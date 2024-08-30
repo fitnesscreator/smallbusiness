@@ -526,70 +526,86 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            const mainImage = document.querySelector('.main-image');
-            const thumbnails = document.querySelectorAll('.thumbnail');
+    const mainImage = document.querySelector('.main-image');
+    const thumbnails = document.querySelectorAll('.thumbnail');
+    const productTitleElement = document.querySelector('.product-title');
+    const productPriceElement = document.querySelector('.product-price');
+    const productDescriptionElement = document.querySelector('.product-description');
 
-            thumbnails.forEach(thumbnail => {
-                thumbnail.addEventListener('click', function() {
-                    // Change the main image to the selected thumbnail
-                    mainImage.textContent = this.textContent;
+    // Retrieve the selected product from localStorage
+    const selectedProduct = JSON.parse(localStorage.getItem('selectedProduct'));
 
-                    // Highlight the selected thumbnail
-                    thumbnails.forEach(t => t.classList.remove('selected'));
-                    this.classList.add('selected');
-                });
-            });
+    if (selectedProduct) {
+        productTitleElement.textContent = selectedProduct.title;
+        productPriceElement.textContent = selectedProduct.price;
+        productDescriptionElement.textContent = "This is the description of " + selectedProduct.title + ". It's a great product!";
+    }
 
-            const sizeOptions = document.querySelectorAll('.size-option');
-            sizeOptions.forEach(option => {
-                option.addEventListener('click', function() {
-                    sizeOptions.forEach(o => o.classList.remove('selected'));
-                    this.classList.add('selected');
-                });
-            });
+    // Thumbnails click event to change the main image
+    thumbnails.forEach(thumbnail => {
+        thumbnail.addEventListener('click', function() {
+            mainImage.textContent = this.textContent;
 
-            const decreaseQuantity = document.getElementById('decreaseQuantity');
-            const increaseQuantity = document.getElementById('increaseQuantity');
-            const quantityInput = document.getElementById('quantity');
-
-            decreaseQuantity.addEventListener('click', function() {
-                let currentValue = parseInt(quantityInput.value);
-                if (currentValue > 1) {
-                    quantityInput.value = currentValue - 1;
-                }
-            });
-
-            increaseQuantity.addEventListener('click', function() {
-                let currentValue = parseInt(quantityInput.value);
-                quantityInput.value = currentValue + 1;
-            });
-
-            // Wishlist button toggle with localStorage
-            const wishlistButton = document.querySelector('.wishlist-button');
-            let wishlist = JSON.parse(localStorage.getItem('wishlist')) || [];
-            const productTitle = document.querySelector('.product-title').textContent;
-
-            // Check if product is already in the wishlist and update the icon
-            const isProductInWishlist = wishlist.find(item => item.title === productTitle);
-            if (isProductInWishlist) {
-                wishlistButton.classList.add('is-active');
-                wishlistButton.querySelector('svg path').setAttribute('fill', '#191919');
-            }
-
-            wishlistButton.addEventListener('click', function() {
-                if (wishlistButton.classList.contains('is-active')) {
-                    wishlistButton.classList.remove('is-active');
-                    wishlistButton.querySelector('svg path').setAttribute('fill', 'none');
-                    wishlist = wishlist.filter(item => item.title !== productTitle);
-                } else {
-                    wishlistButton.classList.add('is-active');
-                    wishlistButton.querySelector('svg path').setAttribute('fill', '#191919');
-                    wishlist.push({ title: productTitle });
-                }
-
-                localStorage.setItem('wishlist', JSON.stringify(wishlist));
-            });
+            thumbnails.forEach(t => t.classList.remove('selected'));
+            this.classList.add('selected');
         });
+    });
+
+    const sizeOptions = document.querySelectorAll('.size-option');
+    sizeOptions.forEach(option => {
+        option.addEventListener('click', function() {
+            sizeOptions.forEach(o => o.classList.remove('selected'));
+            this.classList.add('selected');
+        });
+    });
+
+    const decreaseQuantity = document.getElementById('decreaseQuantity');
+    const increaseQuantity = document.getElementById('increaseQuantity');
+    const quantityInput = document.getElementById('quantity');
+
+    decreaseQuantity.addEventListener('click', function() {
+        let currentValue = parseInt(quantityInput.value);
+        if (currentValue > 1) {
+            quantityInput.value = currentValue - 1;
+        }
+    });
+
+    increaseQuantity.addEventListener('click', function() {
+        let currentValue = parseInt(quantityInput.value);
+        quantityInput.value = currentValue + 1;
+    });
+
+    // Wishlist functionality for productdetails.html
+    const wishlistButton = document.querySelector('.wishlist-button svg path');
+    let wishlist = JSON.parse(localStorage.getItem('wishlist')) || [];
+
+    // Check if the product is already in the wishlist
+    const isInWishlist = wishlist.some(item => item.title === selectedProduct.title);
+
+    if (isInWishlist) {
+        wishlistButton.setAttribute('fill', '#191919');
+    }
+
+    wishlistButton.closest('.wishlist-button').addEventListener('click', function() {
+        const productIndex = wishlist.findIndex(item => item.title === selectedProduct.title);
+
+        if (wishlistButton.getAttribute('fill') === 'none') {
+            wishlistButton.setAttribute('fill', '#191919');
+
+            if (productIndex === -1) {
+                wishlist.push({ title: selectedProduct.title, price: selectedProduct.price });
+            }
+        } else {
+            wishlistButton.setAttribute('fill', 'none');
+
+            if (productIndex !== -1) {
+                wishlist.splice(productIndex, 1);
+            }
+        }
+
+        localStorage.setItem('wishlist', JSON.stringify(wishlist));
+    });
+});
     </script>
 
 </body>
