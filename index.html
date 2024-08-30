@@ -898,16 +898,51 @@ document.addEventListener('DOMContentLoaded', function() {
     const wishlistButtons = document.querySelectorAll('.wishlist-button');
     const products = document.querySelectorAll('.product');
 
+    // Load wishlist from localStorage
+    let wishlist = JSON.parse(localStorage.getItem('wishlist')) || [];
+
+    // Update wishlist buttons based on stored data
+    function updateWishlistIcons() {
+        products.forEach(product => {
+            const productTitle = product.querySelector('.product-title').textContent;
+            const wishlistButton = product.querySelector('.wishlist-button svg path');
+            const isInWishlist = wishlist.some(item => item.title === productTitle);
+
+            if (isInWishlist) {
+                wishlistButton.setAttribute('fill', '#191919');
+            } else {
+                wishlistButton.setAttribute('fill', 'none');
+            }
+        });
+    }
+
+    // Call function to update icons on page load
+    updateWishlistIcons();
+
     // Wishlist button toggle
     wishlistButtons.forEach(button => {
         button.addEventListener('click', function(event) {
             event.stopPropagation();  // Prevent the event from bubbling up to the image click handler
+            const productElement = this.closest('.product');
+            const productTitle = productElement.querySelector('.product-title').textContent;
+            const productPrice = productElement.querySelector('.product-price').textContent;
             const svgPath = this.querySelector('svg path');
-            if (svgPath.getAttribute('fill') === 'none') {
+
+            // Check if product is already in wishlist
+            const productIndex = wishlist.findIndex(item => item.title === productTitle);
+
+            if (productIndex === -1) {
+                // Add product to wishlist
+                wishlist.push({ title: productTitle, price: productPrice });
                 svgPath.setAttribute('fill', '#191919'); // Filled state color
             } else {
+                // Remove product from wishlist
+                wishlist.splice(productIndex, 1);
                 svgPath.setAttribute('fill', 'none'); // Unfilled state
             }
+
+            // Save the updated wishlist to localStorage
+            localStorage.setItem('wishlist', JSON.stringify(wishlist));
         });
     });
 
