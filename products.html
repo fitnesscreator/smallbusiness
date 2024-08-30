@@ -777,6 +777,27 @@
     const categoryButtons = document.querySelectorAll('.category');
     const products = document.querySelectorAll('.product');
 
+    // Load wishlist from localStorage
+    let wishlist = JSON.parse(localStorage.getItem('wishlist')) || [];
+
+    // Function to update wishlist icons based on localStorage
+    function updateWishlistIcons() {
+        products.forEach(product => {
+            const productTitle = product.querySelector('.product-title').textContent;
+            const wishlistButton = product.querySelector('.wishlist-button svg path');
+            const isInWishlist = wishlist.some(item => item.title === productTitle);
+
+            if (isInWishlist) {
+                wishlistButton.setAttribute('fill', '#191919');
+            } else {
+                wishlistButton.setAttribute('fill', 'none');
+            }
+        });
+    }
+
+    // Call the function to update icons on page load
+    updateWishlistIcons();
+
     categoryButtons.forEach(button => {
         button.addEventListener('click', function() {
             const selectedCategory = this.getAttribute('data-category');
@@ -803,7 +824,6 @@
             const productPrice = productElement.querySelector('.product-price').textContent;
 
             // Check if the product is already in the wishlist
-            let wishlist = JSON.parse(localStorage.getItem('wishlist')) || [];
             const productIndex = wishlist.findIndex(item => item.title === productTitle);
 
             if (svgPath.getAttribute('fill') === 'none') {
