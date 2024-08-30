@@ -792,16 +792,38 @@
         });
     });
 
-    // Wishlist button toggle
+    // Wishlist button toggle with localStorage
     const wishlistButtons = document.querySelectorAll('.wishlist-button');
+    
     wishlistButtons.forEach(button => {
         button.addEventListener('click', function() {
             const svgPath = this.querySelector('svg path');
+            const productElement = this.closest('.product');
+            const productTitle = productElement.querySelector('.product-title').textContent;
+            const productPrice = productElement.querySelector('.product-price').textContent;
+
+            // Check if the product is already in the wishlist
+            let wishlist = JSON.parse(localStorage.getItem('wishlist')) || [];
+            const productIndex = wishlist.findIndex(item => item.title === productTitle);
+
             if (svgPath.getAttribute('fill') === 'none') {
                 svgPath.setAttribute('fill', '#191919'); // Fill the heart
+
+                // Add product to the wishlist if not already added
+                if (productIndex === -1) {
+                    wishlist.push({ title: productTitle, price: productPrice });
+                }
             } else {
                 svgPath.setAttribute('fill', 'none'); // Unfill the heart
+
+                // Remove product from the wishlist
+                if (productIndex !== -1) {
+                    wishlist.splice(productIndex, 1);
+                }
             }
+
+            // Save the updated wishlist to localStorage
+            localStorage.setItem('wishlist', JSON.stringify(wishlist));
         });
     });
 });
