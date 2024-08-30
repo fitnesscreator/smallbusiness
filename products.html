@@ -846,6 +846,23 @@
             localStorage.setItem('wishlist', JSON.stringify(wishlist));
         });
     });
+
+    // Add event listener to product images for redirection
+    const productImages = document.querySelectorAll('.image-container');
+    
+    productImages.forEach(image => {
+        image.addEventListener('click', function() {
+            const productElement = this.closest('.product');
+            const productTitle = productElement.querySelector('.product-title').textContent;
+            const productPrice = productElement.querySelector('.product-price').textContent;
+
+            // Store selected product details in localStorage
+            localStorage.setItem('selectedProduct', JSON.stringify({ title: productTitle, price: productPrice }));
+
+            // Redirect to productdetails.html
+            window.location.href = 'productdetails.html';
+        });
+    });
 });
     </script>
 
