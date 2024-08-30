@@ -817,7 +817,9 @@
     const wishlistButtons = document.querySelectorAll('.wishlist-button');
     
     wishlistButtons.forEach(button => {
-        button.addEventListener('click', function() {
+        button.addEventListener('click', function(event) {
+            event.stopPropagation();  // Prevent the click event from bubbling up
+
             const svgPath = this.querySelector('svg path');
             const productElement = this.closest('.product');
             const productTitle = productElement.querySelector('.product-title').textContent;
