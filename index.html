@@ -874,53 +874,62 @@
 
     <script>
         // Promo Banner Slideshow Script
-        let slideIndex = 0;
-        const slides = document.querySelectorAll('.slide');
+let slideIndex = 0;
+const slides = document.querySelectorAll('.slide');
 
-        function showSlide(index) {
-            slides.forEach((slide, i) => {
-                slide.style.display = i === index ? 'block' : 'none';
-            });
-        }
+function showSlide(index) {
+    slides.forEach((slide, i) => {
+        slide.style.display = i === index ? 'block' : 'none';
+    });
+}
 
-        function changeSlide(direction) {
-            slideIndex += direction;
-            if (slideIndex >= slides.length) slideIndex = 0;
-            if (slideIndex < 0) slideIndex = slides.length - 1;
-            showSlide(slideIndex);
-        }
+function changeSlide(direction) {
+    slideIndex += direction;
+    if (slideIndex >= slides.length) slideIndex = 0;
+    if (slideIndex < 0) slideIndex = slides.length - 1;
+    showSlide(slideIndex);
+}
 
-        setInterval(() => {
-            changeSlide(1);
-        }, 3000); // Change slide every 3 seconds
+setInterval(() => {
+    changeSlide(1);
+}, 3000); // Change slide every 3 seconds
 
-        // Wishlist Button Toggle Script
-        document.addEventListener('DOMContentLoaded', function() {
-            const wishlistButtons = document.querySelectorAll('.wishlist-button');
+document.addEventListener('DOMContentLoaded', function() {
+    const wishlistButtons = document.querySelectorAll('.wishlist-button');
+    const products = document.querySelectorAll('.product');
 
-            wishlistButtons.forEach(button => {
-                button.addEventListener('click', function() {
-                    const svgPath = this.querySelector('svg path');
-                    if (svgPath.getAttribute('fill') === 'none') {
-                        svgPath.setAttribute('fill', '#191919'); // Filled state color
-                    } else {
-                        svgPath.setAttribute('fill', 'none'); // Unfilled state
-                    }
-                });
-            });
+    // Wishlist button toggle
+    wishlistButtons.forEach(button => {
+        button.addEventListener('click', function(event) {
+            event.stopPropagation();  // Prevent the event from bubbling up to the image click handler
+            const svgPath = this.querySelector('svg path');
+            if (svgPath.getAttribute('fill') === 'none') {
+                svgPath.setAttribute('fill', '#191919'); // Filled state color
+            } else {
+                svgPath.setAttribute('fill', 'none'); // Unfilled state
+            }
         });
+    });
 
-        // Function to handle product details view
-        function viewProductDetails(title, price, image) {
-            const productDetails = {
-                title: title,
-                price: price,
-                image: image
-            };
+    // Product image click - navigate to product details
+    products.forEach(product => {
+        product.addEventListener('click', function() {
+            const productTitle = this.querySelector('.product-title').textContent;
+            const productPrice = this.querySelector('.product-price').textContent;
+            const productImage = this.querySelector('.image-container img').src;
 
-            localStorage.setItem('selectedProduct', JSON.stringify(productDetails));
+            // Store product details in localStorage
+            localStorage.setItem('productDetails', JSON.stringify({
+                title: productTitle,
+                price: productPrice,
+                image: productImage
+            }));
+
+            // Navigate to product details page
             window.location.href = 'productdetails.html';
-        }
+        });
+    });
+});
     </script>
 </body>
 </html>
