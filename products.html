@@ -844,92 +844,98 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            const wishlistButtons = document.querySelectorAll('.wishlist-button');
-            const products = document.querySelectorAll('.product');
-            const categoryButtons = document.querySelectorAll('.category');
+    const categoryButtons = document.querySelectorAll('.category');
+    const products = document.querySelectorAll('.product');
 
-            // Load wishlist from localStorage
-            let wishlist = JSON.parse(localStorage.getItem('wishlist')) || [];
+    // Load wishlist from localStorage
+    let wishlist = JSON.parse(localStorage.getItem('wishlist')) || [];
 
-            // Update wishlist buttons based on stored data
-            function updateWishlistIcons() {
-                products.forEach(product => {
-                    const productTitle = product.querySelector('.product-title').textContent;
-                    const wishlistButton = product.querySelector('.wishlist-button svg path');
-                    const isInWishlist = wishlist.some(item => item.title === productTitle);
+    // Function to update wishlist icons based on localStorage
+    function updateWishlistIcons() {
+        products.forEach(product => {
+            const productTitle = product.querySelector('.product-title').textContent;
+            const wishlistButton = product.querySelector('.wishlist-button svg path');
+            const isInWishlist = wishlist.some(item => item.title === productTitle);
 
-                    if (isInWishlist) {
-                        wishlistButton.setAttribute('fill', '#191919');
-                    } else {
-                        wishlistButton.setAttribute('fill', 'none');
-                    }
-                });
-            }
-
-            // Call function to update icons on page load
-            updateWishlistIcons();
-
-            // Wishlist button toggle
-            wishlistButtons.forEach(button => {
-                button.addEventListener('click', function(event) {
-                    event.stopPropagation();  // Prevent the event from bubbling up to the image click handler
-                    const productElement = this.closest('.product');
-                    const productTitle = productElement.querySelector('.product-title').textContent;
-                    const productPrice = productElement.querySelector('.product-price').textContent;
-                    const svgPath = this.querySelector('svg path');
-
-                    // Check if product is already in wishlist
-                    const productIndex = wishlist.findIndex(item => item.title === productTitle);
-
-                    if (productIndex === -1) {
-                        // Add product to wishlist
-                        wishlist.push({ title: productTitle, price: productPrice });
-                        svgPath.setAttribute('fill', '#191919'); // Filled state color
-                    } else {
-                        // Remove product from wishlist
-                        wishlist.splice(productIndex, 1);
-                        svgPath.setAttribute('fill', 'none'); // Unfilled state
-                    }
-
-                    // Save the updated wishlist to localStorage
-                    localStorage.setItem('wishlist', JSON.stringify(wishlist));
-                });
-            });
-
-            // Category button click - filter products
-            categoryButtons.forEach(button => {
-                button.addEventListener('click', function() {
-                    const selectedCategory = this.getAttribute('data-category');
-                    filterProducts(selectedCategory);
-                });
-            });
-
-            // Function to filter products based on category
-            function filterProducts(category) {
-                products.forEach(product => {
-                    if (category === 'all' || product.getAttribute('data-category') === category) {
-                        product.style.display = 'block';
-                    } else {
-                        product.style.display = 'none';
-                    }
-                });
-            }
-
-            // Initial filter based on stored category in localStorage
-            const storedCategory = localStorage.getItem('selectedCategory');
-            if (storedCategory) {
-                filterProducts(storedCategory);
+            if (isInWishlist) {
+                wishlistButton.setAttribute('fill', '#191919');
             } else {
-                filterProducts('all');
+                wishlistButton.setAttribute('fill', 'none');
             }
+        });
+    }
 
-            // Store selected category in localStorage on click
-            categoryButtons.forEach(button => {
-                button.addEventListener('click', function() {
-                    localStorage.setItem('selectedCategory', this.getAttribute('data-category'));
-                });
+    // Call the function to update icons on page load
+    updateWishlistIcons();
+
+    categoryButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            const selectedCategory = this.getAttribute('data-category');
+
+            products.forEach(product => {
+                const productCategory = product.getAttribute('data-category');
+                if (selectedCategory === 'all' || productCategory === selectedCategory) {
+                    product.style.display = 'block';
+                } else {
+                    product.style.display = 'none';
+                }
             });
         });
+    });
+
+    // Wishlist button toggle with localStorage
+    const wishlistButtons = document.querySelectorAll('.wishlist-button');
+    
+    wishlistButtons.forEach(button => {
+        button.addEventListener('click', function(event) {
+            event.stopPropagation();  // Prevent the click event from bubbling up
+
+            const svgPath = this.querySelector('svg path');
+            const productElement = this.closest('.product');
+            const productTitle = productElement.querySelector('.product-title').textContent;
+            const productPrice = productElement.querySelector('.product-price').textContent;
+
+            // Check if the product is already in the wishlist
+            const productIndex = wishlist.findIndex(item => item.title === productTitle);
+
+            if (svgPath.getAttribute('fill') === 'none') {
+                svgPath.setAttribute('fill', '#191919'); // Fill the heart
+
+                // Add product to the wishlist if not already added
+                if (productIndex === -1) {
+                    wishlist.push({ title: productTitle, price: productPrice });
+                }
+            } else {
+                svgPath.setAttribute('fill', 'none'); // Unfill the heart
+
+                // Remove product from the wishlist
+                if (productIndex !== -1) {
+                    wishlist.splice(productIndex, 1);
+                }
+            }
+
+            // Save the updated wishlist to localStorage
+            localStorage.setItem('wishlist', JSON.stringify(wishlist));
+        });
+    });
+
+    // Add event listener to product images for redirection
+    const productImages = document.querySelectorAll('.image-container');
+    
+    productImages.forEach(image => {
+        image.addEventListener('click', function() {
+            const productElement = this.closest('.product');
+            const productTitle = productElement.querySelector('.product-title').textContent;
+            const productPrice = productElement.querySelector('.product-price').textContent;
+
+            // Store selected product details in localStorage
+            localStorage.setItem('selectedProduct', JSON.stringify({ title: productTitle, price: productPrice }));
+
+            // Redirect to productdetails.html
+            window.location.href = 'productdetails.html';
+        });
+    });
+});
     </script>
 
 </body>
