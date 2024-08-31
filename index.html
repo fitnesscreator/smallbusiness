@@ -625,7 +625,7 @@
     <div class="navbar">
         <div class="logo">Veronica</div>
         <div class="menu">
-            <a href="#">Shop</a>
+        <a href="#" id="shopButton">Shop</a>
             <a href="#">Reviews</a>
             <a href="#">About</a>
             <a href="#">Contact Us</a>
@@ -905,6 +905,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const categoryButtons = document.querySelectorAll('.category');
     const shopNowButton = document.querySelector('.cta'); // Assuming 'cta' class is used for the "Shop Now" button
     const viewAllProductsButton = document.querySelector('.view-more'); // Assuming 'view-more' class is used for the "View All Products" button
+    const shopButton = document.querySelector('.menu a[href="#"]'); // Assuming the first <a> tag with href="#" is the "Shop" button
 
     // Load wishlist from localStorage
     let wishlist = JSON.parse(localStorage.getItem('wishlist')) || [];
@@ -981,6 +982,18 @@ document.addEventListener('DOMContentLoaded', function() {
     // View All Products button click - clear any existing category filter
     if (viewAllProductsButton) {
         viewAllProductsButton.addEventListener('click', function() {
+            // Clear the selected category from localStorage
+            localStorage.removeItem('selectedCategory');
+            
+            // Navigate to products.html
+            window.location.href = 'products.html';
+        });
+    }
+
+    // Shop button in navigation bar - clear any existing category filter
+    if (shopButton) {
+        shopButton.addEventListener('click', function(event) {
+            event.preventDefault(); // Prevent default link behavior
             // Clear the selected category from localStorage
             localStorage.removeItem('selectedCategory');
             
