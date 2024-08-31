@@ -780,6 +780,9 @@
     // Load wishlist from localStorage
     let wishlist = JSON.parse(localStorage.getItem('wishlist')) || [];
 
+    // Load the selected category from localStorage (if any)
+    const selectedCategory = localStorage.getItem('selectedCategory') || 'all';
+
     // Function to update wishlist icons based on localStorage
     function updateWishlistIcons() {
         products.forEach(product => {
@@ -795,21 +798,31 @@
         });
     }
 
+    // Function to filter products based on the selected category
+    function filterProducts(category) {
+        products.forEach(product => {
+            const productCategory = product.getAttribute('data-category');
+            if (category === 'all' || productCategory === category) {
+                product.style.display = 'block';
+            } else {
+                product.style.display = 'none';
+            }
+        });
+    }
+
     // Call the function to update icons on page load
     updateWishlistIcons();
 
+    // Filter products on page load based on the selected category
+    filterProducts(selectedCategory);
+
+    // Handle category button clicks
     categoryButtons.forEach(button => {
         button.addEventListener('click', function() {
             const selectedCategory = this.getAttribute('data-category');
 
-            products.forEach(product => {
-                const productCategory = product.getAttribute('data-category');
-                if (selectedCategory === 'all' || productCategory === selectedCategory) {
-                    product.style.display = 'block';
-                } else {
-                    product.style.display = 'none';
-                }
-            });
+            // Filter the products based on the selected category
+            filterProducts(selectedCategory);
         });
     });
 
