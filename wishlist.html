@@ -403,19 +403,15 @@
     const wishlistGrid = document.getElementById('wishlistGrid');
     let wishlist = JSON.parse(localStorage.getItem('wishlist')) || [];
 
-    console.log("Wishlist data from localStorage:", wishlist); // Log wishlist data
-
     if (wishlist.length === 0) {
         wishlistGrid.innerHTML = '<p>Your wishlist is empty.</p>';
     } else {
         wishlist.forEach(product => {
-            console.log("Processing product:", product); // Log each product being processed
-
             const productElement = document.createElement('div');
             productElement.classList.add('product');
 
-            // Safeguard for image property: Check if it exists and is a valid string
-            const productImageURL = product.image ? product.image : 'path/to/default-image.jpg';
+            // Ensure that the image URL is correctly retrieved from localStorage
+            const productImageURL = product.image || 'path/to/default-image.jpg';
 
             productElement.innerHTML = `
                 <div class="image-container" style="position: relative;">
