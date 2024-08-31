@@ -540,13 +540,20 @@
         productTitleElement.textContent = selectedProduct.title;
         productPriceElement.textContent = selectedProduct.price;
         productDescriptionElement.textContent = "This is the description of " + selectedProduct.title + ". It's a great product!";
-        mainImage.style.backgroundImage = `url(${selectedProduct.image})`;
 
-        // Update the thumbnails based on the main image
+        // Set the main image and adjust styling to fit the container
+        mainImage.style.backgroundImage = `url(${selectedProduct.image})`;
+        mainImage.style.backgroundSize = 'cover'; // Ensure the image covers the entire area
+        mainImage.style.backgroundPosition = 'center'; // Center the image
+        mainImage.textContent = ''; // Remove the "Image 1" text
+
+        // Hide other thumbnails as they are not needed for a single image
         thumbnails.forEach((thumbnail, index) => {
-            thumbnail.style.backgroundImage = `url(${selectedProduct.image})`;
             if (index === 0) {
+                thumbnail.style.backgroundImage = `url(${selectedProduct.image})`;
                 thumbnail.classList.add('selected');
+            } else {
+                thumbnail.style.display = 'none';
             }
         });
     }
