@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Products - Modern Soft Shades</title>
-    <link rel="stylesheet" href="styles.css">
     <style>
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -66,7 +65,48 @@
             color: #b88b8b;
         }
 
-        /* Category Shopping Section */
+        /* Hero banner */
+.hero-banner {
+    width: 100%;
+    height: 340px;
+    background-image: url("https://raw.githubusercontent.com/bestwebsites/smallbusiness/main/Pictures/White%20Pink%20Photo%20Delicate%20Handmade%20Shop%20Etsy%20Shop%20Cover%20%20(1).png");
+    background-size: cover;
+    background-position: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    color: #5c4a4a;
+    margin-bottom: 20px;
+    position: relative;
+}
+
+        .hero-banner h1 {
+            font-size: 48px;
+            font-family: 'Dancing Script', cursive;
+            margin: 0;
+            letter-spacing: 2px;
+            color: #7b6464;
+        }
+
+        .cta {
+            text-decoration: none; /* Remove underline */
+            display: inline-block;
+            padding: 12px 25px;
+            background-color: #d8a69a;
+            color: #fff;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            font-size: 16px;
+        }
+
+        .cta:hover {
+            background-color: #b88b8b;
+        }
+
+        /* Categories section */
         .categories-section {
             padding: 50px 20px;
             background-color: #f4e5e0;
@@ -91,6 +131,7 @@
             flex-direction: column;
             align-items: center;
             text-align: center;
+            cursor: pointer;
         }
 
         .category-image {
@@ -106,16 +147,16 @@
             transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
 
-        .category-image:hover {
-            transform: scale(1.1); /* Slightly enlarges the circle */
-            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1); /* Adds a soft shadow */
-        }
-
         .category-image img {
             width: 100%;
             height: 100%;
             object-fit: cover;
             border-radius: 50%;
+        }
+
+        .category-image:hover {
+            transform: scale(1.1); /* Slightly enlarges the circle */
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1); /* Adds a soft shadow */
         }
 
         .category-title {
@@ -168,6 +209,15 @@
             width: 100%;
             padding-top: 100%; /* Makes the image container a perfect square */
             background-color: #e9d7d2;
+        }
+
+        .image-container img {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover; /* Ensure the image covers the entire area */
         }
 
         .wishlist-button {
@@ -387,385 +437,405 @@
 
     <!-- Navigation Bar -->
     <div class="navbar">
-    <div class="logo">
-        <a href="index.html" style="color: inherit; text-decoration: none;">Veronica</a>
+        <div class="logo">
+            <img src="https://raw.githubusercontent.com/bestwebsites/smallbusiness/main/Pictures/B%20(79).png" alt="Logo" style="height: 50px;">
+        </div>
+        <div class="menu">
+            <a href="index.html">Home</a>
+            <a href="index.html#reviewsSection">Reviews</a>
+            <a href="about.html">About</a>
+            <a href="#contactSection">Contact Us</a>
+        </div>
+        <div class="icons">
+            <a href="wishlist.html" class="icon" style="color: inherit; text-decoration: none;">♡</a> <!-- Wishlist icon -->
+            <a href="cart.html" class="icon" style="color: inherit; text-decoration: none;">🛒</a> <!-- Cart icon -->
+        </div>
     </div>
-    <div class="menu">
-        <a href="index.html">Home</a>
-        <a href="index.html#reviewsSection">Reviews</a>
-        <a href="about.html">About</a>
-        <a href="#contactSection">Contact Us</a>
-    </div>
-    <div class="icons">
-        <a href="wishlist.html" class="icon" style="color: inherit; text-decoration: none;">♡</a> <!-- Wishlist icon -->
-        <a href="cart.html" class="icon" style="color: inherit; text-decoration: none;">🛒</a> <!-- Cart icon -->
-    </div>
-</div>
 
     <!-- Categories Section -->
     <div class="categories-section" id="categoriesSection">
-    <h2>Shop by Category</h2>
-    <div class="categories-row">
-        <div class="category" data-category="trending">
-            <div class="category-image"></div>
-            <p class="category-title">Trending Now</p>
-        </div>
-        <div class="category" data-category="bestsellers">
-            <div class="category-image"></div>
-            <p class="category-title">Best Sellers</p>
-        </div>
-        <div class="category" data-category="newarrivals">
-            <div class="category-image"></div>
-            <p class="category-title">New Arrivals</p>
-        </div>
-        <div class="category" data-category="gifts">
-            <div class="category-image"></div>
-            <p class="category-title">Gift Ideas</p>
-        </div>
-        <div class="category" data-category="all">
-            <div class="category-image"></div>
-            <p class="category-title">All Products</p>
+        <h2>Shop by Category</h2>
+        <div class="categories-row">
+            <div class="category" data-category="trending">
+                <div class="category-image">
+                    <img src="https://raw.githubusercontent.com/bestwebsites/smallbusiness/main/Pictures/265c9107d09f9fd85d9435a2b3d89938.jpg" alt="Trending Now">
+                </div>
+                <p class="category-title">Trending Now</p>
+            </div>
+            <div class="category" data-category="bestsellers">
+                <div class="category-image">
+                    <img src="https://raw.githubusercontent.com/bestwebsites/smallbusiness/main/Pictures/2c5d1407655c10ecc8e487989a5b5ecf.jpg" alt="Best Sellers">
+                </div>
+                <p class="category-title">Best Sellers</p>
+            </div>
+            <div class="category" data-category="newarrivals">
+                <div class="category-image">
+                    <img src="https://raw.githubusercontent.com/bestwebsites/smallbusiness/main/Pictures/55f559de0a40aae6dcbf8bcbdfe7457b.jpg" alt="New Arrivals">
+                </div>
+                <p class="category-title">New Arrivals</p>
+            </div>
+            <div class="category" data-category="gifts">
+                <div class="category-image">
+                    <img src="https://raw.githubusercontent.com/bestwebsites/smallbusiness/main/Pictures/bb27f0f90d7efa29be9817b7cc85fc1e.jpg" alt="Gift Ideas">
+                </div>
+                <p class="category-title">Gift Ideas</p>
+            </div>
+            <div class="category" data-category="all">
+                <div class="category-image">
+                    <img src="https://raw.githubusercontent.com/bestwebsites/smallbusiness/main/Pictures/89a8338f68093c7d97ef1d03299d20b0.jpg" alt="All Products">
+                </div>
+                <p class="category-title">All Products</p>
+            </div>
         </div>
     </div>
-</div>
 
     <!-- Products Section -->
     <div class="products-section">
         <h2>All Products</h2>
         <div class="products-grid">
-    <!-- Product 1 -->
-    <div class="product" data-category="trending">
-        <div class="image-container">
-            <button type="button" class="wishlist-button">
-                <svg width="18" height="16" viewBox="0 0 18 16">
-                    <path
-                        d="M9 14s-4-3.33-6-6a3.5 3.5 0 1 1 6-4 3.5 3.5 0 1 1 6 4c-2 2.67-6 6-6 6z"
-                        stroke="#2D2D2D"
-                        stroke-width="1"
-                        fill="none"
-                    />
-                </svg>
-            </button>
-        </div>
-        <div class="product-details">
-            <div class="product-info">
-                <p class="product-title">Product 1</p>
-                <p class="product-price">$19.99</p>
+            <!-- Product 1 -->
+            <div class="product" data-category="trending">
+                <div class="image-container">
+                    <img src="https://raw.githubusercontent.com/bestwebsites/smallbusiness/main/Pictures/97f9b50623aa00440bb0009848857a6d.jpg" alt="Product 1">
+                    <button type="button" class="wishlist-button">
+                        <svg width="18" height="16" viewBox="0 0 18 16">
+                            <path
+                                d="M9 14s-4-3.33-6-6a3.5 3.5 0 1 1 6-4 3.5 3.5 0 1 1 6 4c-2 2.67-6 6-6 6z"
+                                stroke="#2D2D2D"
+                                stroke-width="1"
+                                fill="none"
+                            />
+                        </svg>
+                    </button>
+                </div>
+                <div class="product-details">
+                    <div class="product-info">
+                        <p class="product-title">Product 1</p>
+                        <p class="product-price">$19.99</p>
+                    </div>
+                    <button class="add-to-cart-button">Add to Cart</button>
+                    <button class="buy-button">Buy Now</button>
+                </div>
             </div>
-            <button class="add-to-cart-button">Add to Cart</button>
-            <button class="buy-button">Buy Now</button>
-        </div>
-    </div>
 
-    <!-- Product 2 -->
-    <div class="product" data-category="trending">
-        <div class="image-container">
-            <button type="button" class="wishlist-button">
-                <svg width="18" height="16" viewBox="0 0 18 16">
-                    <path
-                        d="M9 14s-4-3.33-6-6a3.5 3.5 0 1 1 6-4 3.5 3.5 0 1 1 6 4c-2 2.67-6 6-6 6z"
-                        stroke="#2D2D2D"
-                        stroke-width="1"
-                        fill="none"
-                    />
-                </svg>
-            </button>
-        </div>
-        <div class="product-details">
-            <div class="product-info">
-                <p class="product-title">Product 2</p>
-                <p class="product-price">$29.99</p>
+            <!-- Product 2 -->
+            <div class="product" data-category="trending">
+                <div class="image-container">
+                    <img src="https://raw.githubusercontent.com/bestwebsites/smallbusiness/main/Pictures/9a08fcfea078d7119310bef13452adc3.jpg" alt="Product 2">
+                    <button type="button" class="wishlist-button">
+                        <svg width="18" height="16" viewBox="0 0 18 16">
+                            <path
+                                d="M9 14s-4-3.33-6-6a3.5 3.5 0 1 1 6-4 3.5 3.5 0 1 1 6 4c-2 2.67-6 6-6 6z"
+                                stroke="#2D2D2D"
+                                stroke-width="1"
+                                fill="none"
+                            />
+                        </svg>
+                    </button>
+                </div>
+                <div class="product-details">
+                    <div class="product-info">
+                        <p class="product-title">Product 2</p>
+                        <p class="product-price">$29.99</p>
+                    </div>
+                    <button class="add-to-cart-button">Add to Cart</button>
+                    <button class="buy-button">Buy Now</button>
+                </div>
             </div>
-            <button class="add-to-cart-button">Add to Cart</button>
-            <button class="buy-button">Buy Now</button>
-        </div>
-    </div>
 
-    <!-- Product 3 -->
-    <div class="product" data-category="bestsellers">
-        <div class="image-container">
-            <button type="button" class="wishlist-button">
-                <svg width="18" height="16" viewBox="0 0 18 16">
-                    <path
-                        d="M9 14s-4-3.33-6-6a3.5 3.5 0 1 1 6-4 3.5 3.5 0 1 1 6 4c-2 2.67-6 6-6 6z"
-                        stroke="#2D2D2D"
-                        stroke-width="1"
-                        fill="none"
-                    />
-                </svg>
-            </button>
-        </div>
-        <div class="product-details">
-            <div class="product-info">
-                <p class="product-title">Product 3</p>
-                <p class="product-price">$39.99</p>
+            <!-- Product 3 -->
+            <div class="product" data-category="bestsellers">
+                <div class="image-container">
+                    <img src="https://raw.githubusercontent.com/bestwebsites/smallbusiness/main/Pictures/e6cfab0ebbe1289cee728a546ec4f54a.jpg" alt="Product 3">
+                    <button type="button" class="wishlist-button">
+                        <svg width="18" height="16" viewBox="0 0 18 16">
+                            <path
+                                d="M9 14s-4-3.33-6-6a3.5 3.5 0 1 1 6-4 3.5 3.5 0 1 1 6 4c-2 2.67-6 6-6 6z"
+                                stroke="#2D2D2D"
+                                stroke-width="1"
+                                fill="none"
+                            />
+                        </svg>
+                    </button>
+                </div>
+                <div class="product-details">
+                    <div class="product-info">
+                        <p class="product-title">Product 3</p>
+                        <p class="product-price">$39.99</p>
+                    </div>
+                    <button class="add-to-cart-button">Add to Cart</button>
+                    <button class="buy-button">Buy Now</button>
+                </div>
             </div>
-            <button class="add-to-cart-button">Add to Cart</button>
-            <button class="buy-button">Buy Now</button>
-        </div>
-    </div>
 
-    <!-- Product 4 -->
-    <div class="product" data-category="bestsellers">
-        <div class="image-container">
-            <button type="button" class="wishlist-button">
-                <svg width="18" height="16" viewBox="0 0 18 16">
-                    <path
-                        d="M9 14s-4-3.33-6-6a3.5 3.5 0 1 1 6-4 3.5 3.5 0 1 1 6 4c-2 2.67-6 6-6 6z"
-                        stroke="#2D2D2D"
-                        stroke-width="1"
-                        fill="none"
-                    />
-                </svg>
-            </button>
-        </div>
-        <div class="product-details">
-            <div class="product-info">
-                <p class="product-title">Product 4</p>
-                <p class="product-price">$49.99</p>
+            <!-- Product 4 -->
+            <div class="product" data-category="bestsellers">
+                <div class="image-container">
+                    <img src="https://raw.githubusercontent.com/bestwebsites/smallbusiness/main/Pictures/43832097ede022bd532caeb02d124435.jpg" alt="Product 4">
+                    <button type="button" class="wishlist-button">
+                        <svg width="18" height="16" viewBox="0 0 18 16">
+                            <path
+                                d="M9 14s-4-3.33-6-6a3.5 3.5 0 1 1 6-4 3.5 3.5 0 1 1 6 4c-2 2.67-6 6-6 6z"
+                                stroke="#2D2D2D"
+                                stroke-width="1"
+                                fill="none"
+                            />
+                        </svg>
+                    </button>
+                </div>
+                <div class="product-details">
+                    <div class="product-info">
+                        <p class="product-title">Product 4</p>
+                        <p class="product-price">$49.99</p>
+                    </div>
+                    <button class="add-to-cart-button">Add to Cart</button>
+                    <button class="buy-button">Buy Now</button>
+                </div>
             </div>
-            <button class="add-to-cart-button">Add to Cart</button>
-            <button class="buy-button">Buy Now</button>
-        </div>
-    </div>
 
-    <!-- Product 5 -->
-    <div class="product" data-category="bestsellers">
-        <div class="image-container">
-            <button type="button" class="wishlist-button">
-                <svg width="18" height="16" viewBox="0 0 18 16">
-                    <path
-                        d="M9 14s-4-3.33-6-6a3.5 3.5 0 1 1 6-4 3.5 3.5 0 1 1 6 4c-2 2.67-6 6-6 6z"
-                        stroke="#2D2D2D"
-                        stroke-width="1"
-                        fill="none"
-                    />
-                </svg>
-            </button>
-        </div>
-        <div class="product-details">
-            <div class="product-info">
-                <p class="product-title">Product 5</p>
-                <p class="product-price">$59.99</p>
+            <!-- Product 5 -->
+            <div class="product" data-category="bestsellers">
+                <div class="image-container">
+                    <img src="Paste github link here" alt="Product 5">
+                    <button type="button" class="wishlist-button">
+                        <svg width="18" height="16" viewBox="0 0 18 16">
+                            <path
+                                d="M9 14s-4-3.33-6-6a3.5 3.5 0 1 1 6-4 3.5 3.5 0 1 1 6 4c-2 2.67-6 6-6 6z"
+                                stroke="#2D2D2D"
+                                stroke-width="1"
+                                fill="none"
+                            />
+                        </svg>
+                    </button>
+                </div>
+                <div class="product-details">
+                    <div class="product-info">
+                        <p class="product-title">Product 5</p>
+                        <p class="product-price">$59.99</p>
+                    </div>
+                    <button class="add-to-cart-button">Add to Cart</button>
+                    <button class="buy-button">Buy Now</button>
+                </div>
             </div>
-            <button class="add-to-cart-button">Add to Cart</button>
-            <button class="buy-button">Buy Now</button>
-        </div>
-    </div>
 
-    <!-- Product 6 -->
-    <div class="product" data-category="newarrivals">
-        <div class="image-container">
-            <button type="button" class="wishlist-button">
-                <svg width="18" height="16" viewBox="0 0 18 16">
-                    <path
-                        d="M9 14s-4-3.33-6-6a3.5 3.5 0 1 1 6-4 3.5 3.5 0 1 1 6 4c-2 2.67-6 6-6 6z"
-                        stroke="#2D2D2D"
-                        stroke-width="1"
-                        fill="none"
-                    />
-                </svg>
-            </button>
-        </div>
-        <div class="product-details">
-            <div class="product-info">
-                <p class="product-title">Product 6</p>
-                <p class="product-price">$69.99</p>
+            <!-- Product 6 -->
+            <div class="product" data-category="newarrivals">
+                <div class="image-container">
+                    <img src="Paste github link here" alt="Product 6">
+                    <button type="button" class="wishlist-button">
+                        <svg width="18" height="16" viewBox="0 0 18 16">
+                            <path
+                                d="M9 14s-4-3.33-6-6a3.5 3.5 0 1 1 6-4 3.5 3.5 0 1 1 6 4c-2 2.67-6 6-6 6z"
+                                stroke="#2D2D2D"
+                                stroke-width="1"
+                                fill="none"
+                            />
+                        </svg>
+                    </button>
+                </div>
+                <div class="product-details">
+                    <div class="product-info">
+                        <p class="product-title">Product 6</p>
+                        <p class="product-price">$69.99</p>
+                    </div>
+                    <button class="add-to-cart-button">Add to Cart</button>
+                    <button class="buy-button">Buy Now</button>
+                </div>
             </div>
-            <button class="add-to-cart-button">Add to Cart</button>
-            <button class="buy-button">Buy Now</button>
-        </div>
-    </div>
 
-    <!-- Product 7 -->
-    <div class="product" data-category="newarrivals">
-        <div class="image-container">
-            <button type="button" class="wishlist-button">
-                <svg width="18" height="16" viewBox="0 0 18 16">
-                    <path
-                        d="M9 14s-4-3.33-6-6a3.5 3.5 0 1 1 6-4 3.5 3.5 0 1 1 6 4c-2 2.67-6 6-6 6z"
-                        stroke="#2D2D2D"
-                        stroke-width="1"
-                        fill="none"
-                    />
-                </svg>
-            </button>
-        </div>
-        <div class="product-details">
-            <div class="product-info">
-                <p class="product-title">Product 7</p>
-                <p class="product-price">$79.99</p>
+            <!-- Product 7 -->
+            <div class="product" data-category="newarrivals">
+                <div class="image-container">
+                    <img src="Paste github link here" alt="Product 7">
+                    <button type="button" class="wishlist-button">
+                        <svg width="18" height="16" viewBox="0 0 18 16">
+                            <path
+                                d="M9 14s-4-3.33-6-6a3.5 3.5 0 1 1 6-4 3.5 3.5 0 1 1 6 4c-2 2.67-6 6-6 6z"
+                                stroke="#2D2D2D"
+                                stroke-width="1"
+                                fill="none"
+                            />
+                        </svg>
+                    </button>
+                </div>
+                <div class="product-details">
+                    <div class="product-info">
+                        <p class="product-title">Product 7</p>
+                        <p class="product-price">$79.99</p>
+                    </div>
+                    <button class="add-to-cart-button">Add to Cart</button>
+                    <button class="buy-button">Buy Now</button>
+                </div>
             </div>
-            <button class="add-to-cart-button">Add to Cart</button>
-            <button class="buy-button">Buy Now</button>
-        </div>
-    </div>
 
-    <!-- Product 8 -->
-    <div class="product" data-category="newarrivals">
-        <div class="image-container">
-            <button type="button" class="wishlist-button">
-                <svg width="18" height="16" viewBox="0 0 18 16">
-                    <path
-                        d="M9 14s-4-3.33-6-6a3.5 3.5 0 1 1 6-4 3.5 3.5 0 1 1 6 4c-2 2.67-6 6-6 6z"
-                        stroke="#2D2D2D"
-                        stroke-width="1"
-                        fill="none"
-                    />
-                </svg>
-            </button>
-        </div>
-        <div class="product-details">
-            <div class="product-info">
-                <p class="product-title">Product 8</p>
-                <p class="product-price">$89.99</p>
+            <!-- Product 8 -->
+            <div class="product" data-category="newarrivals">
+                <div class="image-container">
+                    <img src="Paste github link here" alt="Product 8">
+                    <button type="button" class="wishlist-button">
+                        <svg width="18" height="16" viewBox="0 0 18 16">
+                            <path
+                                d="M9 14s-4-3.33-6-6a3.5 3.5 0 1 1 6-4 3.5 3.5 0 1 1 6 4c-2 2.67-6 6-6 6z"
+                                stroke="#2D2D2D"
+                                stroke-width="1"
+                                fill="none"
+                            />
+                        </svg>
+                    </button>
+                </div>
+                <div class="product-details">
+                    <div class="product-info">
+                        <p class="product-title">Product 8</p>
+                        <p class="product-price">$89.99</p>
+                    </div>
+                    <button class="add-to-cart-button">Add to Cart</button>
+                    <button class="buy-button">Buy Now</button>
+                </div>
             </div>
-            <button class="add-to-cart-button">Add to Cart</button>
-            <button class="buy-button">Buy Now</button>
-        </div>
-    </div>
 
-    <!-- Product 9 -->
-    <div class="product" data-category="gifts">
-        <div class="image-container">
-            <button type="button" class="wishlist-button">
-                <svg width="18" height="16" viewBox="0 0 18 16">
-                    <path
-                        d="M9 14s-4-3.33-6-6a3.5 3.5 0 1 1 6-4 3.5 3.5 0 1 1 6 4c-2 2.67-6 6-6 6z"
-                        stroke="#2D2D2D"
-                        stroke-width="1"
-                        fill="none"
-                    />
-                </svg>
-            </button>
-        </div>
-        <div class="product-details">
-            <div class="product-info">
-                <p class="product-title">Product 9</p>
-                <p class="product-price">$99.99</p>
+            <!-- Product 9 -->
+            <div class="product" data-category="gifts">
+                <div class="image-container">
+                    <img src="Paste github link here" alt="Product 9">
+                    <button type="button" class="wishlist-button">
+                        <svg width="18" height="16" viewBox="0 0 18 16">
+                            <path
+                                d="M9 14s-4-3.33-6-6a3.5 3.5 0 1 1 6-4 3.5 3.5 0 1 1 6 4c-2 2.67-6 6-6 6z"
+                                stroke="#2D2D2D"
+                                stroke-width="1"
+                                fill="none"
+                            />
+                        </svg>
+                    </button>
+                </div>
+                <div class="product-details">
+                    <div class="product-info">
+                        <p class="product-title">Product 9</p>
+                        <p class="product-price">$99.99</p>
+                    </div>
+                    <button class="add-to-cart-button">Add to Cart</button>
+                    <button class="buy-button">Buy Now</button>
+                </div>
             </div>
-            <button class="add-to-cart-button">Add to Cart</button>
-            <button class="buy-button">Buy Now</button>
-        </div>
-    </div>
 
-    <!-- Product 10 -->
-    <div class="product" data-category="gifts">
-        <div class="image-container">
-            <button type="button" class="wishlist-button">
-                <svg width="18" height="16" viewBox="0 0 18 16">
-                    <path
-                        d="M9 14s-4-3.33-6-6a3.5 3.5 0 1 1 6-4 3.5 3.5 0 1 1 6 4c-2 2.67-6 6-6 6z"
-                        stroke="#2D2D2D"
-                        stroke-width="1"
-                        fill="none"
-                    />
-                </svg>
-            </button>
-        </div>
-        <div class="product-details">
-            <div class="product-info">
-                <p class="product-title">Product 10</p>
-                <p class="product-price">$109.99</p>
+            <!-- Product 10 -->
+            <div class="product" data-category="gifts">
+                <div class="image-container">
+                    <img src="Paste github link here" alt="Product 10">
+                    <button type="button" class="wishlist-button">
+                        <svg width="18" height="16" viewBox="0 0 18 16">
+                            <path
+                                d="M9 14s-4-3.33-6-6a3.5 3.5 0 1 1 6-4 3.5 3.5 0 1 1 6 4c-2 2.67-6 6-6 6z"
+                                stroke="#2D2D2D"
+                                stroke-width="1"
+                                fill="none"
+                            />
+                        </svg>
+                    </button>
+                </div>
+                <div class="product-details">
+                    <div class="product-info">
+                        <p class="product-title">Product 10</p>
+                        <p class="product-price">$109.99</p>
+                    </div>
+                    <button class="add-to-cart-button">Add to Cart</button>
+                    <button class="buy-button">Buy Now</button>
+                </div>
             </div>
-            <button class="add-to-cart-button">Add to Cart</button>
-            <button class="buy-button">Buy Now</button>
-        </div>
-    </div>
 
-    <!-- Product 11 -->
-    <div class="product" data-category="gifts">
-        <div class="image-container">
-            <button type="button" class="wishlist-button">
-                <svg width="18" height="16" viewBox="0 0 18 16">
-                    <path
-                        d="M9 14s-4-3.33-6-6a3.5 3.5 0 1 1 6-4 3.5 3.5 0 1 1 6 4c-2 2.67-6 6-6 6z"
-                        stroke="#2D2D2D"
-                        stroke-width="1"
-                        fill="none"
-                    />
-                </svg>
-            </button>
-        </div>
-        <div class="product-details">
-            <div class="product-info">
-                <p class="product-title">Product 11</p>
-                <p class="product-price">$119.99</p>
+            <!-- Product 11 -->
+            <div class="product" data-category="gifts">
+                <div class="image-container">
+                    <img src="Paste github link here" alt="Product 11">
+                    <button type="button" class="wishlist-button">
+                        <svg width="18" height="16" viewBox="0 0 18 16">
+                            <path
+                                d="M9 14s-4-3.33-6-6a3.5 3.5 0 1 1 6-4 3.5 3.5 0 1 1 6 4c-2 2.67-6 6-6 6z"
+                                stroke="#2D2D2D"
+                                stroke-width="1"
+                                fill="none"
+                            />
+                        </svg>
+                    </button>
+                </div>
+                <div class="product-details">
+                    <div class="product-info">
+                        <p class="product-title">Product 11</p>
+                        <p class="product-price">$119.99</p>
+                    </div>
+                    <button class="add-to-cart-button">Add to Cart</button>
+                    <button class="buy-button">Buy Now</button>
+                </div>
             </div>
-            <button class="add-to-cart-button">Add to Cart</button>
-            <button class="buy-button">Buy Now</button>
-        </div>
-    </div>
 
-    <!-- Product 12 -->
-    <div class="product" data-category="trending">
-        <div class="image-container">
-            <button type="button" class="wishlist-button">
-                <svg width="18" height="16" viewBox="0 0 18 16">
-                    <path
-                        d="M9 14s-4-3.33-6-6a3.5 3.5 0 1 1 6-4 3.5 3.5 0 1 1 6 4c-2 2.67-6 6-6 6z"
-                        stroke="#2D2D2D"
-                        stroke-width="1"
-                        fill="none"
-                    />
-                </svg>
-            </button>
-        </div>
-        <div class="product-details">
-            <div class="product-info">
-                <p class="product-title">Product 12</p>
-                <p class="product-price">$129.99</p>
+            <!-- Product 12 -->
+            <div class="product" data-category="trending">
+                <div class="image-container">
+                    <img src="Paste github link here" alt="Product 12">
+                    <button type="button" class="wishlist-button">
+                        <svg width="18" height="16" viewBox="0 0 18 16">
+                            <path
+                                d="M9 14s-4-3.33-6-6a3.5 3.5 0 1 1 6-4 3.5 3.5 0 1 1 6 4c-2 2.67-6 6-6 6z"
+                                stroke="#2D2D2D"
+                                stroke-width="1"
+                                fill="none"
+                            />
+                        </svg>
+                    </button>
+                </div>
+                <div class="product-details">
+                    <div class="product-info">
+                        <p class="product-title">Product 12</p>
+                        <p class="product-price">$129.99</p>
+                    </div>
+                    <button class="add-to-cart-button">Add to Cart</button>
+                    <button class="buy-button">Buy Now</button>
+                </div>
             </div>
-            <button class="add-to-cart-button">Add to Cart</button>
-            <button class="buy-button">Buy Now</button>
-        </div>
-    </div>
-</div>
-            <!-- Repeat until you have 16 products -->
         </div>
     </div>
 
     <!-- Contact Us Section -->
-<div class="contact-us" id="contactSection">
-    <div class="contact-container">
-        <div class="logo">
-            <div class="navbar-logo">Veronica</div>
-        </div>
-        <div class="links">
-            <div class="link-group">
-                <p class="link-title">Shop</p>
-                <ul class="dropdown">
-                    <li>Trending Now</li>
-                    <li>Best Sellers</li>
-                    <li>New Arrivals</li>
-                    <li>Gift Ideas</li>
-                </ul>
+    <div class="contact-us" id="contactSection">
+        <div class="contact-container">
+            <div class="logo">
+                <img src="https://raw.githubusercontent.com/bestwebsites/smallbusiness/main/Pictures/B%20(79).png" alt="Contact Us Logo" style="height: 50px;">
             </div>
-            <div class="link-group">
-                <p class="link-title">About</p>
-                <ul class="dropdown">
-                    <li>About Us</li>
-                    <li>Reviews</li>
-                    <li>Shipping</li>
-                </ul>
-            </div>
-            <div class="link-group">
-                <p class="link-title">Contact</p>
-                <ul class="dropdown">
-                    <li><button class="contact-button">Contact Us</button></li>
-                    <li>
-                        <div class="social-icons">
-                            <span>📷</span> <!-- Instagram icon -->
-                            <span>🎵</span> <!-- TikTok icon -->
-                            <span>📘</span> <!-- Facebook icon -->
-                            <span>🐦</span> <!-- X (Twitter) icon -->
-                        </div>
-                    </li>
-                </ul>
+            <div class="links">
+                <div class="link-group">
+                    <p class="link-title">Shop</p>
+                    <ul class="dropdown">
+                        <li>Trending Now</li>
+                        <li>Best Sellers</li>
+                        <li>New Arrivals</li>
+                        <li>Gift Ideas</li>
+                    </ul>
+                </div>
+                <div class="link-group">
+                    <p class="link-title">About</p>
+                    <ul class="dropdown">
+                        <li>About Us</li>
+                        <li>Reviews</li>
+                        <li>Shipping</li>
+                    </ul>
+                </div>
+                <div class="link-group">
+                    <p class="link-title">Contact</p>
+                    <ul class="dropdown">
+                        <li><button class="contact-button">Contact Us</button></li>
+                        <li>
+                            <div class="social-icons">
+                                <span>📷</span> <!-- Instagram icon -->
+                                <span>🎵</span> <!-- TikTok icon -->
+                                <span>📘</span> <!-- Facebook icon -->
+                                <span>🐦</span> <!-- X (Twitter) icon -->
+                            </div>
+                        </li>
+                    </ul>
+                </div>
             </div>
         </div>
     </div>
-</div>
 
     <!-- Footer -->
     <div class="footer">
@@ -774,111 +844,92 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-    const categoryButtons = document.querySelectorAll('.category');
-    const products = document.querySelectorAll('.product');
+            const wishlistButtons = document.querySelectorAll('.wishlist-button');
+            const products = document.querySelectorAll('.product');
+            const categoryButtons = document.querySelectorAll('.category');
 
-    // Load wishlist from localStorage
-    let wishlist = JSON.parse(localStorage.getItem('wishlist')) || [];
+            // Load wishlist from localStorage
+            let wishlist = JSON.parse(localStorage.getItem('wishlist')) || [];
 
-    // Load the selected category from localStorage (if any)
-    const selectedCategory = localStorage.getItem('selectedCategory') || 'all';
+            // Update wishlist buttons based on stored data
+            function updateWishlistIcons() {
+                products.forEach(product => {
+                    const productTitle = product.querySelector('.product-title').textContent;
+                    const wishlistButton = product.querySelector('.wishlist-button svg path');
+                    const isInWishlist = wishlist.some(item => item.title === productTitle);
 
-    // Function to update wishlist icons based on localStorage
-    function updateWishlistIcons() {
-        products.forEach(product => {
-            const productTitle = product.querySelector('.product-title').textContent;
-            const wishlistButton = product.querySelector('.wishlist-button svg path');
-            const isInWishlist = wishlist.some(item => item.title === productTitle);
-
-            if (isInWishlist) {
-                wishlistButton.setAttribute('fill', '#191919');
-            } else {
-                wishlistButton.setAttribute('fill', 'none');
-            }
-        });
-    }
-
-    // Function to filter products based on the selected category
-    function filterProducts(category) {
-        products.forEach(product => {
-            const productCategory = product.getAttribute('data-category');
-            if (category === 'all' || productCategory === category) {
-                product.style.display = 'block';
-            } else {
-                product.style.display = 'none';
-            }
-        });
-    }
-
-    // Call the function to update icons on page load
-    updateWishlistIcons();
-
-    // Filter products on page load based on the selected category
-    filterProducts(selectedCategory);
-
-    // Handle category button clicks
-    categoryButtons.forEach(button => {
-        button.addEventListener('click', function() {
-            const selectedCategory = this.getAttribute('data-category');
-
-            // Filter the products based on the selected category
-            filterProducts(selectedCategory);
-        });
-    });
-
-    // Wishlist button toggle with localStorage
-    const wishlistButtons = document.querySelectorAll('.wishlist-button');
-    
-    wishlistButtons.forEach(button => {
-        button.addEventListener('click', function(event) {
-            event.stopPropagation();  // Prevent the click event from bubbling up
-
-            const svgPath = this.querySelector('svg path');
-            const productElement = this.closest('.product');
-            const productTitle = productElement.querySelector('.product-title').textContent;
-            const productPrice = productElement.querySelector('.product-price').textContent;
-
-            // Check if the product is already in the wishlist
-            const productIndex = wishlist.findIndex(item => item.title === productTitle);
-
-            if (svgPath.getAttribute('fill') === 'none') {
-                svgPath.setAttribute('fill', '#191919'); // Fill the heart
-
-                // Add product to the wishlist if not already added
-                if (productIndex === -1) {
-                    wishlist.push({ title: productTitle, price: productPrice });
-                }
-            } else {
-                svgPath.setAttribute('fill', 'none'); // Unfill the heart
-
-                // Remove product from the wishlist
-                if (productIndex !== -1) {
-                    wishlist.splice(productIndex, 1);
-                }
+                    if (isInWishlist) {
+                        wishlistButton.setAttribute('fill', '#191919');
+                    } else {
+                        wishlistButton.setAttribute('fill', 'none');
+                    }
+                });
             }
 
-            // Save the updated wishlist to localStorage
-            localStorage.setItem('wishlist', JSON.stringify(wishlist));
+            // Call function to update icons on page load
+            updateWishlistIcons();
+
+            // Wishlist button toggle
+            wishlistButtons.forEach(button => {
+                button.addEventListener('click', function(event) {
+                    event.stopPropagation();  // Prevent the event from bubbling up to the image click handler
+                    const productElement = this.closest('.product');
+                    const productTitle = productElement.querySelector('.product-title').textContent;
+                    const productPrice = productElement.querySelector('.product-price').textContent;
+                    const svgPath = this.querySelector('svg path');
+
+                    // Check if product is already in wishlist
+                    const productIndex = wishlist.findIndex(item => item.title === productTitle);
+
+                    if (productIndex === -1) {
+                        // Add product to wishlist
+                        wishlist.push({ title: productTitle, price: productPrice });
+                        svgPath.setAttribute('fill', '#191919'); // Filled state color
+                    } else {
+                        // Remove product from wishlist
+                        wishlist.splice(productIndex, 1);
+                        svgPath.setAttribute('fill', 'none'); // Unfilled state
+                    }
+
+                    // Save the updated wishlist to localStorage
+                    localStorage.setItem('wishlist', JSON.stringify(wishlist));
+                });
+            });
+
+            // Category button click - filter products
+            categoryButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const selectedCategory = this.getAttribute('data-category');
+                    filterProducts(selectedCategory);
+                });
+            });
+
+            // Function to filter products based on category
+            function filterProducts(category) {
+                products.forEach(product => {
+                    if (category === 'all' || product.getAttribute('data-category') === category) {
+                        product.style.display = 'block';
+                    } else {
+                        product.style.display = 'none';
+                    }
+                });
+            }
+
+            // Initial filter based on stored category in localStorage
+            const storedCategory = localStorage.getItem('selectedCategory');
+            if (storedCategory) {
+                filterProducts(storedCategory);
+            } else {
+                filterProducts('all');
+            }
+
+            // Store selected category in localStorage on click
+            categoryButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    localStorage.setItem('selectedCategory', this.getAttribute('data-category'));
+                });
+            });
         });
-    });
-
-    // Add event listener to product images for redirection
-    const productImages = document.querySelectorAll('.image-container');
-    
-    productImages.forEach(image => {
-        image.addEventListener('click', function() {
-            const productElement = this.closest('.product');
-            const productTitle = productElement.querySelector('.product-title').textContent;
-            const productPrice = productElement.querySelector('.product-price').textContent;
-
-            // Store selected product details in localStorage
-            localStorage.setItem('selectedProduct', JSON.stringify({ title: productTitle, price: productPrice }));
-
-            // Redirect to productdetails.html
-            window.location.href = 'productdetails.html';
-        });
-    });
-});
     </script>
 
 </body>
