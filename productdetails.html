@@ -533,18 +533,28 @@
     const productDescriptionElement = document.querySelector('.product-description');
 
     // Retrieve the selected product from localStorage
-    const selectedProduct = JSON.parse(localStorage.getItem('selectedProduct'));
+    const selectedProduct = JSON.parse(localStorage.getItem('productDetails'));
 
     if (selectedProduct) {
+        // Set the main product details
         productTitleElement.textContent = selectedProduct.title;
         productPriceElement.textContent = selectedProduct.price;
         productDescriptionElement.textContent = "This is the description of " + selectedProduct.title + ". It's a great product!";
+        mainImage.style.backgroundImage = `url(${selectedProduct.image})`;
+
+        // Update the thumbnails based on the main image
+        thumbnails.forEach((thumbnail, index) => {
+            thumbnail.style.backgroundImage = `url(${selectedProduct.image})`;
+            if (index === 0) {
+                thumbnail.classList.add('selected');
+            }
+        });
     }
 
     // Thumbnails click event to change the main image
     thumbnails.forEach(thumbnail => {
         thumbnail.addEventListener('click', function() {
-            mainImage.textContent = this.textContent;
+            mainImage.style.backgroundImage = this.style.backgroundImage;
 
             thumbnails.forEach(t => t.classList.remove('selected'));
             this.classList.add('selected');
