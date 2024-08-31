@@ -403,10 +403,14 @@
     const wishlistGrid = document.getElementById('wishlistGrid');
     let wishlist = JSON.parse(localStorage.getItem('wishlist')) || [];
 
+    console.log("Wishlist data from localStorage:", wishlist); // Log wishlist data
+
     if (wishlist.length === 0) {
         wishlistGrid.innerHTML = '<p>Your wishlist is empty.</p>';
     } else {
         wishlist.forEach(product => {
+            console.log("Processing product:", product); // Log each product being processed
+
             const productElement = document.createElement('div');
             productElement.classList.add('product');
 
