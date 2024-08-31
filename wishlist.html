@@ -427,9 +427,9 @@
                     const productElement = document.createElement('div');
                     productElement.classList.add('product');
 
-                    // Ensure image URL is correctly formed
-                    const productImageURL = product.image || 'path/to/default-image.jpg'; // Use a default image if none exists
-                    console.log(`Using Image URL: ${productImageURL}`); // Log the image URL
+                    // Ensure image URL is correctly formed or use a default image if none exists
+                    const productImageURL = product.image ? product.image : 'path/to/default-image.jpg';
+                    console.log(`Using Image URL for product ${index}: ${productImageURL}`); // Log the image URL
 
                     productElement.innerHTML = `
                         <div class="image-container" style="position: relative;">
