@@ -399,69 +399,129 @@
     </div>
 
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-    const wishlistGrid = document.getElementById('wishlistGrid');
-    let wishlist = JSON.parse(localStorage.getItem('wishlist')) || [];
+        document.addEventListener('DOMContentLoaded', function () {
+    let db;
+    const request = indexedDB.open('ProductDatabase', 1);
 
-    console.log("Wishlist data from localStorage:", wishlist);
+    request.onupgradeneeded = function (event) {
+        db = event.target.result;
 
-    if (wishlist.length === 0) {
-        wishlistGrid.innerHTML = '<p>Your wishlist is empty.</p>';
-    } else {
-        wishlist.forEach((product, index) => {
-            console.log(`Processing product ${index}:`, product); // Log each product
-            console.log(`Product image URL: ${product.image}`); // Log image URL
+        if (!db.objectStoreNames.contains('wishlist')) {
+            db.createObjectStore('wishlist', { keyPath: 'title' });
+        }
 
-            const productElement = document.createElement('div');
-            productElement.classList.add('product');
+        if (!db.objectStoreNames.contains('products')) {
+            db.createObjectStore('products', { keyPath: 'title' });
+        }
+    };
 
-            const productImageURL = product.image ? product.image : 'path/to/default-image.jpg';
+    request.onsuccess = function (event) {
+        db = event.target.result;
+        loadWishlist(db);
+    };
 
-            productElement.innerHTML = `
-                <div class="image-container" style="position: relative;">
-                    <div class="product-image" style="background-image: url('${productImageURL}'); background-size: cover; background-position: center; width: 100%; height: 100%;"></div>
-                    <button type="button" class="wishlist-button" style="position: absolute; top: 10px; right: 10px;">
-                        <svg width="18" height="16" viewBox="0 0 18 16">
-                            <path
-                                d="M9 14s-4-3.33-6-6a3.5 3.5 0 1 1 6-4 3.5 3.5 0 1 1 6 4c-2 2.67-6 6-6 6z"
-                                stroke="#2D2D2D"
-                                stroke-width="1"
-                                fill="#191919"
-                            />
-                        </svg>
-                    </button>
-                </div>
-                <div class="product-details">
-                    <div class="product-info">
-                        <p class="product-title">${product.title}</p>
-                        <p class="product-price">${product.price}</p>
-                    </div>
-                    <button class="add-to-cart-button">Add to Cart</button>
-                    <button class="buy-button">Buy Now</button>
-                </div>
-            `;
+    request.onerror = function (event) {
+        console.error('IndexedDB error:', event.target.errorCode);
+    };
 
-            wishlistGrid.appendChild(productElement);
+    function loadWishlist(db) {
+        const transaction = db.transaction('wishlist', 'readonly');
+        const store = transaction.objectStore('wishlist');
+        const request = store.getAll();
 
-            const productImage = productElement.querySelector('.product-image');
-            productImage.addEventListener('click', function() {
-                localStorage.setItem('selectedProduct', JSON.stringify(product));
-                window.location.href = 'productdetails.html';
-            });
+        request.onsuccess = function () {
+            const wishlist = request.result;
+            console.log("Wishlist data from IndexedDB:", wishlist);
 
-            const wishlistButton = productElement.querySelector('.wishlist-button');
-            wishlistButton.addEventListener('click', function() {
-                const productIndex = wishlist.findIndex(item => item.title === product.title);
-                if (productIndex !== -1) {
-                    wishlist.splice(productIndex, 1);
-                    localStorage.setItem('wishlist', JSON.stringify(wishlist));
-                    productElement.remove();
-                    if (wishlist.length === 0) {
-                        wishlistGrid.innerHTML = '<p>Your wishlist is empty.</p>';
-                    }
-                }
-            });
-        });
+            const wishlistGrid = document.getElementById('wishlistGrid');
+
+            if (wishlist.length === 0) {
+                wishlistGrid.innerHTML = '<p>Your wishlist is empty.</p>';
+            } else {
+                wishlist.forEach(product => {
+                    console.log("Processing product:", product);
+                    const productElement = document.createElement('div');
+                    productElement.classList.add('product');
+
+                    const productImageURL = product.image ? product.image : 'path/to/default-image.jpg';
+
+                    productElement.innerHTML = `
+                        <div class="image-container" style="position: relative;">
+                            <div class="product-image" style="background-image: url('${productImageURL}'); background-size: cover; background-position: center; width: 100%; height: 100%;"></div>
+                            <button type="button" class="wishlist-button" style="position: absolute; top: 10px; right: 10px;">
+                                <svg width="18" height="16" viewBox="0 0 18 16">
+                                    <path
+                                        d="M9 14s-4-3.33-6-6a3.5 3.5 0 1 1 6-4 3.5 3.5 0 1 1 6 4c-2 2.67-6 6-6 6z"
+                                        stroke="#2D2D2D"
+                                        stroke-width="1"
+                                        fill="#191919"
+                                    />
+                                </svg>
+                            </button>
+                        </div>
+                        <div class="product-details">
+                            <div class="product-info">
+                                <p class="product-title">${product.title}</p>
+                                <p class="product-price">${product.price}</p>
+                            </div>
+                            <button class="add-to-cart-button">Add to Cart</button>
+                            <button class="buy-button">Buy Now</button>
+                        </div>
+                    `;
+
+                    wishlistGrid.appendChild(productElement);
+
+                    const productImage = productElement.querySelector('.product-image');
+                    productImage.addEventListener('click', function () {
+                        saveSelectedProduct(db, product);
+                        window.location.href = 'productdetails.html';
+                    });
+
+                    const wishlistButton = productElement.querySelector('.wishlist-button');
+                    wishlistButton.addEventListener('click', function () {
+                        removeFromWishlist(db, product.title, productElement);
+                    });
+                });
+            }
+        };
+
+        request.onerror = function () {
+            console.error('Failed to load wishlist');
+        };
+    }
+
+    function saveSelectedProduct(db, product) {
+        const transaction = db.transaction('products', 'readwrite');
+        const store = transaction.objectStore('products');
+        store.clear(); // Clear previous selections
+        store.add(product);
+    }
+
+    function removeFromWishlist(db, productTitle, productElement) {
+        const transaction = db.transaction('wishlist', 'readwrite');
+        const store = transaction.objectStore('wishlist');
+        store.delete(productTitle);
+
+        transaction.oncomplete = function () {
+            productElement.remove();
+            checkEmptyWishlist(db);
+        };
+
+        transaction.onerror = function () {
+            console.error('Failed to remove item from wishlist');
+        };
+    }
+
+    function checkEmptyWishlist(db) {
+        const transaction = db.transaction('wishlist', 'readonly');
+        const store = transaction.objectStore('wishlist');
+        const request = store.count();
+
+        request.onsuccess = function () {
+            if (request.result === 0) {
+                document.getElementById('wishlistGrid').innerHTML = '<p>Your wishlist is empty.</p>';
+            }
+        };
     }
 });
     </script>
