@@ -904,6 +904,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const products = document.querySelectorAll('.product');
     const categoryButtons = document.querySelectorAll('.category');
     const shopNowButton = document.querySelector('.cta'); // Assuming 'cta' class is used for the "Shop Now" button
+    const viewAllProductsButton = document.querySelector('.view-more'); // Assuming 'view-more' class is used for the "View All Products" button
 
     // Load wishlist from localStorage
     let wishlist = JSON.parse(localStorage.getItem('wishlist')) || [];
@@ -969,6 +970,17 @@ document.addEventListener('DOMContentLoaded', function() {
     // Shop Now button click - clear any existing category filter
     if (shopNowButton) {
         shopNowButton.addEventListener('click', function() {
+            // Clear the selected category from localStorage
+            localStorage.removeItem('selectedCategory');
+            
+            // Navigate to products.html
+            window.location.href = 'products.html';
+        });
+    }
+
+    // View All Products button click - clear any existing category filter
+    if (viewAllProductsButton) {
+        viewAllProductsButton.addEventListener('click', function() {
             // Clear the selected category from localStorage
             localStorage.removeItem('selectedCategory');
             
