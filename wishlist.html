@@ -105,6 +105,7 @@
             flex-direction: column;
             justify-content: flex-start;
             position: relative;
+            height: 300px; /* Adjusted height for a better aspect ratio */
         }
 
         .product:hover {
@@ -115,7 +116,7 @@
         .image-container {
             position: relative;
             width: 100%;
-            padding-top: 100%;
+            height: 200px; /* Adjusted to fit within the container */
             background-color: #e9d7d2;
         }
 
@@ -411,106 +412,108 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-    let db;
-    const request = indexedDB.open('ProductDatabase', 1);
+            let db;
+            const request = indexedDB.open('ProductDatabase', 1);
 
-    request.onsuccess = function(event) {
-        db = event.target.result;
-        loadWishlist(db);
-    };
+            request.onsuccess = function(event) {
+                db = event.target.result;
+                loadWishlist(db);
+            };
 
-    function loadWishlist(db) {
-        const transaction = db.transaction('wishlist', 'readonly');
-        const store = transaction.objectStore('wishlist');
-        const request = store.getAll();
+            function loadWishlist(db) {
+                const transaction = db.transaction('wishlist', 'readonly');
+                const store = transaction.objectStore('wishlist');
+                const request = store.getAll();
 
-        request.onsuccess = function() {
-            const wishlist = request.result;
-            const wishlistGrid = document.getElementById('wishlistGrid');
+                request.onsuccess = function() {
+                    const wishlist = request.result;
+                    const wishlistGrid = document.getElementById('wishlistGrid');
 
-            // Clear the wishlist grid to handle reloads
-            wishlistGrid.innerHTML = '';
+                    // Clear the wishlist grid to handle reloads
+                    wishlistGrid.innerHTML = '';
 
-            // Check if the wishlist is empty
-            if (wishlist.length === 0) {
-                const emptyMessage = document.createElement('p');
-                emptyMessage.textContent = 'Your wishlist is empty.';
-                wishlistGrid.appendChild(emptyMessage);
-            } else {
-                const images = {
-                    'Product 1': 'https://raw.githubusercontent.com/bestwebsites/smallbusiness/main/Pictures/97f9b50623aa00440bb0009848857a6d.jpg',
-                    'Product 2': 'https://raw.githubusercontent.com/bestwebsites/smallbusiness/main/Pictures/9a08fcfea078d7119310bef13452adc3.jpg',
-                    'Product 3': 'https://raw.githubusercontent.com/bestwebsites/smallbusiness/main/Pictures/e6cfab0ebbe1289cee728a546ec4f54a.jpg',
-                    'Product 4': 'https://raw.githubusercontent.com/bestwebsites/smallbusiness/main/Pictures/43832097ede022bd532caeb02d124435.jpg',
-                    'Product 5': 'paste-your-image-link-here-5',
-                    'Product 6': 'paste-your-image-link-here-6',
-                    'Product 7': 'paste-your-image-link-here-7',
-                    'Product 8': 'paste-your-image-link-here-8',
-                    'Product 9': 'paste-your-image-link-here-9',
-                    'Product 10': 'paste-your-image-link-here-10',
-                    'Product 11': 'paste-your-image-link-here-11',
-                    'Product 12': 'paste-your-image-link-here-12'
+                    // Check if the wishlist is empty
+                    if (wishlist.length === 0) {
+                        const emptyMessage = document.createElement('p');
+                        emptyMessage.textContent = 'Your wishlist is empty.';
+                        wishlistGrid.appendChild(emptyMessage);
+                    } else {
+                        const images = {
+                            'Product 1': 'https://raw.githubusercontent.com/bestwebsites/smallbusiness/main/Pictures/97f9b50623aa00440bb0009848857a6d.jpg',
+                            'Product 2': 'https://raw.githubusercontent.com/bestwebsites/smallbusiness/main/Pictures/9a08fcfea078d7119310bef13452adc3.jpg',
+                            'Product 3': 'https://raw.githubusercontent.com/bestwebsites/smallbusiness/main/Pictures/e6cfab0ebbe1289cee728a546ec4f54a.jpg',
+                            'Product 4': 'https://raw.githubusercontent.com/bestwebsites/smallbusiness/main/Pictures/43832097ede022bd532caeb02d124435.jpg',
+                            'Product 5': 'paste-your-image-link-here-5',
+                            'Product 6': 'paste-your-image-link-here-6',
+                            'Product 7': 'paste-your-image-link-here-7',
+                            'Product 8': 'paste-your-image-link-here-8',
+                            'Product 9': 'paste-your-image-link-here-9',
+                            'Product 10': 'paste-your-image-link-here-10',
+                            'Product 11': 'paste-your-image-link-here-11',
+                            'Product 12': 'paste-your-image-link-here-12'
+                        };
+
+                        wishlist.forEach((product, index) => {
+                            const productElement = document.createElement('div');
+                            productElement.classList.add('product');
+
+                            const productImageURL = images[product.title] || 'path/to/default-image.jpg';
+
+                            productElement.innerHTML = `
+                                <div class="image-container" style="position: relative;">
+                                    <img src="${productImageURL}" alt="${product.title}" style="width: 100%; height: 100%; object-fit: cover;">
+                                    <button type="button" class="wishlist-button" style="position: absolute; top: 10px; right: 10px;">
+                                        <svg width="18" height="16" viewBox="0 0 18 16">
+                                            <path
+                                                d="M9 14s-4-3.33-6-6a3.5 3.5 0 1 1 6-4 3.5 3.5 0 1 1 6 4c-2 2.67-6 6-6 6z"
+                                                stroke="#2D2D2D"
+                                                stroke-width="1"
+                                                fill="#191919"
+                                            />
+                                        </svg>
+                                    </button>
+                                </div>
+                                <div class="product-details">
+                                    <div class="product-info">
+                                        <p class="product-title">${product.title}</p>
+                                        <p class="product-price">${product.price}</p>
+                                    </div>
+                                    <button class="add-to-cart-button">Add to Cart</button>
+                                    <button class="buy-button">Buy Now</button>
+                                </div>
+                            `;
+
+                            wishlistGrid.appendChild(productElement);
+
+                            const productImage = productElement.querySelector('img');
+                            productImage.addEventListener('click', function() {
+                                localStorage.setItem('selectedProduct', JSON.stringify(product));
+                                window.location.href = 'productdetails.html';
+                            });
+
+                            const wishlistButton = productElement.querySelector('.wishlist-button');
+                            wishlistButton.addEventListener('click', function() {
+                                const productIndex = wishlist.findIndex(item => item.title === product.title);
+                                if (productIndex !== -1) {
+                                    wishlist.splice(productIndex, 1);
+                                    const transaction = db.transaction('wishlist', 'readwrite');
+                                    const store = transaction.objectStore('wishlist');
+                                    store.delete(product.title);
+                                    productElement.remove();
+                                    if (wishlist.length === 0) {
+                                        wishlistGrid.innerHTML = '<p>Your wishlist is empty.</p>';
+                                    }
+                                }
+                            });
+                        });
+                    }
                 };
 
-                wishlist.forEach((product, index) => {
-                    const productElement = document.createElement('div');
-                    productElement.classList.add('product');
-
-                    const productImageURL = images[product.title] || 'path/to/default-image.jpg';
-
-                    productElement.innerHTML = `
-                        <div class="image-container" style="position: relative;">
-                            <img src="${productImageURL}" alt="${product.title}" style="width: 100%; height: 100%; object-fit: cover;">
-                            <button type="button" class="wishlist-button" style="position: absolute; top: 10px; right: 10px;">
-                                <svg width="18" height="16" viewBox="0 0 18 16">
-                                    <path
-                                        d="M9 14s-4-3.33-6-6a3.5 3.5 0 1 1 6-4 3.5 3.5 0 1 1 6 4c-2 2.67-6 6-6 6z"
-                                        stroke="#2D2D2D"
-                                        stroke-width="1"
-                                        fill="#191919"
-                                    />
-                                </svg>
-                            </button>
-                        </div>
-                        <div class="product-details">
-                            <div class="product-info">
-                                <p class="product-title">${product.title}</p>
-                                <p class="product-price">${product.price}</p>
-                            </div>
-                            <button class="add-to-cart-button">Add to Cart</button>
-                            <button class="buy-button">Buy Now</button>
-                        </div>
-                    `;
-
-                    wishlistGrid.appendChild(productElement);
-
-                    const productImage = productElement.querySelector('img');
-                    productImage.addEventListener('click', function() {
-                        localStorage.setItem('selectedProduct', JSON.stringify(product));
-                        window.location.href = 'productdetails.html';
-                    });
-
-                    const wishlistButton = productElement.querySelector('.wishlist-button');
-                    wishlistButton.addEventListener('click', function() {
-                        const productIndex = wishlist.findIndex(item => item.title === product.title);
-                        if (productIndex !== -1) {
-                            wishlist.splice(productIndex, 1);
-                            store.delete(product.title);
-                            productElement.remove();
-                            if (wishlist.length === 0) {
-                                wishlistGrid.innerHTML = '<p>Your wishlist is empty.</p>';
-                            }
-                        }
-                    });
-                });
+                request.onerror = function() {
+                    console.error('Failed to load wishlist');
+                };
             }
-        };
-
-        request.onerror = function() {
-            console.error('Failed to load wishlist');
-        };
-    }
-});
+        });
     </script>
 </body>
 </html>
