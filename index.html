@@ -66,18 +66,20 @@
         }
 
         /* Hero banner */
-        .hero-banner {
-            width: 100%;
-            height: 340px;
-            background: linear-gradient(135deg, #f6e3df, #e9d7d2);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            text-align: center;
-            color: #5c4a4a;
-            margin-bottom: 20px;
-            position: relative;
-        }
+.hero-banner {
+    width: 100%;
+    height: 340px;
+    background-image: url("https://raw.githubusercontent.com/bestwebsites/smallbusiness/main/Pictures/White%20Pink%20Photo%20Delicate%20Handmade%20Shop%20Etsy%20Shop%20Cover%20%20(1).png");
+    background-size: cover;
+    background-position: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    color: #5c4a4a;
+    margin-bottom: 20px;
+    position: relative;
+}
 
         .hero-banner h1 {
             font-size: 48px;
@@ -101,10 +103,6 @@
         }
 
         .cta:hover {
-            background-color: #b88b8b;
-        }
-
-        .hero-banner .cta:hover {
             background-color: #b88b8b;
         }
 
@@ -149,16 +147,16 @@
             transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
 
-        .category-image:hover {
-            transform: scale(1.1); /* Slightly enlarges the circle */
-            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1); /* Adds a soft shadow */
-        }
-
         .category-image img {
             width: 100%;
             height: 100%;
-            object-fit: cover;
+            object-fit: cover; /* Ensure the image covers the entire area */
             border-radius: 50%;
+        }
+
+        .category-image:hover {
+            transform: scale(1.1); /* Slightly enlarges the circle */
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1); /* Adds a soft shadow */
         }
 
         .category-title {
@@ -211,6 +209,15 @@
             width: 100%;
             padding-top: 100%; /* Makes the image container a perfect square */
             background-color: #e9d7d2;
+        }
+
+        .image-container img {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover; /* Ensure the image covers the entire area */
         }
 
         .wishlist-button {
@@ -317,18 +324,18 @@
         }
 
         .view-more {
-    display: block;
-    margin: 0 auto;
-    padding: 12px 30px;
-    background-color: #b88b8b;
-    color: #fff;
-    text-align: center;
-    width: fit-content;
-    border-radius: 25px;
-    cursor: pointer;
-    transition: background-color 0.3s;
-    text-decoration: none; /* This will remove the underline */
-}
+            display: block;
+            margin: 0 auto;
+            padding: 12px 30px;
+            background-color: #b88b8b;
+            color: #fff;
+            text-align: center;
+            width: fit-content;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            text-decoration: none; /* This will remove the underline */
+        }
 
         .view-more:hover {
             background-color: #a16f6f;
@@ -352,6 +359,12 @@
             height: 100%;
             position: absolute;
             transition: opacity 1s ease-in-out;
+        }
+
+        .slide img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover; /* Ensure the image covers the entire area */
         }
 
         .slide.active {
@@ -597,7 +610,7 @@
             }
             to {
                 transform: translateY(0);
-                opacity: 1;
+                opacity: 1);
             }
         }
 
@@ -625,9 +638,9 @@
 <body>
     <!-- Navigation Bar -->
     <div class="navbar">
-        <div class="logo">Veronica</div>
+        <div class="logo"><img src="https://raw.githubusercontent.com/bestwebsites/smallbusiness/main/Pictures/B%20(79).png" alt="Logo" style="height: 50px;"></div> <!-- Logo image -->
         <div class="menu">
-        <a href="#" id="shopButton">Shop</a>
+            <a href="#" id="shopButton">Shop</a>
             <a href="#">Reviews</a>
             <a href="#">About</a>
             <a href="#">Contact Us</a>
@@ -651,23 +664,33 @@
         <h2>Shop by Category</h2>
         <div class="categories-row">
             <div class="category" data-category="trending">
-                <div class="category-image"></div>
+                <div class="category-image">
+                    <img src="https://raw.githubusercontent.com/bestwebsites/smallbusiness/main/Pictures/265c9107d09f9fd85d9435a2b3d89938.jpg" alt="Trending Now">
+                </div>
                 <p class="category-title">Trending Now</p>
             </div>
             <div class="category" data-category="bestsellers">
-                <div class="category-image"></div>
+                <div class="category-image">
+                    <img src="https://raw.githubusercontent.com/bestwebsites/smallbusiness/main/Pictures/2c5d1407655c10ecc8e487989a5b5ecf.jpg" alt="Best Sellers">
+                </div>
                 <p class="category-title">Best Sellers</p>
             </div>
             <div class="category" data-category="newarrivals">
-                <div class="category-image"></div>
+                <div class="category-image">
+                    <img src="https://raw.githubusercontent.com/bestwebsites/smallbusiness/main/Pictures/55f559de0a40aae6dcbf8bcbdfe7457b.jpg" alt="New Arrivals">
+                </div>
                 <p class="category-title">New Arrivals</p>
             </div>
             <div class="category" data-category="gifts">
-                <div class="category-image"></div>
+                <div class="category-image">
+                    <img src="https://raw.githubusercontent.com/bestwebsites/smallbusiness/main/Pictures/bb27f0f90d7efa29be9817b7cc85fc1e.jpg" alt="Gift Ideas">
+                </div>
                 <p class="category-title">Gift Ideas</p>
             </div>
             <div class="category" data-category="all">
-                <div class="category-image"></div>
+                <div class="category-image">
+                    <img src="https://raw.githubusercontent.com/bestwebsites/smallbusiness/main/Pictures/89a8338f68093c7d97ef1d03299d20b0.jpg" alt="All Products">
+                </div>
                 <p class="category-title">All Products</p>
             </div>
         </div>
@@ -679,7 +702,7 @@
         <div class="products-row">
             <div class="product" onclick="viewProductDetails('Product 1', '$19.99', 'path/to/product1.jpg')">
                 <div class="image-container">
-                    <img src="path/to/product1.jpg" alt="Product 1">
+                    <img src="https://raw.githubusercontent.com/bestwebsites/smallbusiness/main/Pictures/97f9b50623aa00440bb0009848857a6d.jpg" alt="Product 1">
                     <button type="button" class="wishlist-button">
                         <svg width="18" height="16" viewBox="0 0 18 16">
                             <path
@@ -703,7 +726,7 @@
 
             <div class="product" onclick="viewProductDetails('Product 2', '$29.99', 'path/to/product2.jpg')">
                 <div class="image-container">
-                    <img src="path/to/product2.jpg" alt="Product 2">
+                    <img src="https://raw.githubusercontent.com/bestwebsites/smallbusiness/main/Pictures/9a08fcfea078d7119310bef13452adc3.jpg" alt="Product 2">
                     <button type="button" class="wishlist-button">
                         <svg width="18" height="16" viewBox="0 0 18 16">
                             <path
@@ -727,7 +750,7 @@
 
             <div class="product" onclick="viewProductDetails('Product 3', '$39.99', 'path/to/product3.jpg')">
                 <div class="image-container">
-                    <img src="path/to/product3.jpg" alt="Product 3">
+                    <img src="https://raw.githubusercontent.com/bestwebsites/smallbusiness/main/Pictures/e6cfab0ebbe1289cee728a546ec4f54a.jpg" alt="Product 3">
                     <button type="button" class="wishlist-button">
                         <svg width="18" height="16" viewBox="0 0 18 16">
                             <path
@@ -751,7 +774,7 @@
 
             <div class="product" onclick="viewProductDetails('Product 4', '$49.99', 'path/to/product4.jpg')">
                 <div class="image-container">
-                    <img src="path/to/product4.jpg" alt="Product 4">
+                    <img src="https://raw.githubusercontent.com/bestwebsites/smallbusiness/main/Pictures/43832097ede022bd532caeb02d124435.jpg" alt="Product 4">
                     <button type="button" class="wishlist-button">
                         <svg width="18" height="16" viewBox="0 0 18 16">
                             <path
@@ -780,12 +803,15 @@
     <!-- Promo Banner Slideshow -->
     <div class="slideshow-container" id="promoBanner">
         <div class="slide active">
+            <img src="Paste github image link here" alt="Promo 1">
             <div class="slide-text">Promo 1: Special Discount!</div>
         </div>
         <div class="slide">
+            <img src="Paste github image link here" alt="Promo 2">
             <div class="slide-text">Promo 2: Buy One Get One Free!</div>
         </div>
         <div class="slide">
+            <img src="Paste github image link here" alt="Promo 3">
             <div class="slide-text">Promo 3: New Arrivals!</div>
         </div>
         <a class="prev" onclick="changeSlide(-1)">&#10094;</a>
@@ -836,7 +862,7 @@
     <div class="contact-us">
         <div class="contact-container">
             <div class="logo">
-                <div class="navbar-logo">Veronica</div>
+                <img src="https://raw.githubusercontent.com/bestwebsites/smallbusiness/main/Pictures/B%20(79).png" alt="Contact Us Logo" style="height: 50px;">
             </div>
             <div class="links">
                 <div class="link-group">
@@ -881,148 +907,148 @@
 
     <script>
         // Promo Banner Slideshow Script
-let slideIndex = 0;
-const slides = document.querySelectorAll('.slide');
+        let slideIndex = 0;
+        const slides = document.querySelectorAll('.slide');
 
-function showSlide(index) {
-    slides.forEach((slide, i) => {
-        slide.style.display = i === index ? 'block' : 'none';
-    });
-}
+        function showSlide(index) {
+            slides.forEach((slide, i) => {
+                slide.style.display = i === index ? 'block' : 'none';
+            });
+        }
 
-function changeSlide(direction) {
-    slideIndex += direction;
-    if (slideIndex >= slides.length) slideIndex = 0;
-    if (slideIndex < 0) slideIndex = slides.length - 1;
-    showSlide(slideIndex);
-}
+        function changeSlide(direction) {
+            slideIndex += direction;
+            if (slideIndex >= slides.length) slideIndex = 0;
+            if (slideIndex < 0) slideIndex = slides.length - 1;
+            showSlide(slideIndex);
+        }
 
-setInterval(() => {
-    changeSlide(1);
-}, 3000); // Change slide every 3 seconds
+        setInterval(() => {
+            changeSlide(1);
+        }, 3000); // Change slide every 3 seconds
 
-document.addEventListener('DOMContentLoaded', function() {
-    const wishlistButtons = document.querySelectorAll('.wishlist-button');
-    const products = document.querySelectorAll('.product');
-    const categoryButtons = document.querySelectorAll('.category');
-    const shopNowButton = document.querySelector('.cta'); // Assuming 'cta' class is used for the "Shop Now" button
-    const viewAllProductsButton = document.querySelector('.view-more'); // Assuming 'view-more' class is used for the "View All Products" button
-    const shopButton = document.querySelector('.menu a[href="#"]'); // Assuming the first <a> tag with href="#" is the "Shop" button
+        document.addEventListener('DOMContentLoaded', function() {
+            const wishlistButtons = document.querySelectorAll('.wishlist-button');
+            const products = document.querySelectorAll('.product');
+            const categoryButtons = document.querySelectorAll('.category');
+            const shopNowButton = document.querySelector('.cta'); // Assuming 'cta' class is used for the "Shop Now" button
+            const viewAllProductsButton = document.querySelector('.view-more'); // Assuming 'view-more' class is used for the "View All Products" button
+            const shopButton = document.querySelector('.menu a[href="#"]'); // Assuming the first <a> tag with href="#" is the "Shop" button
 
-    // Load wishlist from localStorage
-    let wishlist = JSON.parse(localStorage.getItem('wishlist')) || [];
+            // Load wishlist from localStorage
+            let wishlist = JSON.parse(localStorage.getItem('wishlist')) || [];
 
-    // Update wishlist buttons based on stored data
-    function updateWishlistIcons() {
-        products.forEach(product => {
-            const productTitle = product.querySelector('.product-title').textContent;
-            const wishlistButton = product.querySelector('.wishlist-button svg path');
-            const isInWishlist = wishlist.some(item => item.title === productTitle);
+            // Update wishlist buttons based on stored data
+            function updateWishlistIcons() {
+                products.forEach(product => {
+                    const productTitle = product.querySelector('.product-title').textContent;
+                    const wishlistButton = product.querySelector('.wishlist-button svg path');
+                    const isInWishlist = wishlist.some(item => item.title === productTitle);
 
-            if (isInWishlist) {
-                wishlistButton.setAttribute('fill', '#191919');
-            } else {
-                wishlistButton.setAttribute('fill', 'none');
-            }
-        });
-    }
-
-    // Call function to update icons on page load
-    updateWishlistIcons();
-
-    // Wishlist button toggle
-    wishlistButtons.forEach(button => {
-        button.addEventListener('click', function(event) {
-            event.stopPropagation();  // Prevent the event from bubbling up to the image click handler
-            const productElement = this.closest('.product');
-            const productTitle = productElement.querySelector('.product-title').textContent;
-            const productPrice = productElement.querySelector('.product-price').textContent;
-            const svgPath = this.querySelector('svg path');
-
-            // Check if product is already in wishlist
-            const productIndex = wishlist.findIndex(item => item.title === productTitle);
-
-            if (productIndex === -1) {
-                // Add product to wishlist
-                wishlist.push({ title: productTitle, price: productPrice });
-                svgPath.setAttribute('fill', '#191919'); // Filled state color
-            } else {
-                // Remove product from wishlist
-                wishlist.splice(productIndex, 1);
-                svgPath.setAttribute('fill', 'none'); // Unfilled state
+                    if (isInWishlist) {
+                        wishlistButton.setAttribute('fill', '#191919');
+                    } else {
+                        wishlistButton.setAttribute('fill', 'none');
+                    }
+                });
             }
 
-            // Save the updated wishlist to localStorage
-            localStorage.setItem('wishlist', JSON.stringify(wishlist));
+            // Call function to update icons on page load
+            updateWishlistIcons();
+
+            // Wishlist button toggle
+            wishlistButtons.forEach(button => {
+                button.addEventListener('click', function(event) {
+                    event.stopPropagation();  // Prevent the event from bubbling up to the image click handler
+                    const productElement = this.closest('.product');
+                    const productTitle = productElement.querySelector('.product-title').textContent;
+                    const productPrice = productElement.querySelector('.product-price').textContent;
+                    const svgPath = this.querySelector('svg path');
+
+                    // Check if product is already in wishlist
+                    const productIndex = wishlist.findIndex(item => item.title === productTitle);
+
+                    if (productIndex === -1) {
+                        // Add product to wishlist
+                        wishlist.push({ title: productTitle, price: productPrice });
+                        svgPath.setAttribute('fill', '#191919'); // Filled state color
+                    } else {
+                        // Remove product from wishlist
+                        wishlist.splice(productIndex, 1);
+                        svgPath.setAttribute('fill', 'none'); // Unfilled state
+                    }
+
+                    // Save the updated wishlist to localStorage
+                    localStorage.setItem('wishlist', JSON.stringify(wishlist));
+                });
+            });
+
+            // Category button click - navigate to products.html with filter
+            categoryButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const selectedCategory = this.getAttribute('data-category');
+
+                    // Store selected category in localStorage
+                    localStorage.setItem('selectedCategory', selectedCategory);
+
+                    // Navigate to products.html
+                    window.location.href = 'products.html';
+                });
+            });
+
+            // Shop Now button click - clear any existing category filter
+            if (shopNowButton) {
+                shopNowButton.addEventListener('click', function() {
+                    // Clear the selected category from localStorage
+                    localStorage.removeItem('selectedCategory');
+                    
+                    // Navigate to products.html
+                    window.location.href = 'products.html';
+                });
+            }
+
+            // View All Products button click - clear any existing category filter
+            if (viewAllProductsButton) {
+                viewAllProductsButton.addEventListener('click', function() {
+                    // Clear the selected category from localStorage
+                    localStorage.removeItem('selectedCategory');
+                    
+                    // Navigate to products.html
+                    window.location.href = 'products.html';
+                });
+            }
+
+            // Shop button in navigation bar - clear any existing category filter
+            if (shopButton) {
+                shopButton.addEventListener('click', function(event) {
+                    event.preventDefault(); // Prevent default link behavior
+                    // Clear the selected category from localStorage
+                    localStorage.removeItem('selectedCategory');
+                    
+                    // Navigate to products.html
+                    window.location.href = 'products.html';
+                });
+            }
+
+            // Product image click - navigate to productdetails.html
+            products.forEach(product => {
+                product.addEventListener('click', function() {
+                    const productTitle = this.querySelector('.product-title').textContent;
+                    const productPrice = this.querySelector('.product-price').textContent;
+                    const productImage = this.querySelector('.image-container img').src;
+
+                    // Store product details in localStorage
+                    localStorage.setItem('productDetails', JSON.stringify({
+                        title: productTitle,
+                        price: productPrice,
+                        image: productImage
+                    }));
+
+                    // Navigate to product details page
+                    window.location.href = 'productdetails.html';
+                });
+            });
         });
-    });
-
-    // Category button click - navigate to products.html with filter
-    categoryButtons.forEach(button => {
-        button.addEventListener('click', function() {
-            const selectedCategory = this.getAttribute('data-category');
-
-            // Store selected category in localStorage
-            localStorage.setItem('selectedCategory', selectedCategory);
-
-            // Navigate to products.html
-            window.location.href = 'products.html';
-        });
-    });
-
-    // Shop Now button click - clear any existing category filter
-    if (shopNowButton) {
-        shopNowButton.addEventListener('click', function() {
-            // Clear the selected category from localStorage
-            localStorage.removeItem('selectedCategory');
-            
-            // Navigate to products.html
-            window.location.href = 'products.html';
-        });
-    }
-
-    // View All Products button click - clear any existing category filter
-    if (viewAllProductsButton) {
-        viewAllProductsButton.addEventListener('click', function() {
-            // Clear the selected category from localStorage
-            localStorage.removeItem('selectedCategory');
-            
-            // Navigate to products.html
-            window.location.href = 'products.html';
-        });
-    }
-
-    // Shop button in navigation bar - clear any existing category filter
-    if (shopButton) {
-        shopButton.addEventListener('click', function(event) {
-            event.preventDefault(); // Prevent default link behavior
-            // Clear the selected category from localStorage
-            localStorage.removeItem('selectedCategory');
-            
-            // Navigate to products.html
-            window.location.href = 'products.html';
-        });
-    }
-
-    // Product image click - navigate to productdetails.html
-    products.forEach(product => {
-        product.addEventListener('click', function() {
-            const productTitle = this.querySelector('.product-title').textContent;
-            const productPrice = this.querySelector('.product-price').textContent;
-            const productImage = this.querySelector('.image-container img').src;
-
-            // Store product details in localStorage
-            localStorage.setItem('productDetails', JSON.stringify({
-                title: productTitle,
-                price: productPrice,
-                image: productImage
-            }));
-
-            // Navigate to product details page
-            window.location.href = 'productdetails.html';
-        });
-    });
-});
     </script>
 </body>
 </html>
