@@ -443,7 +443,9 @@
                     const productElement = document.createElement('div');
                     productElement.classList.add('product');
 
+                    // Debugging: Log the image URL
                     const productImageURL = product.image ? product.image : 'path/to/default-image.jpg';
+                    console.log(`Setting image URL: ${productImageURL}`);
 
                     productElement.innerHTML = `
                         <div class="image-container" style="position: relative;">
