@@ -952,25 +952,6 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
-    // Product image click - navigate to product details
-    products.forEach(product => {
-        product.addEventListener('click', function() {
-            const productTitle = this.querySelector('.product-title').textContent;
-            const productPrice = this.querySelector('.product-price').textContent;
-            const productImage = this.querySelector('.image-container img').src;
-
-            // Store product details in localStorage
-            localStorage.setItem('productDetails', JSON.stringify({
-                title: productTitle,
-                price: productPrice,
-                image: productImage
-            }));
-
-            // Navigate to product details page
-            window.location.href = 'productdetails.html';
-        });
-    });
-
     // Category button click - navigate to products.html with filter
     categoryButtons.forEach(button => {
         button.addEventListener('click', function() {
