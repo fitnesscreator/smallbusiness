@@ -399,11 +399,11 @@
     </div>
 
     <script>
-        document.addEventListener('DOMContentLoaded', function () {
+        document.addEventListener('DOMContentLoaded', function() {
     let db;
     const request = indexedDB.open('ProductDatabase', 1);
 
-    request.onupgradeneeded = function (event) {
+    request.onupgradeneeded = function(event) {
         db = event.target.result;
 
         if (!db.objectStoreNames.contains('wishlist')) {
@@ -415,12 +415,12 @@
         }
     };
 
-    request.onsuccess = function (event) {
+    request.onsuccess = function(event) {
         db = event.target.result;
         loadWishlist(db);
     };
 
-    request.onerror = function (event) {
+    request.onerror = function(event) {
         console.error('IndexedDB error:', event.target.errorCode);
     };
 
@@ -429,7 +429,7 @@
         const store = transaction.objectStore('wishlist');
         const request = store.getAll();
 
-        request.onsuccess = function () {
+        request.onsuccess = function() {
             const wishlist = request.result;
             console.log("Wishlist data from IndexedDB:", wishlist);
 
@@ -443,8 +443,8 @@
                     const productElement = document.createElement('div');
                     productElement.classList.add('product');
 
-                    // Debugging: Log the image URL
-                    const productImageURL = product.image ? product.image : 'path/to/default-image.jpg';
+                    // Use the correct image URL from the product object
+                    const productImageURL = product.image;
                     console.log(`Setting image URL: ${productImageURL}`);
 
                     productElement.innerHTML = `
@@ -474,20 +474,20 @@
                     wishlistGrid.appendChild(productElement);
 
                     const productImage = productElement.querySelector('.product-image');
-                    productImage.addEventListener('click', function () {
+                    productImage.addEventListener('click', function() {
                         saveSelectedProduct(db, product);
                         window.location.href = 'productdetails.html';
                     });
 
                     const wishlistButton = productElement.querySelector('.wishlist-button');
-                    wishlistButton.addEventListener('click', function () {
+                    wishlistButton.addEventListener('click', function() {
                         removeFromWishlist(db, product.title, productElement);
                     });
                 });
             }
         };
 
-        request.onerror = function () {
+        request.onerror = function() {
             console.error('Failed to load wishlist');
         };
     }
@@ -504,12 +504,12 @@
         const store = transaction.objectStore('wishlist');
         store.delete(productTitle);
 
-        transaction.oncomplete = function () {
+        transaction.oncomplete = function() {
             productElement.remove();
             checkEmptyWishlist(db);
         };
 
-        transaction.onerror = function () {
+        transaction.onerror = function() {
             console.error('Failed to remove item from wishlist');
         };
     }
@@ -519,7 +519,7 @@
         const store = transaction.objectStore('wishlist');
         const request = store.count();
 
-        request.onsuccess = function () {
+        request.onsuccess = function() {
             if (request.result === 0) {
                 document.getElementById('wishlistGrid').innerHTML = '<p>Your wishlist is empty.</p>';
             }
