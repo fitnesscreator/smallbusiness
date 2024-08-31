@@ -906,149 +906,184 @@
     </div>
 
     <script>
-        // Promo Banner Slideshow Script
-        let slideIndex = 0;
-        const slides = document.querySelectorAll('.slide');
+        document.addEventListener('DOMContentLoaded', function () {
+    // Open (or create) an IndexedDB database
+    let db;
+    const request = indexedDB.open('ProductDatabase', 1);
 
-        function showSlide(index) {
-            slides.forEach((slide, i) => {
-                slide.style.display = i === index ? 'block' : 'none';
-            });
+    request.onupgradeneeded = function (event) {
+        db = event.target.result;
+
+        // Create an object store named 'wishlist' with 'title' as the key path
+        if (!db.objectStoreNames.contains('wishlist')) {
+            db.createObjectStore('wishlist', { keyPath: 'title' });
         }
 
-        function changeSlide(direction) {
-            slideIndex += direction;
-            if (slideIndex >= slides.length) slideIndex = 0;
-            if (slideIndex < 0) slideIndex = slides.length - 1;
-            showSlide(slideIndex);
+        // Create an object store for storing products
+        if (!db.objectStoreNames.contains('products')) {
+            db.createObjectStore('products', { keyPath: 'title' });
         }
 
-        setInterval(() => {
-            changeSlide(1);
-        }, 3000); // Change slide every 3 seconds
+        // Create an object store for categories
+        if (!db.objectStoreNames.contains('categories')) {
+            db.createObjectStore('categories', { keyPath: 'name' });
+        }
+    };
 
-        document.addEventListener('DOMContentLoaded', function() {
-            const wishlistButtons = document.querySelectorAll('.wishlist-button');
-            const products = document.querySelectorAll('.product');
-            const categoryButtons = document.querySelectorAll('.category');
-            const shopNowButton = document.querySelector('.cta'); // Assuming 'cta' class is used for the "Shop Now" button
-            const viewAllProductsButton = document.querySelector('.view-more'); // Assuming 'view-more' class is used for the "View All Products" button
-            const shopButton = document.querySelector('.menu a[href="#"]'); // Assuming the first <a> tag with href="#" is the "Shop" button
+    request.onsuccess = function (event) {
+        db = event.target.result;
+        initializePage(db);
+    };
 
-            // Load wishlist from localStorage
-            let wishlist = JSON.parse(localStorage.getItem('wishlist')) || [];
+    request.onerror = function (event) {
+        console.error('IndexedDB error:', event.target.errorCode);
+    };
 
-            // Update wishlist buttons based on stored data
-            function updateWishlistIcons() {
-                products.forEach(product => {
-                    const productTitle = product.querySelector('.product-title').textContent;
-                    const wishlistButton = product.querySelector('.wishlist-button svg path');
-                    const isInWishlist = wishlist.some(item => item.title === productTitle);
+    function initializePage(db) {
+        const wishlistButtons = document.querySelectorAll('.wishlist-button');
+        const products = document.querySelectorAll('.product');
+        const categoryButtons = document.querySelectorAll('.category');
+        const shopNowButton = document.querySelector('.cta');
+        const viewAllProductsButton = document.querySelector('.view-more');
+        const shopButton = document.querySelector('.menu a[href="#"]');
 
-                    if (isInWishlist) {
-                        wishlistButton.setAttribute('fill', '#191919');
-                    } else {
-                        wishlistButton.setAttribute('fill', 'none');
-                    }
-                });
-            }
+        // Load wishlist from IndexedDB
+        loadWishlist(db);
 
-            // Call function to update icons on page load
-            updateWishlistIcons();
+        // Update wishlist buttons based on stored data
+        function loadWishlist(db) {
+            const transaction = db.transaction('wishlist', 'readonly');
+            const store = transaction.objectStore('wishlist');
+            const request = store.getAll();
 
-            // Wishlist button toggle
-            wishlistButtons.forEach(button => {
-                button.addEventListener('click', function(event) {
-                    event.stopPropagation();  // Prevent the event from bubbling up to the image click handler
-                    const productElement = this.closest('.product');
-                    const productTitle = productElement.querySelector('.product-title').textContent;
-                    const productPrice = productElement.querySelector('.product-price').textContent;
-                    const svgPath = this.querySelector('svg path');
+            request.onsuccess = function () {
+                const wishlist = request.result || [];
+                updateWishlistIcons(wishlist);
+            };
 
-                    // Check if product is already in wishlist
-                    const productIndex = wishlist.findIndex(item => item.title === productTitle);
+            request.onerror = function () {
+                console.error('Failed to load wishlist');
+            };
+        }
 
-                    if (productIndex === -1) {
-                        // Add product to wishlist
-                        wishlist.push({ title: productTitle, price: productPrice });
-                        svgPath.setAttribute('fill', '#191919'); // Filled state color
-                    } else {
-                        // Remove product from wishlist
-                        wishlist.splice(productIndex, 1);
-                        svgPath.setAttribute('fill', 'none'); // Unfilled state
-                    }
-
-                    // Save the updated wishlist to localStorage
-                    localStorage.setItem('wishlist', JSON.stringify(wishlist));
-                });
-            });
-
-            // Category button click - navigate to products.html with filter
-            categoryButtons.forEach(button => {
-                button.addEventListener('click', function() {
-                    const selectedCategory = this.getAttribute('data-category');
-
-                    // Store selected category in localStorage
-                    localStorage.setItem('selectedCategory', selectedCategory);
-
-                    // Navigate to products.html
-                    window.location.href = 'products.html';
-                });
-            });
-
-            // Shop Now button click - clear any existing category filter
-            if (shopNowButton) {
-                shopNowButton.addEventListener('click', function() {
-                    // Clear the selected category from localStorage
-                    localStorage.removeItem('selectedCategory');
-                    
-                    // Navigate to products.html
-                    window.location.href = 'products.html';
-                });
-            }
-
-            // View All Products button click - clear any existing category filter
-            if (viewAllProductsButton) {
-                viewAllProductsButton.addEventListener('click', function() {
-                    // Clear the selected category from localStorage
-                    localStorage.removeItem('selectedCategory');
-                    
-                    // Navigate to products.html
-                    window.location.href = 'products.html';
-                });
-            }
-
-            // Shop button in navigation bar - clear any existing category filter
-            if (shopButton) {
-                shopButton.addEventListener('click', function(event) {
-                    event.preventDefault(); // Prevent default link behavior
-                    // Clear the selected category from localStorage
-                    localStorage.removeItem('selectedCategory');
-                    
-                    // Navigate to products.html
-                    window.location.href = 'products.html';
-                });
-            }
-
-            // Product image click - navigate to productdetails.html
+        function updateWishlistIcons(wishlist) {
             products.forEach(product => {
-                product.addEventListener('click', function() {
-                    const productTitle = this.querySelector('.product-title').textContent;
-                    const productPrice = this.querySelector('.product-price').textContent;
-                    const productImage = this.querySelector('.image-container img').src;
+                const productTitle = product.querySelector('.product-title').textContent;
+                const wishlistButton = product.querySelector('.wishlist-button svg path');
+                const isInWishlist = wishlist.some(item => item.title === productTitle);
 
-                    // Store product details in localStorage
-                    localStorage.setItem('productDetails', JSON.stringify({
-                        title: productTitle,
-                        price: productPrice,
-                        image: productImage
-                    }));
+                if (isInWishlist) {
+                    wishlistButton.setAttribute('fill', '#191919');
+                } else {
+                    wishlistButton.setAttribute('fill', 'none');
+                }
+            });
+        }
 
-                    // Navigate to product details page
-                    window.location.href = 'productdetails.html';
-                });
+        // Wishlist button toggle
+        wishlistButtons.forEach(button => {
+            button.addEventListener('click', function (event) {
+                event.stopPropagation();
+                const productElement = this.closest('.product');
+                const productTitle = productElement.querySelector('.product-title').textContent;
+                const productPrice = productElement.querySelector('.product-price').textContent;
+                const svgPath = this.querySelector('svg path');
+
+                // Toggle wishlist status in IndexedDB
+                toggleWishlist(db, productTitle, productPrice, svgPath);
             });
         });
+
+        function toggleWishlist(db, productTitle, productPrice, svgPath) {
+            const transaction = db.transaction('wishlist', 'readwrite');
+            const store = transaction.objectStore('wishlist');
+            const request = store.get(productTitle);
+
+            request.onsuccess = function () {
+                if (request.result) {
+                    // Remove from wishlist
+                    store.delete(productTitle);
+                    svgPath.setAttribute('fill', 'none');
+                } else {
+                    // Add to wishlist
+                    store.add({ title: productTitle, price: productPrice });
+                    svgPath.setAttribute('fill', '#191919');
+                }
+            };
+
+            request.onerror = function () {
+                console.error('Error toggling wishlist status');
+            };
+        }
+
+        // Category button click - navigate to products.html with filter
+        categoryButtons.forEach(button => {
+            button.addEventListener('click', function () {
+                const selectedCategory = this.getAttribute('data-category');
+
+                // Store selected category in IndexedDB
+                storeSelectedCategory(db, selectedCategory);
+
+                // Navigate to products.html
+                window.location.href = 'products.html';
+            });
+        });
+
+        function storeSelectedCategory(db, category) {
+            const transaction = db.transaction('categories', 'readwrite');
+            const store = transaction.objectStore('categories');
+
+            // Clear existing category
+            store.clear().onsuccess = function () {
+                // Store the selected category
+                store.add({ name: category });
+            };
+        }
+
+        // Shop Now and View All Products button click - clear any existing category filter
+        [shopNowButton, viewAllProductsButton, shopButton].forEach(button => {
+            if (button) {
+                button.addEventListener('click', function (event) {
+                    if (event) event.preventDefault();
+                    clearSelectedCategory(db);
+                    window.location.href = 'products.html';
+                });
+            }
+        });
+
+        function clearSelectedCategory(db) {
+            const transaction = db.transaction('categories', 'readwrite');
+            const store = transaction.objectStore('categories');
+            store.clear();
+        }
+
+        // Product image click - navigate to productdetails.html
+        products.forEach(product => {
+            product.addEventListener('click', function () {
+                const productTitle = this.querySelector('.product-title').textContent;
+                const productPrice = this.querySelector('.product-price').textContent;
+                const productImage = this.querySelector('.image-container img').src;
+
+                // Store product details in IndexedDB
+                storeProductDetails(db, { title: productTitle, price: productPrice, image: productImage });
+
+                // Navigate to product details page
+                window.location.href = 'productdetails.html';
+            });
+        });
+
+        function storeProductDetails(db, productDetails) {
+            const transaction = db.transaction('products', 'readwrite');
+            const store = transaction.objectStore('products');
+
+            // Clear existing product details
+            store.clear().onsuccess = function () {
+                // Store new product details
+                store.add(productDetails);
+            };
+        }
+    }
+});
     </script>
 </body>
 </html>
