@@ -403,25 +403,9 @@
     let db;
     const request = indexedDB.open('ProductDatabase', 1);
 
-    request.onupgradeneeded = function(event) {
-        db = event.target.result;
-
-        if (!db.objectStoreNames.contains('wishlist')) {
-            db.createObjectStore('wishlist', { keyPath: 'title' });
-        }
-
-        if (!db.objectStoreNames.contains('products')) {
-            db.createObjectStore('products', { keyPath: 'title' });
-        }
-    };
-
     request.onsuccess = function(event) {
         db = event.target.result;
         loadWishlist(db);
-    };
-
-    request.onerror = function(event) {
-        console.error('IndexedDB error:', event.target.errorCode);
     };
 
     function loadWishlist(db) {
@@ -431,21 +415,25 @@
 
         request.onsuccess = function() {
             const wishlist = request.result;
-            console.log("Wishlist data from IndexedDB:", wishlist);
-
             const wishlistGrid = document.getElementById('wishlistGrid');
 
             if (wishlist.length === 0) {
                 wishlistGrid.innerHTML = '<p>Your wishlist is empty.</p>';
             } else {
-                wishlist.forEach(product => {
-                    console.log("Processing product:", product);
+                wishlist.forEach((product, index) => {
+                    console.log(`Product ${index} - Title: ${product.title}, Image URL: ${product.image}`); // Log the URL
+
                     const productElement = document.createElement('div');
                     productElement.classList.add('product');
 
-                    // Use the correct image URL from the product object
+                    // Ensure image URL is correctly formed
                     const productImageURL = product.image;
-                    console.log(`Setting image URL: ${productImageURL}`);
+                    console.log(`Using Image URL: ${productImageURL}`); // Log the image URL
+
+                    // If the URL is undefined or empty, log a warning
+                    if (!productImageURL) {
+                        console.warn(`Image URL is missing for product: ${product.title}`);
+                    }
 
                     productElement.innerHTML = `
                         <div class="image-container" style="position: relative;">
@@ -475,13 +463,21 @@
 
                     const productImage = productElement.querySelector('.product-image');
                     productImage.addEventListener('click', function() {
-                        saveSelectedProduct(db, product);
+                        localStorage.setItem('selectedProduct', JSON.stringify(product));
                         window.location.href = 'productdetails.html';
                     });
 
                     const wishlistButton = productElement.querySelector('.wishlist-button');
                     wishlistButton.addEventListener('click', function() {
-                        removeFromWishlist(db, product.title, productElement);
+                        const productIndex = wishlist.findIndex(item => item.title === product.title);
+                        if (productIndex !== -1) {
+                            wishlist.splice(productIndex, 1);
+                            localStorage.setItem('wishlist', JSON.stringify(wishlist));
+                            productElement.remove();
+                            if (wishlist.length === 0) {
+                                wishlistGrid.innerHTML = '<p>Your wishlist is empty.</p>';
+                            }
+                        }
                     });
                 });
             }
@@ -489,40 +485,6 @@
 
         request.onerror = function() {
             console.error('Failed to load wishlist');
-        };
-    }
-
-    function saveSelectedProduct(db, product) {
-        const transaction = db.transaction('products', 'readwrite');
-        const store = transaction.objectStore('products');
-        store.clear(); // Clear previous selections
-        store.add(product);
-    }
-
-    function removeFromWishlist(db, productTitle, productElement) {
-        const transaction = db.transaction('wishlist', 'readwrite');
-        const store = transaction.objectStore('wishlist');
-        store.delete(productTitle);
-
-        transaction.oncomplete = function() {
-            productElement.remove();
-            checkEmptyWishlist(db);
-        };
-
-        transaction.onerror = function() {
-            console.error('Failed to remove item from wishlist');
-        };
-    }
-
-    function checkEmptyWishlist(db) {
-        const transaction = db.transaction('wishlist', 'readonly');
-        const store = transaction.objectStore('wishlist');
-        const request = store.count();
-
-        request.onsuccess = function() {
-            if (request.result === 0) {
-                document.getElementById('wishlistGrid').innerHTML = '<p>Your wishlist is empty.</p>';
-            }
         };
     }
 });
