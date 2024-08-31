@@ -12,6 +12,9 @@
             margin: 0;
             padding: 0;
             background-color: #FFFFFF;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
         }
 
         /* Navigation bar */
@@ -66,11 +69,16 @@
             color: #b88b8b;
         }
 
-        /* Wishlist Section */
-        .wishlist-section {
+        /* Main content area */
+        .content {
+            flex-grow: 1;
             padding: 50px 20px;
             background-color: #f9f3f1;
-            margin: 0 20px 40px 20px; /* Adds margin to the left, right, and bottom */
+        }
+
+        /* Wishlist Section */
+        .wishlist-section {
+            margin: 0 20px 40px 20px;
         }
 
         .wishlist-section h2 {
@@ -107,7 +115,7 @@
         .image-container {
             position: relative;
             width: 100%;
-            padding-top: 100%; /* Makes the image container a perfect square */
+            padding-top: 100%;
             background-color: #e9d7d2;
         }
 
@@ -338,16 +346,19 @@
             <a href="#contactSection">Contact Us</a>
         </div>
         <div class="icons">
-            <span class="icon" onclick="window.location.href='wishlist.html'">♡</span> <!-- Wishlist icon -->
-            <span class="icon" onclick="window.location.href='cart.html'">🛒</span> <!-- Cart icon -->
+            <span class="icon" onclick="window.location.href='wishlist.html'">♡</span>
+            <span class="icon" onclick="window.location.href='cart.html'">🛒</span>
         </div>
     </div>
 
-    <!-- Wishlist Section -->
-    <div class="wishlist-section">
-        <h2>Your Wishlist</h2>
-        <div class="wishlist-grid" id="wishlistGrid">
-            <!-- Wishlist items will be dynamically inserted here -->
+    <!-- Main Content -->
+    <div class="content">
+        <!-- Wishlist Section -->
+        <div class="wishlist-section">
+            <h2>Your Wishlist</h2>
+            <div class="wishlist-grid" id="wishlistGrid">
+                <!-- Wishlist items will be dynamically inserted here -->
+            </div>
         </div>
     </div>
 
@@ -381,10 +392,10 @@
                         <li><button class="contact-button">Contact Us</button></li>
                         <li>
                             <div class="social-icons">
-                                <span>📷</span> <!-- Instagram icon -->
-                                <span>🎵</span> <!-- TikTok icon -->
-                                <span>📘</span> <!-- Facebook icon -->
-                                <span>🐦</span> <!-- X (Twitter) icon -->
+                                <span>📷</span>
+                                <span>🎵</span>
+                                <span>📘</span>
+                                <span>🐦</span>
                             </div>
                         </li>
                     </ul>
@@ -417,19 +428,35 @@
             const wishlist = request.result;
             const wishlistGrid = document.getElementById('wishlistGrid');
 
-            if (wishlist.length === 0) {
-                wishlistGrid.innerHTML = '<p>Your wishlist is empty.</p>';
-            } else {
-                wishlist.forEach((product, index) => {
-                    console.log(`Processing product ${index}:`, product); // Log each product
-                    console.log(`Product image URL: ${product.image}`); // Log image URL
+            // Clear the wishlist grid to handle reloads
+            wishlistGrid.innerHTML = '';
 
+            // Check if the wishlist is empty
+            if (wishlist.length === 0) {
+                const emptyMessage = document.createElement('p');
+                emptyMessage.textContent = 'Your wishlist is empty.';
+                wishlistGrid.appendChild(emptyMessage);
+            } else {
+                const images = {
+                    'Product 1': 'https://raw.githubusercontent.com/bestwebsites/smallbusiness/main/Pictures/97f9b50623aa00440bb0009848857a6d.jpg',
+                    'Product 2': 'https://raw.githubusercontent.com/bestwebsites/smallbusiness/main/Pictures/9a08fcfea078d7119310bef13452adc3.jpg',
+                    'Product 3': 'https://raw.githubusercontent.com/bestwebsites/smallbusiness/main/Pictures/e6cfab0ebbe1289cee728a546ec4f54a.jpg',
+                    'Product 4': 'https://raw.githubusercontent.com/bestwebsites/smallbusiness/main/Pictures/43832097ede022bd532caeb02d124435.jpg',
+                    'Product 5': 'paste-your-image-link-here-5',
+                    'Product 6': 'paste-your-image-link-here-6',
+                    'Product 7': 'paste-your-image-link-here-7',
+                    'Product 8': 'paste-your-image-link-here-8',
+                    'Product 9': 'paste-your-image-link-here-9',
+                    'Product 10': 'paste-your-image-link-here-10',
+                    'Product 11': 'paste-your-image-link-here-11',
+                    'Product 12': 'paste-your-image-link-here-12'
+                };
+
+                wishlist.forEach((product, index) => {
                     const productElement = document.createElement('div');
                     productElement.classList.add('product');
 
-                    // Ensure image URL is correctly formed or use a default image if none exists
-                    const productImageURL = product.image ? product.image : 'path/to/default-image.jpg';
-                    console.log(`Using Image URL for product ${index}: ${productImageURL}`); // Log the image URL
+                    const productImageURL = images[product.title] || 'path/to/default-image.jpg';
 
                     productElement.innerHTML = `
                         <div class="image-container" style="position: relative;">
@@ -468,7 +495,7 @@
                         const productIndex = wishlist.findIndex(item => item.title === product.title);
                         if (productIndex !== -1) {
                             wishlist.splice(productIndex, 1);
-                            localStorage.setItem('wishlist', JSON.stringify(wishlist));
+                            store.delete(product.title);
                             productElement.remove();
                             if (wishlist.length === 0) {
                                 wishlistGrid.innerHTML = '<p>Your wishlist is empty.</p>';
