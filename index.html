@@ -133,6 +133,7 @@
             flex-direction: column;
             align-items: center;
             text-align: center;
+            cursor: pointer;
         }
 
         .category-image {
@@ -644,24 +645,28 @@
     </div>
 
     <!-- Categories Section -->
-    <div class="categories-section" id="categoriesSection" style="display: none;">
+    <div class="categories-section" id="categoriesSection">
         <h2>Shop by Category</h2>
         <div class="categories-row">
-            <div class="category">
+            <div class="category" data-category="trending">
                 <div class="category-image"></div>
                 <p class="category-title">Trending Now</p>
             </div>
-            <div class="category">
+            <div class="category" data-category="bestsellers">
                 <div class="category-image"></div>
                 <p class="category-title">Best Sellers</p>
             </div>
-            <div class="category">
+            <div class="category" data-category="newarrivals">
                 <div class="category-image"></div>
                 <p class="category-title">New Arrivals</p>
             </div>
-            <div class="category">
+            <div class="category" data-category="gifts">
                 <div class="category-image"></div>
                 <p class="category-title">Gift Ideas</p>
+            </div>
+            <div class="category" data-category="all">
+                <div class="category-image"></div>
+                <p class="category-title">All Products</p>
             </div>
         </div>
     </div>
@@ -874,97 +879,34 @@
 
     <script>
         // Promo Banner Slideshow Script
-let slideIndex = 0;
-const slides = document.querySelectorAll('.slide');
+        let slideIndex = 0;
+        const slides = document.querySelectorAll('.slide');
 
-function showSlide(index) {
-    slides.forEach((slide, i) => {
-        slide.style.display = i === index ? 'block' : 'none';
-    });
-}
+        function showSlide(index) {
+            slides.forEach((slide, i) => {
+                slide.style.display = i === index ? 'block' : 'none';
+            });
+        }
 
-function changeSlide(direction) {
-    slideIndex += direction;
-    if (slideIndex >= slides.length) slideIndex = 0;
-    if (slideIndex < 0) slideIndex = slides.length - 1;
-    showSlide(slideIndex);
-}
+        function changeSlide(direction) {
+            slideIndex += direction;
+            if (slideIndex >= slides.length) slideIndex = 0;
+            if (slideIndex < 0) slideIndex = slides.length - 1;
+            showSlide(slideIndex);
+        }
 
-setInterval(() => {
-    changeSlide(1);
-}, 3000); // Change slide every 3 seconds
+        setInterval(() => {
+            changeSlide(1);
+        }, 3000); // Change slide every 3 seconds
 
-document.addEventListener('DOMContentLoaded', function() {
-    const wishlistButtons = document.querySelectorAll('.wishlist-button');
-    const products = document.querySelectorAll('.product');
-
-    // Load wishlist from localStorage
-    let wishlist = JSON.parse(localStorage.getItem('wishlist')) || [];
-
-    // Update wishlist buttons based on stored data
-    function updateWishlistIcons() {
-        products.forEach(product => {
-            const productTitle = product.querySelector('.product-title').textContent;
-            const wishlistButton = product.querySelector('.wishlist-button svg path');
-            const isInWishlist = wishlist.some(item => item.title === productTitle);
-
-            if (isInWishlist) {
-                wishlistButton.setAttribute('fill', '#191919');
-            } else {
-                wishlistButton.setAttribute('fill', 'none');
-            }
+        // Handle category clicks and redirect with category info
+        document.querySelectorAll('.category').forEach(category => {
+            category.addEventListener('click', function() {
+                const selectedCategory = this.getAttribute('data-category');
+                window.location.href = `products.html?category=${selectedCategory}`;
+            });
         });
-    }
 
-    // Call function to update icons on page load
-    updateWishlistIcons();
-
-    // Wishlist button toggle
-    wishlistButtons.forEach(button => {
-        button.addEventListener('click', function(event) {
-            event.stopPropagation();  // Prevent the event from bubbling up to the image click handler
-            const productElement = this.closest('.product');
-            const productTitle = productElement.querySelector('.product-title').textContent;
-            const productPrice = productElement.querySelector('.product-price').textContent;
-            const svgPath = this.querySelector('svg path');
-
-            // Check if product is already in wishlist
-            const productIndex = wishlist.findIndex(item => item.title === productTitle);
-
-            if (productIndex === -1) {
-                // Add product to wishlist
-                wishlist.push({ title: productTitle, price: productPrice });
-                svgPath.setAttribute('fill', '#191919'); // Filled state color
-            } else {
-                // Remove product from wishlist
-                wishlist.splice(productIndex, 1);
-                svgPath.setAttribute('fill', 'none'); // Unfilled state
-            }
-
-            // Save the updated wishlist to localStorage
-            localStorage.setItem('wishlist', JSON.stringify(wishlist));
-        });
-    });
-
-    // Product image click - navigate to product details
-    products.forEach(product => {
-        product.addEventListener('click', function() {
-            const productTitle = this.querySelector('.product-title').textContent;
-            const productPrice = this.querySelector('.product-price').textContent;
-            const productImage = this.querySelector('.image-container img').src;
-
-            // Store product details in localStorage
-            localStorage.setItem('productDetails', JSON.stringify({
-                title: productTitle,
-                price: productPrice,
-                image: productImage
-            }));
-
-            // Navigate to product details page
-            window.location.href = 'productdetails.html';
-        });
-    });
-});
     </script>
 </body>
 </html>
