@@ -927,9 +927,14 @@
             const productElement = this.closest('.product');
             const productTitle = productElement.querySelector('.product-title').textContent;
             const productPrice = productElement.querySelector('.product-price').textContent;
+            const productImage = productElement.querySelector('img').src; // Get the correct image URL
 
             // Store selected product details in localStorage
-            localStorage.setItem('selectedProduct', JSON.stringify({ title: productTitle, price: productPrice }));
+            localStorage.setItem('productDetails', JSON.stringify({
+                title: productTitle,
+                price: productPrice,
+                image: productImage // Save the image URL
+            }));
 
             // Redirect to productdetails.html
             window.location.href = 'productdetails.html';
