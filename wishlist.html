@@ -403,18 +403,18 @@
     const wishlistGrid = document.getElementById('wishlistGrid');
     let wishlist = JSON.parse(localStorage.getItem('wishlist')) || [];
 
-    console.log("Wishlist data from localStorage:", wishlist); // Log wishlist data
+    console.log("Wishlist data from localStorage:", wishlist);
 
     if (wishlist.length === 0) {
         wishlistGrid.innerHTML = '<p>Your wishlist is empty.</p>';
     } else {
-        wishlist.forEach(product => {
-            console.log("Processing product:", product); // Log each product being processed
+        wishlist.forEach((product, index) => {
+            console.log(`Processing product ${index}:`, product); // Log each product
+            console.log(`Product image URL: ${product.image}`); // Log image URL
 
             const productElement = document.createElement('div');
             productElement.classList.add('product');
 
-            // Safeguard for image property: Check if it exists and is a valid string
             const productImageURL = product.image ? product.image : 'path/to/default-image.jpg';
 
             productElement.innerHTML = `
@@ -443,26 +443,19 @@
 
             wishlistGrid.appendChild(productElement);
 
-            // Handle the click event on the product image to open productdetails.html
             const productImage = productElement.querySelector('.product-image');
             productImage.addEventListener('click', function() {
-                // Store the selected product details in localStorage
                 localStorage.setItem('selectedProduct', JSON.stringify(product));
-                // Redirect to productdetails.html
                 window.location.href = 'productdetails.html';
             });
 
-            // Handle the un-filling of the heart icon and remove the item from the wishlist
             const wishlistButton = productElement.querySelector('.wishlist-button');
             wishlistButton.addEventListener('click', function() {
                 const productIndex = wishlist.findIndex(item => item.title === product.title);
-
                 if (productIndex !== -1) {
                     wishlist.splice(productIndex, 1);
                     localStorage.setItem('wishlist', JSON.stringify(wishlist));
                     productElement.remove();
-
-                    // If the wishlist is empty after removal
                     if (wishlist.length === 0) {
                         wishlistGrid.innerHTML = '<p>Your wishlist is empty.</p>';
                     }
