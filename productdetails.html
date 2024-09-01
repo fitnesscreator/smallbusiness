@@ -625,7 +625,6 @@
         const suggestedProductsContainer = document.getElementById('suggestedProducts');
         const wishlistButton = document.querySelector('.wishlist-button svg path');
 
-        // Hardcoded image URLs and descriptions for each product
         const productData = {
             'Product 1': {
                 images: [
@@ -661,15 +660,13 @@
                         const description = productDetails.description || "No description available for this product.";
                         const category = productDetails.category;
 
-                        // Set the main image
                         if (imageUrls.length > 0) {
                             mainImageElement.style.backgroundImage = `url(${imageUrls[0]})`;
                             mainImageElement.style.backgroundSize = 'cover';
                             mainImageElement.style.backgroundPosition = 'center';
-                            mainImageElement.textContent = ''; // Remove the placeholder text
+                            mainImageElement.textContent = '';
 
-                            // Generate thumbnails
-                            thumbnailsContainer.innerHTML = ''; // Clear existing thumbnails
+                            thumbnailsContainer.innerHTML = '';
                             imageUrls.forEach((imageUrl, index) => {
                                 if (imageUrl) {
                                     const thumbnail = document.createElement('div');
@@ -691,15 +688,12 @@
                             });
                         }
 
-                        // Set the product details
                         productTitleElement.textContent = selectedProduct.title;
                         productPriceElement.textContent = selectedProduct.price;
                         productDescriptionElement.textContent = description;
 
-                        // Display suggested products
                         loadSuggestedProducts(db, category, selectedProduct.title);
 
-                        // Check wishlist status
                         checkWishlist(db, selectedProduct.title);
                     } else {
                         console.error('No data found for the selected product');
@@ -722,14 +716,16 @@
             request.onsuccess = function () {
                 const products = request.result;
 
-                suggestedProductsContainer.innerHTML = ''; // Clear existing suggestions
+                suggestedProductsContainer.innerHTML = '';
 
                 products.forEach(product => {
-                    if (product.title !== excludeTitle && productData[product.title].category === category) {
+                    const productDetails = productData[product.title];
+
+                    if (product.title !== excludeTitle && productDetails && productDetails.category === category) {
                         const suggestedProduct = document.createElement('div');
                         suggestedProduct.className = 'suggested-product';
                         suggestedProduct.innerHTML = `
-                            <div class="suggested-product-image" style="background-image: url(${productData[product.title].images[0]});"></div>
+                            <div class="suggested-product-image" style="background-image: url(${productDetails.images[0]});"></div>
                             <div class="suggested-product-title">${product.title}</div>
                             <div class="suggested-product-price">${product.price}</div>
                         `;
@@ -773,7 +769,6 @@
             };
         }
 
-        // Wishlist button functionality
         wishlistButton.closest('.wishlist-button').addEventListener('click', function () {
             toggleWishlist(db, productTitleElement.textContent, productPriceElement.textContent, wishlistButton);
         });
@@ -798,7 +793,6 @@
             };
         }
 
-        // Quantity selector functionality
         const sizeOptions = document.querySelectorAll('.size-option');
         sizeOptions.forEach(option => {
             option.addEventListener('click', function () {
@@ -823,7 +817,6 @@
             quantityInput.value = currentValue + 1;
         });
 
-        // Load the selected product data
         loadSelectedProduct(db);
     }
 });
