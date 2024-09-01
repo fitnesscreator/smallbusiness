@@ -627,126 +627,98 @@
     };
 
     function loadSelectedProduct(db) {
-        const transaction = db.transaction('products', 'readonly');
-        const store = transaction.objectStore('products');
-        const request = store.getAll();
+    const transaction = db.transaction('products', 'readonly');
+    const store = transaction.objectStore('products');
+    const request = store.getAll();
 
-        request.onsuccess = function () {
-            const selectedProduct = request.result[0]; // Assuming only one selected product is stored
-
-            if (selectedProduct) {
-                const productDetails = productData[selectedProduct.title];
-                if (productDetails) {
-                    displayProductDetails(selectedProduct, productDetails);
-                    loadSuggestedProducts(db, productDetails.category, selectedProduct.title);
-                    checkWishlist(db, selectedProduct.title);
-                } else {
-                    console.error('No data found for the selected product');
-                }
-            } else {
-                console.error('No product selected or found in the database');
-            }
-        };
-
-        request.onerror = function () {
-            console.error('Failed to load selected product');
-        };
-    }
-
-    function displayProductDetails(selectedProduct, productDetails) {
-        const mainImageElement = document.getElementById('mainImage');
-        const thumbnailsContainer = document.getElementById('thumbnailImages');
-        const productTitleElement = document.querySelector('.product-title');
-        const productPriceElement = document.querySelector('.product-price');
-        const productDescriptionElement = document.querySelector('.product-description');
-
-        const imageUrls = productDetails.images || [];
-        const description = productDetails.description || "No description available for this product.";
-
-        if (imageUrls.length > 0) {
-            mainImageElement.style.backgroundImage = `url(${imageUrls[0]})`;
-            mainImageElement.style.backgroundSize = 'cover';
-            mainImageElement.style.backgroundPosition = 'center';
-            mainImageElement.textContent = '';
-
-            thumbnailsContainer.innerHTML = '';
-            imageUrls.forEach((imageUrl, index) => {
-                if (imageUrl) {
-                    const thumbnail = document.createElement('div');
-                    thumbnail.className = 'thumbnail';
-                    thumbnail.style.backgroundImage = `url(${imageUrl})`;
-
-                    if (index === 0) {
-                        thumbnail.classList.add('selected');
-                    }
-
-                    thumbnail.addEventListener('click', function () {
-                        mainImageElement.style.backgroundImage = `url(${imageUrl})`;
-                        document.querySelectorAll('.thumbnail').forEach(t => t.classList.remove('selected'));
-                        thumbnail.classList.add('selected');
-                    });
-
-                    thumbnailsContainer.appendChild(thumbnail);
-                }
-            });
+    request.onsuccess = function () {
+        if (request.result.length > 0) {
+            const selectedProduct = request.result[0]; // Assuming only one product is stored
+            displayProductDetails(selectedProduct);
+            loadSuggestedProducts(db, selectedProduct.category, selectedProduct.title);
+            checkWishlist(db, selectedProduct.title);
+        } else {
+            console.error('No product found in the database');
         }
+    };
 
-        productTitleElement.textContent = selectedProduct.title;
-        productPriceElement.textContent = selectedProduct.price;
-        productDescriptionElement.textContent = description;
+    request.onerror = function () {
+        console.error('Failed to load selected product');
+    };
+}
+
+    function displayProductDetails(selectedProduct) {
+    const mainImageElement = document.getElementById('mainImage');
+    const thumbnailsContainer = document.getElementById('thumbnailImages');
+    const productTitleElement = document.querySelector('.product-title');
+    const productPriceElement = document.querySelector('.product-price');
+    const productDescriptionElement = document.querySelector('.product-description');
+
+    const imageUrls = selectedProduct.images || [];
+    const description = selectedProduct.description || "No description available for this product.";
+
+    if (imageUrls.length > 0) {
+        mainImageElement.style.backgroundImage = `url(${imageUrls[0]})`;
+        mainImageElement.textContent = ''; // Remove any placeholder text
+
+        thumbnailsContainer.innerHTML = '';
+        imageUrls.forEach((imageUrl, index) => {
+            const thumbnail = document.createElement('div');
+            thumbnail.className = 'thumbnail';
+            thumbnail.style.backgroundImage = `url(${imageUrl})`;
+
+            if (index === 0) {
+                thumbnail.classList.add('selected');
+            }
+
+            thumbnail.addEventListener('click', function () {
+                mainImageElement.style.backgroundImage = `url(${imageUrl})`;
+                document.querySelectorAll('.thumbnail').forEach(t => t.classList.remove('selected'));
+                thumbnail.classList.add('selected');
+            });
+
+            thumbnailsContainer.appendChild(thumbnail);
+        });
     }
+
+    productTitleElement.textContent = selectedProduct.title;
+    productPriceElement.textContent = selectedProduct.price;
+    productDescriptionElement.textContent = description;
+}
 
     function loadSuggestedProducts(db, category, excludeTitle) {
-        const transaction = db.transaction('products', 'readonly');
-        const store = transaction.objectStore('products');
-        const request = store.getAll();
+    const transaction = db.transaction('products', 'readonly');
+    const store = transaction.objectStore('products');
+    const request = store.getAll();
 
-        request.onsuccess = function () {
-            const products = request.result;
-            const suggestedProductsContainer = document.getElementById('suggestedProducts');
-            suggestedProductsContainer.innerHTML = ''; // Clear any existing content
+    request.onsuccess = function () {
+        const products = request.result;
+        const suggestedProductsContainer = document.getElementById('suggestedProducts');
+        suggestedProductsContainer.innerHTML = ''; // Clear existing content
 
-            products.forEach(product => {
-                const productDetails = productData[product.title];
-                if (product.title !== excludeTitle && productDetails && productDetails.category === category) {
-                    const suggestedProduct = document.createElement('div');
-                    suggestedProduct.className = 'suggested-product';
-                    suggestedProduct.innerHTML = `
-                        <div class="suggested-product-image" style="background-image: url(${productDetails.images[0]});"></div>
-                        <div class="suggested-product-title">${product.title}</div>
-                        <div class="suggested-product-price">${product.price}</div>
-                    `;
-                    suggestedProductsContainer.appendChild(suggestedProduct);
+        products.forEach(product => {
+            if (product.title !== excludeTitle && product.category === category) {
+                const suggestedProduct = document.createElement('div');
+                suggestedProduct.className = 'suggested-product';
+                suggestedProduct.innerHTML = `
+                    <div class="suggested-product-image" style="background-image: url(${product.images[0]});"></div>
+                    <div class="suggested-product-title">${product.title}</div>
+                    <div class="suggested-product-price">${product.price}</div>
+                `;
+                suggestedProductsContainer.appendChild(suggestedProduct);
 
-                    suggestedProduct.addEventListener('click', function () {
-                        storeProductDetails(db, product);
-                        window.location.href = 'productdetails.html';
-                    });
-                }
-            });
-        };
-
-        request.onerror = function () {
-            console.error('Failed to load suggested products');
-        };
-    }
-
-    function checkWishlist(db, productTitle) {
-        const transaction = db.transaction('wishlist', 'readonly');
-        const store = transaction.objectStore('wishlist');
-        const request = store.get(productTitle);
-
-        request.onsuccess = function () {
-            const wishlistButton = document.querySelector('.wishlist-button svg path');
-            if (request.result) {
-                wishlistButton.setAttribute('fill', '#191919');
+                suggestedProduct.addEventListener('click', function () {
+                    storeProductDetails(db, product);
+                    window.location.href = 'productdetails.html';
+                });
             }
-        };
+        });
+    };
 
-        request.onerror = function () {
-            console.error('Failed to check wishlist');
-        };
-    }
+    request.onerror = function () {
+        console.error('Failed to load suggested products');
+    };
+}
 
     function storeProductDetails(db, productDetails) {
         const transaction = db.transaction('products', 'readwrite');
