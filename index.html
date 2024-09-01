@@ -904,112 +904,101 @@
     <div class="footer">
         &copy; 2024 Your Company. All Rights Reserved.
     </div>
-
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-    let db;
-    const request = indexedDB.open('ProductDatabase', 1);
-
-    request.onupgradeneeded = function (event) {
-        db = event.target.result;
-
-        if (!db.objectStoreNames.contains('wishlist')) {
-            db.createObjectStore('wishlist', { keyPath: 'title' });
-        }
-
-        if (!db.objectStoreNames.contains('products')) {
-            const productsStore = db.createObjectStore('products', { keyPath: 'title' });
-            productsStore.createIndex('category', 'category', { unique: false });
-        }
-    };
-
-    request.onsuccess = function (event) {
-        db = event.target.result;
-        storeProductsInDB(db);
-        loadProducts(db);
-    };
-
-    request.onerror = function (event) {
-        console.error('IndexedDB error:', event.target.errorCode);
-    };
-
-    // Centralized product data
-    const productData = {
-        'Product 1': {
-            images: [
-                'https://raw.githubusercontent.com/bestwebsites/smallbusiness/main/Pictures/97f9b50623aa00440bb0009848857a6d.jpg'
-            ],
-            description: "This is the description for Product 1.",
-            category: 'trending',
-            price: '$19.99'
-        },
-        'Product 2': {
-            images: [
-                'https://raw.githubusercontent.com/bestwebsites/smallbusiness/main/Pictures/9a08fcfea078d7119310bef13452adc3.jpg'
-            ],
-            description: "This is the description for Product 2.",
-            category: 'bestsellers',
-            price: '$29.99'
-        },
-        // Add more products here...
-    };
-
-    // Store product data in IndexedDB
-    function storeProductsInDB(db) {
-        const transaction = db.transaction('products', 'readwrite');
-        const store = transaction.objectStore('products');
-        Object.keys(productData).forEach(productTitle => {
-            store.put({ title: productTitle, ...productData[productTitle] });
-        });
-    }
-
-    // Load products into the page
-    function loadProducts(db) {
-        const transaction = db.transaction('products', 'readonly');
-        const store = transaction.objectStore('products');
-        const request = store.getAll();
-
-        request.onsuccess = function () {
-            const products = request.result;
-            const productsContainer = document.getElementById('productsGrid');
-            productsContainer.innerHTML = '';
-
-            products.forEach(product => {
-                const productElement = document.createElement('div');
-                productElement.className = 'product';
-                productElement.innerHTML = `
-                    <div class="image-container" style="background-image: url(${product.images[0]});"></div>
-                    <div class="product-details">
-                        <div class="product-title">${product.title}</div>
-                        <div class="product-price">${product.price}</div>
-                    </div>
-                `;
-                productsContainer.appendChild(productElement);
-
-                // Click event to store selected product and navigate to details page
-                productElement.addEventListener('click', function () {
-                    storeProductDetails(db, product);
-                    window.location.href = 'productdetails.html';
-                });
-            });
-        };
-
-        request.onerror = function () {
-            console.error('Failed to load products');
-        };
-    }
-
-    // Store selected product details in IndexedDB
-    function storeProductDetails(db, productDetails) {
-        const transaction = db.transaction('products', 'readwrite');
-        const store = transaction.objectStore('products');
-        
-        // Clear previous selection
-        store.clear().onsuccess = function () {
-            store.put(productDetails);
-        };
-    }
-});
-    </script>
 </body>
+    <script>
+        // Function 1: Filter Products by Category and Redirect to products.html
+function filterProductsByCategory(category) {
+    window.location.href = `products.html?category=${category}`;
+}
+
+// Function 2: Wishlist Interaction
+function toggleWishlist(productId, productName, productPrice, productImage) {
+    // Assuming you have a global wishlist array to store wishlist items
+    let wishlist = JSON.parse(localStorage.getItem('wishlist')) || [];
+
+    const productIndex = wishlist.findIndex(product => product.id === productId);
+    if (productIndex > -1) {
+        // If product is already in wishlist, remove it
+        wishlist.splice(productIndex, 1);
+    } else {
+        // Add product to wishlist
+        wishlist.push({ id: productId, name: productName, price: productPrice, image: productImage });
+    }
+
+    // Update the wishlist in local storage
+    localStorage.setItem('wishlist', JSON.stringify(wishlist));
+
+    // Update the wishlist icon fill
+    const wishlistButton = document.querySelector(`[data-product-id="${productId}"] .wishlist-button svg`);
+    wishlistButton.classList.toggle('is-active');
+}
+
+// Function 3: Buy Now and Redirect to Product Details
+function buyNow(productId, productName, productPrice, productImage) {
+    // Pass the product details to productdetails.html
+    window.location.href = `productdetails.html?productId=${productId}&name=${encodeURIComponent(productName)}&price=${encodeURIComponent(productPrice)}&image=${encodeURIComponent(productImage)}`;
+}
+
+// Function 4: Add to Cart and Redirect to cart.html
+function addToCart(productId, productName, productPrice, productImage) {
+    // Assuming you have a global cart array to store cart items
+    let cart = JSON.parse(localStorage.getItem('cart')) || [];
+
+    // Add product to cart
+    cart.push({ id: productId, name: productName, price: productPrice, image: productImage });
+
+    // Update the cart in local storage
+    localStorage.setItem('cart', JSON.stringify(cart));
+
+    // Redirect to cart page
+    window.location.href = 'cart.html';
+}
+
+// Function 5: Filter by Category from Contact Us Section
+function filterByCategoryFromContact(category) {
+    filterProductsByCategory(category);
+}
+
+// Event Listeners for Category Buttons in Shop by Category Section
+document.querySelectorAll('.category').forEach(categoryElement => {
+    categoryElement.addEventListener('click', function() {
+        const category = this.getAttribute('data-category');
+        filterProductsByCategory(category);
+    });
+});
+
+// Event Listeners for Add to Cart and Buy Now Buttons in Featured Products Section
+document.querySelectorAll('.product').forEach(productElement => {
+    const productId = productElement.getAttribute('data-product-id');
+    const productName = productElement.querySelector('.product-title').textContent;
+    const productPrice = productElement.querySelector('.product-price').textContent;
+    const productImage = productElement.querySelector('.image-container img').getAttribute('src');
+
+    // Wishlist Button
+    productElement.querySelector('.wishlist-button').addEventListener('click', function(event) {
+        event.stopPropagation();
+        toggleWishlist(productId, productName, productPrice, productImage);
+    });
+
+    // Buy Now Button
+    productElement.querySelector('.buy-button').addEventListener('click', function(event) {
+        event.stopPropagation();
+        buyNow(productId, productName, productPrice, productImage);
+    });
+
+    // Add to Cart Button
+    productElement.querySelector('.add-to-cart-button').addEventListener('click', function(event) {
+        event.stopPropagation();
+        addToCart(productId, productName, productPrice, productImage);
+    });
+});
+
+// Event Listeners for Buttons in Contact Us Section
+document.querySelectorAll('.contact-container .link-group ul.dropdown li').forEach(link => {
+    link.addEventListener('click', function() {
+        const category = this.textContent.trim().toLowerCase().replace(/\s+/g, '');
+        filterByCategoryFromContact(category);
+    });
+});
+<script>
 </html>
