@@ -909,35 +909,24 @@
         document.addEventListener('DOMContentLoaded', function () {
     // Open (or create) an IndexedDB database
     let db;
-    const request = indexedDB.open('ProductDatabase', 1);
+const request = indexedDB.open('ProductDatabase', 1);
 
-    request.onupgradeneeded = function (event) {
-        db = event.target.result;
+request.onupgradeneeded = function (event) {
+    db = event.target.result;
 
-        // Create an object store named 'wishlist' with 'title' as the key path
-        if (!db.objectStoreNames.contains('wishlist')) {
-            db.createObjectStore('wishlist', { keyPath: 'title' });
-        }
+    if (!db.objectStoreNames.contains('wishlist')) {
+        db.createObjectStore('wishlist', { keyPath: 'title' });
+    }
 
-        // Create an object store for storing products
-        if (!db.objectStoreNames.contains('products')) {
-            db.createObjectStore('products', { keyPath: 'title' });
-        }
+    if (!db.objectStoreNames.contains('products')) {
+        const productsStore = db.createObjectStore('products', { keyPath: 'title' });
+        productsStore.createIndex('category', 'category', { unique: false });
+    }
+};
 
-        // Create an object store for categories
-        if (!db.objectStoreNames.contains('categories')) {
-            db.createObjectStore('categories', { keyPath: 'name' });
-        }
-    };
-
-    request.onsuccess = function (event) {
-        db = event.target.result;
-        initializePage(db);
-    };
-
-    request.onerror = function (event) {
-        console.error('IndexedDB error:', event.target.errorCode);
-    };
+request.onsuccess = function (event) {
+    db = event.target.result;
+};
 
     function initializePage(db) {
         const wishlistButtons = document.querySelectorAll('.wishlist-button');
