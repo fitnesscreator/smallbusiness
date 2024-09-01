@@ -548,18 +548,24 @@
         const productDescriptionElement = document.querySelector('.product-description');
         const wishlistButton = document.querySelector('.wishlist-button svg path');
 
-        // Hardcoded image URLs for each product
+        // Hardcoded image URLs and descriptions for each product
         const productImages = {
-            'Product 1': [
-                'https://raw.githubusercontent.com/bestwebsites/smallbusiness/main/Pictures/97f9b50623aa00440bb0009848857a6d.jpg',
-                'https://raw.githubusercontent.com/bestwebsites/smallbusiness/main/Pictures/9a08fcfea078d7119310bef13452adc3.jpg',
-                // Add additional image URLs as needed
-            ],
-            'Product 2': [
-                'https://example.com/path/to/image2_main.jpg',
-                'https://example.com/path/to/image2_2.jpg',
-                // Add additional image URLs as needed
-            ],
+            'Product 1': {
+                images: [
+                    'https://raw.githubusercontent.com/bestwebsites/smallbusiness/main/Pictures/97f9b50623aa00440bb0009848857a6d.jpg',
+                    'https://raw.githubusercontent.com/bestwebsites/smallbusiness/main/Pictures/9a08fcfea078d7119310bef13452adc3.jpg',
+                    // Add additional image URLs as needed
+                ],
+                description: "This is the description for Product 1. It includes various details about the product, such as features, materials, and other important information."
+            },
+            'Product 2': {
+                images: [
+                    'https://example.com/path/to/image2_main.jpg',
+                    'https://example.com/path/to/image2_2.jpg',
+                    // Add additional image URLs as needed
+                ],
+                description: "This is the description for Product 2. It describes the product's key selling points and other relevant details."
+            },
             // Add more products up to Product 12
         };
 
@@ -573,45 +579,52 @@
 
                 if (selectedProduct) {
                     // Ensure the title matches a key in the productImages object
-                    const imageUrls = productImages[selectedProduct.title] || [];
-                    if (imageUrls.length > 0) {
+                    const productData = productImages[selectedProduct.title];
+                    if (productData) {
+                        const imageUrls = productData.images || [];
+                        const description = productData.description || "No description available for this product.";
+
                         // Set the main image
-                        mainImageElement.style.backgroundImage = `url(${imageUrls[0]})`;
-                        mainImageElement.style.backgroundSize = 'cover';
-                        mainImageElement.style.backgroundPosition = 'center';
-                        mainImageElement.textContent = ''; // Remove the placeholder text
+                        if (imageUrls.length > 0) {
+                            mainImageElement.style.backgroundImage = `url(${imageUrls[0]})`;
+                            mainImageElement.style.backgroundSize = 'cover';
+                            mainImageElement.style.backgroundPosition = 'center';
+                            mainImageElement.textContent = ''; // Remove the placeholder text
 
-                        // Generate only the necessary thumbnails
-                        thumbnailsContainer.innerHTML = ''; // Clear existing thumbnails
-                        imageUrls.forEach((imageUrl, index) => {
-                            if (imageUrl) {
-                                const thumbnail = document.createElement('div');
-                                thumbnail.className = 'thumbnail';
-                                thumbnail.style.backgroundImage = `url(${imageUrl})`;
+                            // Generate only the necessary thumbnails
+                            thumbnailsContainer.innerHTML = ''; // Clear existing thumbnails
+                            imageUrls.forEach((imageUrl, index) => {
+                                if (imageUrl) {
+                                    const thumbnail = document.createElement('div');
+                                    thumbnail.className = 'thumbnail';
+                                    thumbnail.style.backgroundImage = `url(${imageUrl})`;
 
-                                if (index === 0) {
-                                    thumbnail.classList.add('selected');
+                                    if (index === 0) {
+                                        thumbnail.classList.add('selected');
+                                    }
+
+                                    thumbnail.addEventListener('click', function () {
+                                        mainImageElement.style.backgroundImage = `url(${imageUrl})`;
+                                        document.querySelectorAll('.thumbnail').forEach(t => t.classList.remove('selected'));
+                                        thumbnail.classList.add('selected');
+                                    });
+
+                                    thumbnailsContainer.appendChild(thumbnail);
                                 }
+                            });
+                        }
 
-                                thumbnail.addEventListener('click', function () {
-                                    mainImageElement.style.backgroundImage = `url(${imageUrl})`;
-                                    document.querySelectorAll('.thumbnail').forEach(t => t.classList.remove('selected'));
-                                    thumbnail.classList.add('selected');
-                                });
+                        // Set the product description
+                        productDescriptionElement.textContent = description;
 
-                                thumbnailsContainer.appendChild(thumbnail);
-                            }
-                        });
+                        // Set the product title and price
+                        productTitleElement.textContent = selectedProduct.title;
+                        productPriceElement.textContent = selectedProduct.price;
+
+                        checkWishlist(db, selectedProduct.title);
                     } else {
-                        console.error('No images found for the selected product');
+                        console.error('No data found for the selected product');
                     }
-
-                    // Set the product details
-                    productTitleElement.textContent = selectedProduct.title;
-                    productPriceElement.textContent = selectedProduct.price;
-                    productDescriptionElement.textContent = "This is the description of " + selectedProduct.title + ". It's a great product!";
-
-                    checkWishlist(db, selectedProduct.title);
                 } else {
                     console.error('No product selected or found in the database');
                 }
