@@ -1040,8 +1040,29 @@
         // Handle Contact Us section category links
         contactCategoryLinks.forEach(link => {
             link.addEventListener('click', function () {
-                const category = this.textContent.trim().toLowerCase().replace(/ /g, '');
-                window.location.href = `products.html?category=${category}`;
+                const selectedCategory = this.textContent.trim().toLowerCase().replace(/ /g, '');
+
+                // Translate the text to match the correct category key
+                let categoryKey;
+                switch (selectedCategory) {
+                    case 'trendingnow':
+                        categoryKey = 'trending';
+                        break;
+                    case 'bestsellers':
+                        categoryKey = 'bestsellers';
+                        break;
+                    case 'newarrivals':
+                        categoryKey = 'newarrivals';
+                        break;
+                    case 'giftideas':
+                        categoryKey = 'gifts';
+                        break;
+                    default:
+                        categoryKey = 'all';
+                }
+
+                // Navigate to products.html with the selected category as a query parameter
+                window.location.href = `products.html?category=${categoryKey}`;
             });
         });
 
