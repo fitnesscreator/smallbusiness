@@ -873,56 +873,21 @@
     };
 
     function initializePage(db) {
-        const categoryButtons = document.querySelectorAll('.category');
         const products = document.querySelectorAll('.product');
+        const urlParams = new URLSearchParams(window.location.search);
+        const category = urlParams.get('category');
 
-        // Load wishlist from IndexedDB
-        loadWishlist(db);
-
-        // Function to update wishlist icons based on IndexedDB
-        function loadWishlist(db) {
-            const transaction = db.transaction('wishlist', 'readonly');
-            const store = transaction.objectStore('wishlist');
-            const request = store.getAll();
-
-            request.onsuccess = function () {
-                const wishlist = request.result || [];
-                updateWishlistIcons(wishlist);
-            };
-
-            request.onerror = function () {
-                console.error('Failed to load wishlist');
-            };
-        }
-
-        function updateWishlistIcons(wishlist) {
+        // If a category is present in the URL, filter the products
+        if (category) {
             products.forEach(product => {
-                const productTitle = product.querySelector('.product-title').textContent;
-                const wishlistButton = product.querySelector('.wishlist-button svg path');
-                const isInWishlist = wishlist.some(item => item.title === productTitle);
-
-                if (isInWishlist) {
-                    wishlistButton.setAttribute('fill', '#191919');
+                const productCategory = product.getAttribute('data-category');
+                if (category === 'all' || productCategory === category) {
+                    product.style.display = 'block';
                 } else {
-                    wishlistButton.setAttribute('fill', 'none');
+                    product.style.display = 'none';
                 }
             });
         }
-
-        categoryButtons.forEach(button => {
-            button.addEventListener('click', function () {
-                const selectedCategory = this.getAttribute('data-category');
-
-                products.forEach(product => {
-                    const productCategory = product.getAttribute('data-category');
-                    if (selectedCategory === 'all' || productCategory === selectedCategory) {
-                        product.style.display = 'block';
-                    } else {
-                        product.style.display = 'none';
-                    }
-                });
-            });
-        });
 
         // Wishlist button toggle with IndexedDB
         const wishlistButtons = document.querySelectorAll('.wishlist-button');
