@@ -946,6 +946,7 @@
         const shopNowButton = document.querySelector('.cta');
         const viewAllProductsButton = document.querySelector('.view-more');
         const shopButton = document.querySelector('.menu a[href="#"]');
+        const contactCategoryLinks = document.querySelectorAll('.dropdown li'); // Category links in Contact Us section
 
         // Load wishlist from IndexedDB
         loadWishlist(db);
@@ -1034,6 +1035,14 @@
                     window.location.href = 'products.html';
                 });
             }
+        });
+
+        // Handle Contact Us section category links
+        contactCategoryLinks.forEach(link => {
+            link.addEventListener('click', function () {
+                const category = this.textContent.trim().toLowerCase().replace(/ /g, '');
+                window.location.href = `products.html?category=${category}`;
+            });
         });
 
         // Product image click - navigate to productdetails.html
