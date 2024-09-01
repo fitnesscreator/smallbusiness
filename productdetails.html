@@ -693,10 +693,16 @@
 
     request.onsuccess = function () {
         const products = request.result;
+
+        // Debugging logs
+        console.log('Category:', category);  // Log the category
+        console.log('Products:', products);  // Log the products array
+
         const suggestedProductsContainer = document.getElementById('suggestedProducts');
-        suggestedProductsContainer.innerHTML = ''; // Clear existing content
+        suggestedProductsContainer.innerHTML = ''; // Clear any existing content
 
         products.forEach(product => {
+            // Check that the product belongs to the same category and isn't the current product
             if (product.title !== excludeTitle && product.category === category) {
                 const suggestedProduct = document.createElement('div');
                 suggestedProduct.className = 'suggested-product';
@@ -713,6 +719,10 @@
                 });
             }
         });
+
+        if (suggestedProductsContainer.innerHTML === '') {
+            suggestedProductsContainer.innerHTML = '<p>No suggested products available.</p>';
+        }
     };
 
     request.onerror = function () {
