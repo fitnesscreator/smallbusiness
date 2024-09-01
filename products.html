@@ -941,10 +941,30 @@
             };
         }
 
+        // Functionality to navigate to productdetails.html on image click
+        const productImages = document.querySelectorAll('.image-container');
+
+        productImages.forEach(image => {
+            image.addEventListener('click', function () {
+                const productElement = this.closest('.product');
+                const productTitle = productElement.querySelector('.product-title').textContent;
+                const productPrice = productElement.querySelector('.product-price').textContent;
+                const productImage = productElement.querySelector('img').src;
+                const productCategory = productElement.getAttribute('data-category');
+
+                storeProductDetails(db, { title: productTitle, price: productPrice, image: productImage, category: productCategory });
+
+                window.location.href = 'productdetails.html';
+            });
+        });
+
         function storeProductDetails(db, productDetails) {
             const transaction = db.transaction('products', 'readwrite');
             const store = transaction.objectStore('products');
-            store.add(productDetails);
+
+            store.clear().onsuccess = function () {
+                store.add(productDetails);
+            };
         }
     }
 });
