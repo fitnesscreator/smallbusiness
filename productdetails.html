@@ -82,18 +82,21 @@
         }
 
         .thumbnail-images .thumbnail {
-            width: 47.5px;
-            height: 47.5px; /* Square thumbnail */
-            background-color: #e9d7d2;
-            border-radius: 5px;
-            cursor: pointer;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            color: #7b6464;
-            transition: border 0.3s ease;
-            border: 2px solid transparent;
-        }
+    width: 47.5px;
+    height: 47.5px; /* Square thumbnail */
+    background-color: #e9d7d2;
+    border-radius: 5px;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #7b6464;
+    transition: border 0.3s ease;
+    border: 2px solid transparent;
+    background-size: cover; /* Ensure the image covers the entire thumbnail */
+    background-position: center center; /* Center the image */
+    background-repeat: no-repeat; /* Prevent the image from repeating */
+}
 
         .thumbnail:hover,
         .thumbnail.selected {
