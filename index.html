@@ -1021,41 +1021,20 @@
             button.addEventListener('click', function () {
                 const selectedCategory = this.getAttribute('data-category');
 
-                // Store selected category in IndexedDB
-                storeSelectedCategory(db, selectedCategory);
-
-                // Navigate to products.html
-                window.location.href = 'products.html';
+                // Navigate to products.html with the selected category as a query parameter
+                window.location.href = `products.html?category=${selectedCategory}`;
             });
         });
-
-        function storeSelectedCategory(db, category) {
-            const transaction = db.transaction('categories', 'readwrite');
-            const store = transaction.objectStore('categories');
-
-            // Clear existing category
-            store.clear().onsuccess = function () {
-                // Store the selected category
-                store.add({ name: category });
-            };
-        }
 
         // Shop Now and View All Products button click - clear any existing category filter
         [shopNowButton, viewAllProductsButton, shopButton].forEach(button => {
             if (button) {
                 button.addEventListener('click', function (event) {
                     if (event) event.preventDefault();
-                    clearSelectedCategory(db);
                     window.location.href = 'products.html';
                 });
             }
         });
-
-        function clearSelectedCategory(db) {
-            const transaction = db.transaction('categories', 'readwrite');
-            const store = transaction.objectStore('categories');
-            store.clear();
-        }
 
         // Product image click - navigate to productdetails.html
         products.forEach(product => {
