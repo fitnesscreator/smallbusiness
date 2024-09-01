@@ -874,11 +874,24 @@
 
     function initializePage(db) {
         const products = document.querySelectorAll('.product');
+        const categoryButtons = document.querySelectorAll('.category');
         const urlParams = new URLSearchParams(window.location.search);
         const category = urlParams.get('category');
 
         // If a category is present in the URL, filter the products
         if (category) {
+            filterProducts(category);
+        }
+
+        // Category button click - filter products
+        categoryButtons.forEach(button => {
+            button.addEventListener('click', function () {
+                const selectedCategory = this.getAttribute('data-category');
+                filterProducts(selectedCategory);
+            });
+        });
+
+        function filterProducts(category) {
             products.forEach(product => {
                 const productCategory = product.getAttribute('data-category');
                 if (category === 'all' || productCategory === category) {
