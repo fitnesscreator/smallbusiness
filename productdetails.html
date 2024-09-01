@@ -548,46 +548,18 @@
         // Hardcoded image URLs for each product
         const productImages = {
             'Product 1': [
-                'hhttps://raw.githubusercontent.com/bestwebsites/smallbusiness/main/Pictures/97f9b50623aa00440bb0009848857a6d.jpg',
+                'https://raw.githubusercontent.com/bestwebsites/smallbusiness/main/Pictures/97f9b50623aa00440bb0009848857a6d.jpg',
                 'https://raw.githubusercontent.com/bestwebsites/smallbusiness/main/Pictures/9a08fcfea078d7119310bef13452adc3.jpg',
                 'https://example.com/path/to/image1_3.jpg',
-                'https://example.com/path/to/image1_4.jpg',
-                'https://example.com/path/to/image1_5.jpg',
-                'https://example.com/path/to/image1_6.jpg',
-                'https://example.com/path/to/image1_7.jpg',
-                'https://example.com/path/to/image1_8.jpg',
-                'https://example.com/path/to/image1_9.jpg',
-                'https://example.com/path/to/image1_10.jpg'
+                // Add additional image URLs as needed
             ],
             'Product 2': [
                 'https://example.com/path/to/image2_main.jpg',
                 'https://example.com/path/to/image2_2.jpg',
-                'https://example.com/path/to/image2_3.jpg',
-                'https://example.com/path/to/image2_4.jpg',
-                'https://example.com/path/to/image2_5.jpg',
-                'https://example.com/path/to/image2_6.jpg',
-                'https://example.com/path/to/image2_7.jpg',
-                'https://example.com/path/to/image2_8.jpg',
-                'https://example.com/path/to/image2_9.jpg',
-                'https://example.com/path/to/image2_10.jpg'
+                // Add additional image URLs as needed
             ],
             // Add more products up to Product 12
-            'Product 12': [
-                'https://example.com/path/to/image12_main.jpg',
-                'https://example.com/path/to/image12_2.jpg',
-                'https://example.com/path/to/image12_3.jpg',
-                'https://example.com/path/to/image12_4.jpg',
-                'https://example.com/path/to/image12_5.jpg',
-                'https://example.com/path/to/image12_6.jpg',
-                'https://example.com/path/to/image12_7.jpg',
-                'https://example.com/path/to/image12_8.jpg',
-                'https://example.com/path/to/image12_9.jpg',
-                'https://example.com/path/to/image12_10.jpg'
-            ]
         };
-
-        // Retrieve the selected product from IndexedDB
-        loadSelectedProduct(db);
 
         function loadSelectedProduct(db) {
             const transaction = db.transaction('products', 'readonly');
@@ -598,43 +570,48 @@
                 const selectedProduct = request.result[0];
 
                 if (selectedProduct) {
-                    // Set the main product details
+                    // Ensure the title matches a key in the productImages object
+                    const imageUrls = productImages[selectedProduct.title] || [];
+                    if (imageUrls.length > 0) {
+                        // Set the main image
+                        mainImageElement.style.backgroundImage = `url(${imageUrls[0]})`;
+                        mainImageElement.style.backgroundSize = 'cover';
+                        mainImageElement.style.backgroundPosition = 'center';
+                        mainImageElement.textContent = ''; // Remove the placeholder text
+
+                        // Generate only the necessary thumbnails
+                        thumbnailsContainer.innerHTML = ''; // Clear existing thumbnails
+                        imageUrls.forEach((imageUrl, index) => {
+                            if (imageUrl) {
+                                const thumbnail = document.createElement('div');
+                                thumbnail.className = 'thumbnail';
+                                thumbnail.style.backgroundImage = `url(${imageUrl})`;
+
+                                if (index === 0) {
+                                    thumbnail.classList.add('selected');
+                                }
+
+                                thumbnail.addEventListener('click', function () {
+                                    mainImageElement.style.backgroundImage = `url(${imageUrl})`;
+                                    document.querySelectorAll('.thumbnail').forEach(t => t.classList.remove('selected'));
+                                    thumbnail.classList.add('selected');
+                                });
+
+                                thumbnailsContainer.appendChild(thumbnail);
+                            }
+                        });
+                    } else {
+                        console.error('No images found for the selected product');
+                    }
+
+                    // Set the product details
                     productTitleElement.textContent = selectedProduct.title;
                     productPriceElement.textContent = selectedProduct.price;
                     productDescriptionElement.textContent = "This is the description of " + selectedProduct.title + ". It's a great product!";
 
-                    // Load the corresponding images based on the product title
-                    const imageUrls = productImages[selectedProduct.title] || [];
-
-                    // Display the main image
-                    mainImageElement.style.backgroundImage = `url(${imageUrls[0]})`;
-                    mainImageElement.style.backgroundSize = 'cover';
-                    mainImageElement.style.backgroundPosition = 'center';
-                    mainImageElement.textContent = ''; // Remove the placeholder text
-
-                    // Generate thumbnails with square dimensions
-                    thumbnailsContainer.innerHTML = ''; // Clear existing thumbnails
-                    imageUrls.forEach((imageUrl, index) => {
-                        if (imageUrl) { // Ensure the image URL exists
-                            const thumbnail = document.createElement('div');
-                            thumbnail.className = 'thumbnail';
-                            thumbnail.style.backgroundImage = `url(${imageUrl})`;
-
-                            if (index === 0) {
-                                thumbnail.classList.add('selected');
-                            }
-
-                            thumbnail.addEventListener('click', function () {
-                                mainImageElement.style.backgroundImage = `url(${imageUrl})`;
-                                document.querySelectorAll('.thumbnail').forEach(t => t.classList.remove('selected'));
-                                thumbnail.classList.add('selected');
-                            });
-
-                            thumbnailsContainer.appendChild(thumbnail);
-                        }
-                    });
-
                     checkWishlist(db, selectedProduct.title);
+                } else {
+                    console.error('No product selected or found in the database');
                 }
             };
 
@@ -708,6 +685,9 @@
             let currentValue = parseInt(quantityInput.value);
             quantityInput.value = currentValue + 1;
         });
+
+        // Load the selected product data
+        loadSelectedProduct(db);
     }
 });
     </script>
