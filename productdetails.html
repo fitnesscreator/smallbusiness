@@ -623,29 +623,7 @@
         const productPriceElement = document.querySelector('.product-price');
         const productDescriptionElement = document.querySelector('.product-description');
         const wishlistButton = document.querySelector('.wishlist-button svg path');
-
         const suggestedProductsGrid = document.getElementById('suggestedProductsGrid');
-
-        // Hardcoded image URLs and descriptions for each product
-        const productImages = {
-            'Product 1': {
-                images: [
-                    'https://raw.githubusercontent.com/bestwebsites/smallbusiness/main/Pictures/97f9b50623aa00440bb0009848857a6d.jpg',
-                    'https://raw.githubusercontent.com/bestwebsites/smallbusiness/main/Pictures/9a08fcfea078d7119310bef13452adc3.jpg',
-                ],
-                description: "This is the description for Product 1. It includes various details about the product, such as features, materials, and other important information.",
-                category: 'trending'
-            },
-            'Product 2': {
-                images: [
-                    'https://example.com/path/to/image2_main.jpg',
-                    'https://example.com/path/to/image2_2.jpg',
-                ],
-                description: "This is the description for Product 2. It describes the product's key selling points and other relevant details.",
-                category: 'trending'
-            },
-            // Add more products up to Product 12
-        };
 
         function loadSelectedProduct(db) {
             const transaction = db.transaction('products', 'readonly');
@@ -656,56 +634,21 @@
                 const selectedProduct = request.result[0];
 
                 if (selectedProduct) {
-                    const productData = productImages[selectedProduct.title];
-                    if (productData) {
-                        const imageUrls = productData.images || [];
-                        const description = productData.description || "No description available for this product.";
-                        const category = productData.category || "all";
+                    // Set the main image
+                    mainImageElement.style.backgroundImage = `url(${selectedProduct.image})`;
+                    mainImageElement.style.backgroundSize = 'cover';
+                    mainImageElement.style.backgroundPosition = 'center';
+                    mainImageElement.textContent = ''; // Remove the placeholder text
 
-                        // Set the main image
-                        if (imageUrls.length > 0) {
-                            mainImageElement.style.backgroundImage = `url(${imageUrls[0]})`;
-                            mainImageElement.style.backgroundSize = 'cover';
-                            mainImageElement.style.backgroundPosition = 'center';
-                            mainImageElement.textContent = ''; // Remove the placeholder text
+                    // Set the product title and price
+                    productTitleElement.textContent = selectedProduct.title;
+                    productPriceElement.textContent = selectedProduct.price;
+                    productDescriptionElement.textContent = `This is the description of ${selectedProduct.title}. It's a great product!`;
 
-                            // Generate only the necessary thumbnails
-                            thumbnailsContainer.innerHTML = ''; // Clear existing thumbnails
-                            imageUrls.forEach((imageUrl, index) => {
-                                if (imageUrl) {
-                                    const thumbnail = document.createElement('div');
-                                    thumbnail.className = 'thumbnail';
-                                    thumbnail.style.backgroundImage = `url(${imageUrl})`;
+                    // Load suggested products, excluding the current product
+                    loadSuggestedProducts(db, selectedProduct.category, selectedProduct.title);
 
-                                    if (index === 0) {
-                                        thumbnail.classList.add('selected');
-                                    }
-
-                                    thumbnail.addEventListener('click', function () {
-                                        mainImageElement.style.backgroundImage = `url(${imageUrl})`;
-                                        document.querySelectorAll('.thumbnail').forEach(t => t.classList.remove('selected'));
-                                        thumbnail.classList.add('selected');
-                                    });
-
-                                    thumbnailsContainer.appendChild(thumbnail);
-                                }
-                            });
-                        }
-
-                        // Set the product description
-                        productDescriptionElement.textContent = description;
-
-                        // Set the product title and price
-                        productTitleElement.textContent = selectedProduct.title;
-                        productPriceElement.textContent = selectedProduct.price;
-
-                        // Load suggested products, excluding the current product
-                        loadSuggestedProducts(category, selectedProduct.title);
-
-                        checkWishlist(db, selectedProduct.title);
-                    } else {
-                        console.error('No data found for the selected product');
-                    }
+                    checkWishlist(db, selectedProduct.title);
                 } else {
                     console.error('No product selected or found in the database');
                 }
@@ -716,7 +659,7 @@
             };
         }
 
-        function loadSuggestedProducts(category, currentProductTitle) {
+        function loadSuggestedProducts(db, category, currentProductTitle) {
             const transaction = db.transaction('products', 'readonly');
             const store = transaction.objectStore('products');
             const request = store.getAll();
@@ -726,7 +669,7 @@
 
                 // Filter products by category and exclude the current product
                 const suggestedProducts = allProducts.filter(product => 
-                    productImages[product.title]?.category === category && product.title !== currentProductTitle
+                    product.category === category && product.title !== currentProductTitle
                 );
 
                 // Clear the suggested products grid
@@ -734,12 +677,10 @@
 
                 // Add each suggested product to the grid
                 suggestedProducts.forEach(product => {
-                    const productData = productImages[product.title];
-                    const imageUrl = productData.images[0];
                     const productElement = document.createElement('div');
                     productElement.className = 'suggested-product';
                     productElement.innerHTML = `
-                        <img src="${imageUrl}" alt="${product.title}">
+                        <img src="${product.image}" alt="${product.title}">
                         <div class="suggested-product-details">
                             <p class="suggested-product-title">${product.title}</p>
                             <p class="suggested-product-price">${product.price}</p>
@@ -770,7 +711,6 @@
             };
         }
 
-        // Wishlist button functionality
         wishlistButton.closest('.wishlist-button').addEventListener('click', function () {
             toggleWishlist(db, productTitleElement.textContent, productPriceElement.textContent, wishlistButton);
         });
@@ -795,32 +735,6 @@
             };
         }
 
-        // Quantity selector functionality
-        const sizeOptions = document.querySelectorAll('.size-option');
-        sizeOptions.forEach(option => {
-            option.addEventListener('click', function () {
-                sizeOptions.forEach(o => o.classList.remove('selected'));
-                this.classList.add('selected');
-            });
-        });
-
-        const decreaseQuantity = document.getElementById('decreaseQuantity');
-        const increaseQuantity = document.getElementById('increaseQuantity');
-        const quantityInput = document.getElementById('quantity');
-
-        decreaseQuantity.addEventListener('click', function () {
-            let currentValue = parseInt(quantityInput.value);
-            if (currentValue > 1) {
-                quantityInput.value = currentValue - 1;
-            }
-        });
-
-        increaseQuantity.addEventListener('click', function () {
-            let currentValue = parseInt(quantityInput.value);
-            quantityInput.value = currentValue + 1;
-        });
-
-        // Load the selected product data
         loadSelectedProduct(db);
     }
 });
