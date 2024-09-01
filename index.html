@@ -906,99 +906,99 @@
     </div>
 </body>
 <script>
-    // Function 1: Filter Products by Category and Redirect to products.html
-    function filterProductsByCategory(category) {
-        window.location.href = `products.html?category=${category}`;
+// Function 1: Filter Products by Category and Redirect to products.html
+function filterProductsByCategory(category) {
+    window.location.href = `products.html?category=${category}`;
+}
+
+// Function 2: Wishlist Interaction
+function toggleWishlist(productId, productName, productPrice, productImage) {
+    let wishlist = JSON.parse(localStorage.getItem('wishlist')) || [];
+
+    const productIndex = wishlist.findIndex(product => product.id === productId);
+    if (productIndex > -1) {
+        // Remove product from wishlist
+        wishlist.splice(productIndex, 1);
+    } else {
+        // Add product to wishlist
+        wishlist.push({ id: productId, name: productName, price: productPrice, image: productImage });
     }
 
-    // Function 2: Wishlist Interaction
-    function toggleWishlist(productId, productName, productPrice, productImage) {
-        // Assuming you have a global wishlist array to store wishlist items
-        let wishlist = JSON.parse(localStorage.getItem('wishlist')) || [];
+    // Update the wishlist in local storage
+    localStorage.setItem('wishlist', JSON.stringify(wishlist));
 
-        const productIndex = wishlist.findIndex(product => product.id === productId);
-        if (productIndex > -1) {
-            // If product is already in wishlist, remove it
-            wishlist.splice(productIndex, 1);
-        } else {
-            // Add product to wishlist
-            wishlist.push({ id: productId, name: productName, price: productPrice, image: productImage });
-        }
+    // Update the wishlist icon fill
+    const wishlistButton = document.querySelector(`[data-product-id="${productId}"] .wishlist-button svg`);
+    wishlistButton.classList.toggle('is-active');
+}
 
-        // Update the wishlist in local storage
-        localStorage.setItem('wishlist', JSON.stringify(wishlist));
+// Function 3: Buy Now and Redirect to Product Details
+function buyNow(productId, productName, productPrice, productImage) {
+    // Redirect to productdetails.html with product details as query parameters
+    window.location.href = `productdetails.html?productId=${productId}&name=${encodeURIComponent(productName)}&price=${encodeURIComponent(productPrice)}&image=${encodeURIComponent(productImage)}`;
+}
 
-        // Update the wishlist icon fill
-        const wishlistButton = document.querySelector(`[data-product-id="${productId}"] .wishlist-button svg`);
-        wishlistButton.classList.toggle('is-active');
-    }
+// Function 4: Add to Cart and Redirect to cart.html
+function addToCart(productId, productName, productPrice, productImage) {
+    let cart = JSON.parse(localStorage.getItem('cart')) || [];
 
-    // Function 3: Buy Now and Redirect to Product Details
-    function buyNow(productId, productName, productPrice, productImage) {
-        // Pass the product details to productdetails.html
-        window.location.href = `productdetails.html?productId=${productId}&name=${encodeURIComponent(productName)}&price=${encodeURIComponent(productPrice)}&image=${encodeURIComponent(productImage)}`;
-    }
+    // Add product to cart
+    cart.push({ id: productId, name: productName, price: productPrice, image: productImage });
 
-    // Function 4: Add to Cart and Redirect to cart.html
-    function addToCart(productId, productName, productPrice, productImage) {
-        // Assuming you have a global cart array to store cart items
-        let cart = JSON.parse(localStorage.getItem('cart')) || [];
+    // Update the cart in local storage
+    localStorage.setItem('cart', JSON.stringify(cart));
 
-        // Add product to cart
-        cart.push({ id: productId, name: productName, price: productPrice, image: productImage });
+    // Redirect to cart page
+    window.location.href = 'cart.html';
+}
 
-        // Update the cart in local storage
-        localStorage.setItem('cart', JSON.stringify(cart));
+// Function 5: Filter by Category from Contact Us Section
+function filterByCategoryFromContact(category) {
+    filterProductsByCategory(category);
+}
 
-        // Redirect to cart page
-        window.location.href = 'cart.html';
-    }
+// Attach Event Listeners
 
-    // Function 5: Filter by Category from Contact Us Section
-    function filterByCategoryFromContact(category) {
+// 1. Event Listeners for Category Buttons in Shop by Category Section
+document.querySelectorAll('.categories-row .category').forEach(categoryElement => {
+    categoryElement.addEventListener('click', function() {
+        const category = this.getAttribute('data-category');
         filterProductsByCategory(category);
-    }
+    });
+});
 
-    // Event Listeners for Category Buttons in Shop by Category Section
-    document.querySelectorAll('.category').forEach(categoryElement => {
-        categoryElement.addEventListener('click', function() {
-            const category = this.getAttribute('data-category');
-            filterProductsByCategory(category);
-        });
+// 2. Event Listeners for Add to Cart, Buy Now, and Wishlist Buttons in Featured Products Section
+document.querySelectorAll('.product').forEach(productElement => {
+    const productId = productElement.getAttribute('data-product-id');
+    const productName = productElement.querySelector('.product-title').textContent;
+    const productPrice = productElement.querySelector('.product-price').textContent;
+    const productImage = productElement.querySelector('.image-container img').getAttribute('src');
+
+    // Wishlist Button
+    productElement.querySelector('.wishlist-button').addEventListener('click', function(event) {
+        event.stopPropagation();
+        toggleWishlist(productId, productName, productPrice, productImage);
     });
 
-    // Event Listeners for Add to Cart and Buy Now Buttons in Featured Products Section
-    document.querySelectorAll('.product').forEach(productElement => {
-        const productId = productElement.getAttribute('data-product-id');
-        const productName = productElement.querySelector('.product-title').textContent;
-        const productPrice = productElement.querySelector('.product-price').textContent;
-        const productImage = productElement.querySelector('.image-container img').getAttribute('src');
-
-        // Wishlist Button
-        productElement.querySelector('.wishlist-button').addEventListener('click', function(event) {
-            event.stopPropagation();
-            toggleWishlist(productId, productName, productPrice, productImage);
-        });
-
-        // Buy Now Button
-        productElement.querySelector('.buy-button').addEventListener('click', function(event) {
-            event.stopPropagation();
-            buyNow(productId, productName, productPrice, productImage);
-        });
-
-        // Add to Cart Button
-        productElement.querySelector('.add-to-cart-button').addEventListener('click', function(event) {
-            event.stopPropagation();
-            addToCart(productId, productName, productPrice, productImage);
-        });
+    // Buy Now Button
+    productElement.querySelector('.buy-button').addEventListener('click', function(event) {
+        event.stopPropagation();
+        buyNow(productId, productName, productPrice, productImage);
     });
 
-    // Event Listeners for Buttons in Contact Us Section
-    document.querySelectorAll('.contact-container .link-group ul.dropdown li').forEach(link => {
-        link.addEventListener('click', function() {
-            const category = this.textContent.trim().toLowerCase().replace(/\s+/g, '');
-            filterByCategoryFromContact(category);
-        });
+    // Add to Cart Button
+    productElement.querySelector('.add-to-cart-button').addEventListener('click', function(event) {
+        event.stopPropagation();
+        addToCart(productId, productName, productPrice, productImage);
     });
+});
+
+// 3. Event Listeners for Buttons in Contact Us Section
+document.querySelectorAll('.contact-container .link-group ul.dropdown li').forEach(link => {
+    link.addEventListener('click', function() {
+        const category = this.textContent.trim().toLowerCase().replace(/\s+/g, '');
+        filterByCategoryFromContact(category);
+    });
+});
 </script>
 </html>
