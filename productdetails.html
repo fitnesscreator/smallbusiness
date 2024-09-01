@@ -607,7 +607,7 @@
     };
 
     function initializePage(db) {
-        const mainImageElement = document.querySelector('.main-image');
+        const mainImageElement = document.getElementById('mainImage');
         const thumbnailsContainer = document.getElementById('thumbnailImages');
         const productTitleElement = document.querySelector('.product-title');
         const productPriceElement = document.querySelector('.product-price');
@@ -632,7 +632,7 @@
                 description: "This is the description for Product 2.",
                 category: 'trending'
             },
-            // Add more products here
+            // Add more products here as necessary
         };
 
         function loadSelectedProduct(db) {
@@ -641,7 +641,7 @@
             const request = store.getAll();
 
             request.onsuccess = function () {
-                const selectedProduct = request.result[0];
+                const selectedProduct = request.result[0]; // Assuming only one selected product is stored
 
                 if (selectedProduct) {
                     const productDetails = productData[selectedProduct.title];
@@ -705,8 +705,7 @@
 
             request.onsuccess = function () {
                 const products = request.result;
-                const suggestedProductsContainer = document.getElementById('suggestedProducts');
-                suggestedProductsContainer.innerHTML = '';  // Clear any existing content
+                suggestedProductsContainer.innerHTML = ''; // Clear any existing content
 
                 products.forEach(product => {
                     const productDetails = productData[product.title];
@@ -758,7 +757,7 @@
             };
         }
 
-        wishlistButton.closest('.wishlist-button').addEventListener('click', function () {
+        document.querySelector('.wishlist-button').addEventListener('click', function () {
             toggleWishlist(db, productTitleElement.textContent, productPriceElement.textContent, wishlistButton);
         });
 
