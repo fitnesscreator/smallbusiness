@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order Confirmation</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: #333;
+            margin: 0;
+            padding: 0;
+            background-color: #f9f3f1;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 20px;
+            background-color: #f6e6e0;
+            color: #5c4a4a;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+        }
+
+        .navbar .logo {
+            font-size: 20px;
+            font-weight: bold;
+            letter-spacing: 1px;
+            color: #5c4a4a;
+        }
+
+        .navbar .menu {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+
+        .navbar .menu a {
+            color: #5c4a4a;
+            text-decoration: none;
+            transition: color 0.3s;
+            font-size: 14px;
+        }
+
+        .navbar .menu a:hover {
+            color: #b88b8b;
+        }
+
+        .navbar .icons {
+            display: flex;
+            gap: 10px;
+            font-size: 18px;
+        }
+
+        .navbar .icon {
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+
+        .navbar .icon:hover {
+            color: #b88b8b;
+        }
+
+        .confirmation-container {
+            flex: 1;
+            max-width: 600px;
+            margin: 100px auto;
+            text-align: center;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .confirmation-container h1 {
+            font-size: 36px;
+            color: #7b6464;
+            margin-bottom: 20px;
+        }
+
+        .confirmation-container p {
+            font-size: 18px;
+            color: #555;
+            margin-bottom: 30px;
+        }
+
+        .confirmation-container .back-button {
+            padding: 10px 20px;
+            background-color: #b88b8b;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            text-decoration: none;
+            font-size: 16px;
+            transition: background-color 0.3s;
+        }
+
+        .confirmation-container .back-button:hover {
+            background-color: #a16f6f;
+        }
+
+        /* Contact Us Section */
+        .contact-us {
+            padding: 20px 15px;
+            background-color: #f2d9d5;
+            text-align: center;
+            border-top: 2px solid #b88b8b;
+        }
+
+        .contact-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            max-width: 1200px;
+            margin: 0 auto;
+            text-align: left;
+        }
+
+        .contact-container .logo {
+            flex: 1;
+        }
+
+        .contact-container .links {
+            flex: 3;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .navbar-logo {
+            font-size: 18px;
+            font-weight: bold;
+            color: #6d4e4e;
+        }
+
+        .link-group {
+            flex: 1;
+        }
+
+        .link-title {
+            font-size: 16px;
+            font-weight: bold;
+            color: #6d4e4e;
+            margin-bottom: 8px;
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+
+        .link-title:hover {
+            color: #b88b8b;
+        }
+
+        .dropdown {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .dropdown li {
+            margin-bottom: 5px;
+            color: #7b6464;
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+
+        .dropdown li:hover {
+            color: #b88b8b;
+        }
+
+        .contact-button {
+            padding: 6px 10px;
+            background-color: #d8a69a;
+            color: #fff;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            font-size: 12px;
+        }
+
+        .contact-button:hover {
+            background-color: #b88b8b;
+        }
+
+        .social-icons {
+            display: flex;
+            gap: 5px;
+            margin-top: 10px;
+        }
+
+        .social-icons span {
+            font-size: 16px;
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+
+        .social-icons span:hover {
+            color: #b88b8b;
+        }
+
+        /* Footer */
+        .footer {
+            padding: 10px;
+            background-color: #b88b8b;
+            color: #fff;
+            text-align: center;
+            font-size: 12px;
+            letter-spacing: 1px;
+            border-top: 1px solid #a57d7d;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <div class="navbar">
+        <div class="logo"><img src="https://raw.githubusercontent.com/bestwebsites/smallbusiness/main/Pictures/B%20(79).png" alt="Logo" style="height: 30px;"></div>
+        <div class="menu">
+            <a href="index.html">Shop</a>
+            <a href="reviews.html">Reviews</a>
+            <a href="about.html">About</a>
+            <a href="contact.html">Contact Us</a>
+        </div>
+        <div class="icons">
+            <a href="wishlist.html" class="icon" style="color: inherit; text-decoration: none;">♡</a>
+            <a href="cart.html" class="icon" style="color: inherit; text-decoration: none;">🛒</a>
+        </div>
+    </div>
+
+    <!-- Order Confirmation Section -->
+    <div class="confirmation-container">
+        <h1>Order Placed</h1>
+        <p>Thank you for your purchase! Your order has been placed successfully.</p>
+        <a href="index.html" class="back-button">Go Back to Main Page</a>
+    </div>
+
+    <!-- Contact Us Section -->
+    <div class="contact-us">
+        <div class="contact-container">
+            <div class="logo">
+                <img src="https://raw.githubusercontent.com/bestwebsites/smallbusiness/main/Pictures/B%20(79).png" alt="Contact Us Logo" style="height: 30px;">
+            </div>
+            <div class="links">
+                <div class="link-group">
+                    <p class="link-title">Shop</p>
+                    <ul class="dropdown">
+                        <li>Trending Now</li>
+                        <li>Best Sellers</li>
+                        <li>New Arrivals</li>
+                        <li>Gift Ideas</li>
+                    </ul>
+                </div>
+                <div class="link-group">
+                    <p class="link-title">About</p>
+                    <ul class="dropdown">
+                        <li>About Us</li>
+                        <li>Reviews</li>
+                        <li>Shipping</li>
+                    </ul>
+                </div>
+                <div class="link-group">
+                    <p class="link-title">Contact</p>
+                    <ul class="dropdown">
+                        <li><button class="contact-button">Contact Us</button></li>
+                        <li>
+                            <div class="social-icons">
+                                <span>📷</span> <!-- Instagram icon -->
+                                <span>🎵</span> <!-- TikTok icon -->
+                                <span>📘</span> <!-- Facebook icon -->
+                                <span>🐦</span> <!-- X (Twitter) icon -->
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="footer">
+        &copy; 2024 Your Company. All Rights Reserved.
+    </div>
+</body>
+</html>
