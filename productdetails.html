@@ -695,15 +695,21 @@
         const products = request.result;
 
         // Debugging logs
-        console.log('Category:', category);  // Log the category
-        console.log('Products:', products);  // Log the products array
+        console.log('Category:', category);  // Log the category of the current product
+        console.log('Products:', products);  // Log the array of products retrieved from the database
 
         const suggestedProductsContainer = document.getElementById('suggestedProducts');
         suggestedProductsContainer.innerHTML = ''; // Clear any existing content
 
+        let suggestionsFound = false;  // Flag to check if any suggestions are found
+
         products.forEach(product => {
+            console.log(`Checking product: ${product.title}, Category: ${product.category}`);  // Log each product’s title and category
+            
             // Check that the product belongs to the same category and isn't the current product
             if (product.title !== excludeTitle && product.category === category) {
+                suggestionsFound = true;
+
                 const suggestedProduct = document.createElement('div');
                 suggestedProduct.className = 'suggested-product';
                 suggestedProduct.innerHTML = `
@@ -720,7 +726,7 @@
             }
         });
 
-        if (suggestedProductsContainer.innerHTML === '') {
+        if (!suggestionsFound) {
             suggestedProductsContainer.innerHTML = '<p>No suggested products available.</p>';
         }
     };
