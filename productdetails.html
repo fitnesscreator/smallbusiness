@@ -402,20 +402,33 @@
         }
         /* Suggested Products Section */
         .suggested-products-section {
+    margin-top: 40px;
+    padding: 20px;
+    background-color: #f4e5e0;
+    border-radius: 10px;
+}
+
+.suggested-products-section h2 {
+    font-size: 24px;
+    color: #7b6464;
+    margin-bottom: 20px;
+}
+
+.suggested-products-container {
     display: flex;
     flex-wrap: wrap;
     gap: 20px;
-    margin-top: 40px;
 }
 
 .suggested-product {
     flex: 1 1 200px;
-    background-color: #f9f3f1;
+    background-color: #ffffff;
     border: 1px solid #e4c9c4;
     border-radius: 10px;
-    padding: 10px;
-    cursor: pointer;
+    overflow: hidden;
     transition: transform 0.3s, box-shadow 0.3s;
+    cursor: pointer;
+    padding: 10px;
 }
 
 .suggested-product:hover {
@@ -434,6 +447,7 @@
 .suggested-product-title {
     font-size: 16px;
     font-weight: bold;
+    color: #7b6464;
     margin-bottom: 5px;
 }
 
@@ -511,11 +525,10 @@
     <div class="suggested-products-section">
     <h2>Suggested Products</h2>
     <div id="suggestedProducts" class="suggested-products-container">
-        <!-- Suggested products will be dynamically inserted here -->
+        <!-- Suggested products will be injected here -->
     </div>
 </div>
-
-
+    
     <!-- Contact Us Section -->
     <div class="contact-us" id="contactSection">
         <div class="contact-container">
@@ -692,12 +705,11 @@
 
             request.onsuccess = function () {
                 const products = request.result;
-
-                suggestedProductsContainer.innerHTML = '';
+                const suggestedProductsContainer = document.getElementById('suggestedProducts');
+                suggestedProductsContainer.innerHTML = '';  // Clear any existing content
 
                 products.forEach(product => {
                     const productDetails = productData[product.title];
-
                     if (product.title !== excludeTitle && productDetails && productDetails.category === category) {
                         const suggestedProduct = document.createElement('div');
                         suggestedProduct.className = 'suggested-product';
@@ -770,7 +782,6 @@
             };
         }
 
-        // Size option selector functionality
         const sizeOptions = document.querySelectorAll('.size-option');
         sizeOptions.forEach(option => {
             option.addEventListener('click', function () {
@@ -779,7 +790,6 @@
             });
         });
 
-        // Quantity selector functionality
         const decreaseQuantity = document.getElementById('decreaseQuantity');
         const increaseQuantity = document.getElementById('increaseQuantity');
         const quantityInput = document.getElementById('quantity');
