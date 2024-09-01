@@ -622,8 +622,29 @@
         const productTitleElement = document.querySelector('.product-title');
         const productPriceElement = document.querySelector('.product-price');
         const productDescriptionElement = document.querySelector('.product-description');
+        const suggestedProductsContainer = document.getElementById('suggestedProducts');
         const wishlistButton = document.querySelector('.wishlist-button svg path');
-        const suggestedProductsGrid = document.getElementById('suggestedProductsGrid');
+
+        // Hardcoded image URLs and descriptions for each product
+        const productData = {
+            'Product 1': {
+                images: [
+                    'https://raw.githubusercontent.com/bestwebsites/smallbusiness/main/Pictures/97f9b50623aa00440bb0009848857a6d.jpg',
+                    'https://raw.githubusercontent.com/bestwebsites/smallbusiness/main/Pictures/9a08fcfea078d7119310bef13452adc3.jpg',
+                ],
+                description: "This is the description for Product 1.",
+                category: 'trending'
+            },
+            'Product 2': {
+                images: [
+                    'https://example.com/path/to/image2_main.jpg',
+                    'https://example.com/path/to/image2_2.jpg',
+                ],
+                description: "This is the description for Product 2.",
+                category: 'trending'
+            },
+            // Add more products here
+        };
 
         function loadSelectedProduct(db) {
             const transaction = db.transaction('products', 'readonly');
@@ -634,21 +655,55 @@
                 const selectedProduct = request.result[0];
 
                 if (selectedProduct) {
-                    // Set the main image
-                    mainImageElement.style.backgroundImage = `url(${selectedProduct.image})`;
-                    mainImageElement.style.backgroundSize = 'cover';
-                    mainImageElement.style.backgroundPosition = 'center';
-                    mainImageElement.textContent = ''; // Remove the placeholder text
+                    const productDetails = productData[selectedProduct.title];
+                    if (productDetails) {
+                        const imageUrls = productDetails.images || [];
+                        const description = productDetails.description || "No description available for this product.";
+                        const category = productDetails.category;
 
-                    // Set the product title and price
-                    productTitleElement.textContent = selectedProduct.title;
-                    productPriceElement.textContent = selectedProduct.price;
-                    productDescriptionElement.textContent = `This is the description of ${selectedProduct.title}. It's a great product!`;
+                        // Set the main image
+                        if (imageUrls.length > 0) {
+                            mainImageElement.style.backgroundImage = `url(${imageUrls[0]})`;
+                            mainImageElement.style.backgroundSize = 'cover';
+                            mainImageElement.style.backgroundPosition = 'center';
+                            mainImageElement.textContent = ''; // Remove the placeholder text
 
-                    // Load suggested products, excluding the current product
-                    loadSuggestedProducts(db, selectedProduct.category, selectedProduct.title);
+                            // Generate thumbnails
+                            thumbnailsContainer.innerHTML = ''; // Clear existing thumbnails
+                            imageUrls.forEach((imageUrl, index) => {
+                                if (imageUrl) {
+                                    const thumbnail = document.createElement('div');
+                                    thumbnail.className = 'thumbnail';
+                                    thumbnail.style.backgroundImage = `url(${imageUrl})`;
 
-                    checkWishlist(db, selectedProduct.title);
+                                    if (index === 0) {
+                                        thumbnail.classList.add('selected');
+                                    }
+
+                                    thumbnail.addEventListener('click', function () {
+                                        mainImageElement.style.backgroundImage = `url(${imageUrl})`;
+                                        document.querySelectorAll('.thumbnail').forEach(t => t.classList.remove('selected'));
+                                        thumbnail.classList.add('selected');
+                                    });
+
+                                    thumbnailsContainer.appendChild(thumbnail);
+                                }
+                            });
+                        }
+
+                        // Set the product details
+                        productTitleElement.textContent = selectedProduct.title;
+                        productPriceElement.textContent = selectedProduct.price;
+                        productDescriptionElement.textContent = description;
+
+                        // Display suggested products
+                        loadSuggestedProducts(db, category, selectedProduct.title);
+
+                        // Check wishlist status
+                        checkWishlist(db, selectedProduct.title);
+                    } else {
+                        console.error('No data found for the selected product');
+                    }
                 } else {
                     console.error('No product selected or found in the database');
                 }
@@ -659,34 +714,32 @@
             };
         }
 
-        function loadSuggestedProducts(db, category, currentProductTitle) {
+        function loadSuggestedProducts(db, category, excludeTitle) {
             const transaction = db.transaction('products', 'readonly');
             const store = transaction.objectStore('products');
             const request = store.getAll();
 
             request.onsuccess = function () {
-                const allProducts = request.result;
+                const products = request.result;
 
-                // Filter products by category and exclude the current product
-                const suggestedProducts = allProducts.filter(product => 
-                    product.category === category && product.title !== currentProductTitle
-                );
+                suggestedProductsContainer.innerHTML = ''; // Clear existing suggestions
 
-                // Clear the suggested products grid
-                suggestedProductsGrid.innerHTML = '';
+                products.forEach(product => {
+                    if (product.title !== excludeTitle && productData[product.title].category === category) {
+                        const suggestedProduct = document.createElement('div');
+                        suggestedProduct.className = 'suggested-product';
+                        suggestedProduct.innerHTML = `
+                            <div class="suggested-product-image" style="background-image: url(${productData[product.title].images[0]});"></div>
+                            <div class="suggested-product-title">${product.title}</div>
+                            <div class="suggested-product-price">${product.price}</div>
+                        `;
+                        suggestedProductsContainer.appendChild(suggestedProduct);
 
-                // Add each suggested product to the grid
-                suggestedProducts.forEach(product => {
-                    const productElement = document.createElement('div');
-                    productElement.className = 'suggested-product';
-                    productElement.innerHTML = `
-                        <img src="${product.image}" alt="${product.title}">
-                        <div class="suggested-product-details">
-                            <p class="suggested-product-title">${product.title}</p>
-                            <p class="suggested-product-price">${product.price}</p>
-                        </div>
-                    `;
-                    suggestedProductsGrid.appendChild(productElement);
+                        suggestedProduct.addEventListener('click', function () {
+                            storeProductDetails(db, product);
+                            window.location.href = 'productdetails.html';
+                        });
+                    }
                 });
             };
 
@@ -711,6 +764,16 @@
             };
         }
 
+        function storeProductDetails(db, productDetails) {
+            const transaction = db.transaction('products', 'readwrite');
+            const store = transaction.objectStore('products');
+
+            store.clear().onsuccess = function () {
+                store.add(productDetails);
+            };
+        }
+
+        // Wishlist button functionality
         wishlistButton.closest('.wishlist-button').addEventListener('click', function () {
             toggleWishlist(db, productTitleElement.textContent, productPriceElement.textContent, wishlistButton);
         });
@@ -735,6 +798,32 @@
             };
         }
 
+        // Quantity selector functionality
+        const sizeOptions = document.querySelectorAll('.size-option');
+        sizeOptions.forEach(option => {
+            option.addEventListener('click', function () {
+                sizeOptions.forEach(o => o.classList.remove('selected'));
+                this.classList.add('selected');
+            });
+        });
+
+        const decreaseQuantity = document.getElementById('decreaseQuantity');
+        const increaseQuantity = document.getElementById('increaseQuantity');
+        const quantityInput = document.getElementById('quantity');
+
+        decreaseQuantity.addEventListener('click', function () {
+            let currentValue = parseInt(quantityInput.value);
+            if (currentValue > 1) {
+                quantityInput.value = currentValue - 1;
+            }
+        });
+
+        increaseQuantity.addEventListener('click', function () {
+            let currentValue = parseInt(quantityInput.value);
+            quantityInput.value = currentValue + 1;
+        });
+
+        // Load the selected product data
         loadSelectedProduct(db);
     }
 });
