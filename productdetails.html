@@ -599,214 +599,212 @@
 
     request.onsuccess = function (event) {
         db = event.target.result;
-        initializePage(db);
+        loadSelectedProduct(db);
     };
 
     request.onerror = function (event) {
         console.error('IndexedDB error:', event.target.errorCode);
     };
 
-    function initializePage(db) {
+    const productData = {
+        'Product 1': {
+            images: [
+                'https://raw.githubusercontent.com/bestwebsites/smallbusiness/main/Pictures/97f9b50623aa00440bb0009848857a6d.jpg',
+                'https://raw.githubusercontent.com/bestwebsites/smallbusiness/main/Pictures/9a08fcfea078d7119310bef13452adc3.jpg',
+            ],
+            description: "This is the description for Product 1.",
+            category: 'trending'
+        },
+        'Product 2': {
+            images: [
+                'https://example.com/path/to/image2_main.jpg',
+                'https://example.com/path/to/image2_2.jpg',
+            ],
+            description: "This is the description for Product 2.",
+            category: 'trending'
+        },
+        // Add more products here as necessary
+    };
+
+    function loadSelectedProduct(db) {
+        const transaction = db.transaction('products', 'readonly');
+        const store = transaction.objectStore('products');
+        const request = store.getAll();
+
+        request.onsuccess = function () {
+            const selectedProduct = request.result[0]; // Assuming only one selected product is stored
+
+            if (selectedProduct) {
+                const productDetails = productData[selectedProduct.title];
+                if (productDetails) {
+                    displayProductDetails(selectedProduct, productDetails);
+                    loadSuggestedProducts(db, productDetails.category, selectedProduct.title);
+                    checkWishlist(db, selectedProduct.title);
+                } else {
+                    console.error('No data found for the selected product');
+                }
+            } else {
+                console.error('No product selected or found in the database');
+            }
+        };
+
+        request.onerror = function () {
+            console.error('Failed to load selected product');
+        };
+    }
+
+    function displayProductDetails(selectedProduct, productDetails) {
         const mainImageElement = document.getElementById('mainImage');
         const thumbnailsContainer = document.getElementById('thumbnailImages');
         const productTitleElement = document.querySelector('.product-title');
         const productPriceElement = document.querySelector('.product-price');
         const productDescriptionElement = document.querySelector('.product-description');
-        const suggestedProductsContainer = document.getElementById('suggestedProducts');
-        const wishlistButton = document.querySelector('.wishlist-button svg path');
 
-        const productData = {
-            'Product 1': {
-                images: [
-                    'https://raw.githubusercontent.com/bestwebsites/smallbusiness/main/Pictures/97f9b50623aa00440bb0009848857a6d.jpg',
-                    'https://raw.githubusercontent.com/bestwebsites/smallbusiness/main/Pictures/9a08fcfea078d7119310bef13452adc3.jpg',
-                ],
-                description: "This is the description for Product 1.",
-                category: 'trending'
-            },
-            'Product 2': {
-                images: [
-                    'https://example.com/path/to/image2_main.jpg',
-                    'https://example.com/path/to/image2_2.jpg',
-                ],
-                description: "This is the description for Product 2.",
-                category: 'trending'
-            },
-            // Add more products here as necessary
+        const imageUrls = productDetails.images || [];
+        const description = productDetails.description || "No description available for this product.";
+
+        if (imageUrls.length > 0) {
+            mainImageElement.style.backgroundImage = `url(${imageUrls[0]})`;
+            mainImageElement.style.backgroundSize = 'cover';
+            mainImageElement.style.backgroundPosition = 'center';
+            mainImageElement.textContent = '';
+
+            thumbnailsContainer.innerHTML = '';
+            imageUrls.forEach((imageUrl, index) => {
+                if (imageUrl) {
+                    const thumbnail = document.createElement('div');
+                    thumbnail.className = 'thumbnail';
+                    thumbnail.style.backgroundImage = `url(${imageUrl})`;
+
+                    if (index === 0) {
+                        thumbnail.classList.add('selected');
+                    }
+
+                    thumbnail.addEventListener('click', function () {
+                        mainImageElement.style.backgroundImage = `url(${imageUrl})`;
+                        document.querySelectorAll('.thumbnail').forEach(t => t.classList.remove('selected'));
+                        thumbnail.classList.add('selected');
+                    });
+
+                    thumbnailsContainer.appendChild(thumbnail);
+                }
+            });
+        }
+
+        productTitleElement.textContent = selectedProduct.title;
+        productPriceElement.textContent = selectedProduct.price;
+        productDescriptionElement.textContent = description;
+    }
+
+    function loadSuggestedProducts(db, category, excludeTitle) {
+        const transaction = db.transaction('products', 'readonly');
+        const store = transaction.objectStore('products');
+        const request = store.getAll();
+
+        request.onsuccess = function () {
+            const products = request.result;
+            const suggestedProductsContainer = document.getElementById('suggestedProducts');
+            suggestedProductsContainer.innerHTML = ''; // Clear any existing content
+
+            products.forEach(product => {
+                const productDetails = productData[product.title];
+                if (product.title !== excludeTitle && productDetails && productDetails.category === category) {
+                    const suggestedProduct = document.createElement('div');
+                    suggestedProduct.className = 'suggested-product';
+                    suggestedProduct.innerHTML = `
+                        <div class="suggested-product-image" style="background-image: url(${productDetails.images[0]});"></div>
+                        <div class="suggested-product-title">${product.title}</div>
+                        <div class="suggested-product-price">${product.price}</div>
+                    `;
+                    suggestedProductsContainer.appendChild(suggestedProduct);
+
+                    suggestedProduct.addEventListener('click', function () {
+                        storeProductDetails(db, product);
+                        window.location.href = 'productdetails.html';
+                    });
+                }
+            });
         };
 
-        function loadSelectedProduct(db) {
-            const transaction = db.transaction('products', 'readonly');
-            const store = transaction.objectStore('products');
-            const request = store.getAll();
-
-            request.onsuccess = function () {
-                const selectedProduct = request.result[0]; // Assuming only one selected product is stored
-
-                if (selectedProduct) {
-                    const productDetails = productData[selectedProduct.title];
-                    if (productDetails) {
-                        const imageUrls = productDetails.images || [];
-                        const description = productDetails.description || "No description available for this product.";
-                        const category = productDetails.category;
-
-                        if (imageUrls.length > 0) {
-                            mainImageElement.style.backgroundImage = `url(${imageUrls[0]})`;
-                            mainImageElement.style.backgroundSize = 'cover';
-                            mainImageElement.style.backgroundPosition = 'center';
-                            mainImageElement.textContent = '';
-
-                            thumbnailsContainer.innerHTML = '';
-                            imageUrls.forEach((imageUrl, index) => {
-                                if (imageUrl) {
-                                    const thumbnail = document.createElement('div');
-                                    thumbnail.className = 'thumbnail';
-                                    thumbnail.style.backgroundImage = `url(${imageUrl})`;
-
-                                    if (index === 0) {
-                                        thumbnail.classList.add('selected');
-                                    }
-
-                                    thumbnail.addEventListener('click', function () {
-                                        mainImageElement.style.backgroundImage = `url(${imageUrl})`;
-                                        document.querySelectorAll('.thumbnail').forEach(t => t.classList.remove('selected'));
-                                        thumbnail.classList.add('selected');
-                                    });
-
-                                    thumbnailsContainer.appendChild(thumbnail);
-                                }
-                            });
-                        }
-
-                        productTitleElement.textContent = selectedProduct.title;
-                        productPriceElement.textContent = selectedProduct.price;
-                        productDescriptionElement.textContent = description;
-
-                        loadSuggestedProducts(db, category, selectedProduct.title);
-
-                        checkWishlist(db, selectedProduct.title);
-                    } else {
-                        console.error('No data found for the selected product');
-                    }
-                } else {
-                    console.error('No product selected or found in the database');
-                }
-            };
-
-            request.onerror = function () {
-                console.error('Failed to load selected product');
-            };
-        }
-
-        function loadSuggestedProducts(db, category, excludeTitle) {
-            const transaction = db.transaction('products', 'readonly');
-            const store = transaction.objectStore('products');
-            const request = store.getAll();
-
-            request.onsuccess = function () {
-                const products = request.result;
-                suggestedProductsContainer.innerHTML = ''; // Clear any existing content
-
-                products.forEach(product => {
-                    const productDetails = productData[product.title];
-                    if (product.title !== excludeTitle && productDetails && productDetails.category === category) {
-                        const suggestedProduct = document.createElement('div');
-                        suggestedProduct.className = 'suggested-product';
-                        suggestedProduct.innerHTML = `
-                            <div class="suggested-product-image" style="background-image: url(${productDetails.images[0]});"></div>
-                            <div class="suggested-product-title">${product.title}</div>
-                            <div class="suggested-product-price">${product.price}</div>
-                        `;
-                        suggestedProductsContainer.appendChild(suggestedProduct);
-
-                        suggestedProduct.addEventListener('click', function () {
-                            storeProductDetails(db, product);
-                            window.location.href = 'productdetails.html';
-                        });
-                    }
-                });
-            };
-
-            request.onerror = function () {
-                console.error('Failed to load suggested products');
-            };
-        }
-
-        function checkWishlist(db, productTitle) {
-            const transaction = db.transaction('wishlist', 'readonly');
-            const store = transaction.objectStore('wishlist');
-            const request = store.get(productTitle);
-
-            request.onsuccess = function () {
-                if (request.result) {
-                    wishlistButton.setAttribute('fill', '#191919');
-                }
-            };
-
-            request.onerror = function () {
-                console.error('Failed to check wishlist');
-            };
-        }
-
-        function storeProductDetails(db, productDetails) {
-            const transaction = db.transaction('products', 'readwrite');
-            const store = transaction.objectStore('products');
-
-            store.clear().onsuccess = function () {
-                store.add(productDetails);
-            };
-        }
-
-        document.querySelector('.wishlist-button').addEventListener('click', function () {
-            toggleWishlist(db, productTitleElement.textContent, productPriceElement.textContent, wishlistButton);
-        });
-
-        function toggleWishlist(db, productTitle, productPrice, wishlistButton) {
-            const transaction = db.transaction('wishlist', 'readwrite');
-            const store = transaction.objectStore('wishlist');
-            const request = store.get(productTitle);
-
-            request.onsuccess = function () {
-                if (request.result) {
-                    store.delete(productTitle);
-                    wishlistButton.setAttribute('fill', 'none');
-                } else {
-                    store.add({ title: productTitle, price: productPrice });
-                    wishlistButton.setAttribute('fill', '#191919');
-                }
-            };
-
-            request.onerror = function () {
-                console.error('Error toggling wishlist status');
-            };
-        }
-
-        const sizeOptions = document.querySelectorAll('.size-option');
-        sizeOptions.forEach(option => {
-            option.addEventListener('click', function () {
-                sizeOptions.forEach(o => o.classList.remove('selected'));
-                this.classList.add('selected');
-            });
-        });
-
-        const decreaseQuantity = document.getElementById('decreaseQuantity');
-        const increaseQuantity = document.getElementById('increaseQuantity');
-        const quantityInput = document.getElementById('quantity');
-
-        decreaseQuantity.addEventListener('click', function () {
-            let currentValue = parseInt(quantityInput.value);
-            if (currentValue > 1) {
-                quantityInput.value = currentValue - 1;
-            }
-        });
-
-        increaseQuantity.addEventListener('click', function () {
-            let currentValue = parseInt(quantityInput.value);
-            quantityInput.value = currentValue + 1;
-        });
-
-        loadSelectedProduct(db);
+        request.onerror = function () {
+            console.error('Failed to load suggested products');
+        };
     }
+
+    function checkWishlist(db, productTitle) {
+        const transaction = db.transaction('wishlist', 'readonly');
+        const store = transaction.objectStore('wishlist');
+        const request = store.get(productTitle);
+
+        request.onsuccess = function () {
+            const wishlistButton = document.querySelector('.wishlist-button svg path');
+            if (request.result) {
+                wishlistButton.setAttribute('fill', '#191919');
+            }
+        };
+
+        request.onerror = function () {
+            console.error('Failed to check wishlist');
+        };
+    }
+
+    function storeProductDetails(db, productDetails) {
+        const transaction = db.transaction('products', 'readwrite');
+        const store = transaction.objectStore('products');
+
+        store.clear().onsuccess = function () {
+            store.add(productDetails);
+        };
+    }
+
+    document.querySelector('.wishlist-button').addEventListener('click', function () {
+        toggleWishlist(db, document.querySelector('.product-title').textContent, document.querySelector('.product-price').textContent);
+    });
+
+    function toggleWishlist(db, productTitle, productPrice) {
+        const transaction = db.transaction('wishlist', 'readwrite');
+        const store = transaction.objectStore('wishlist');
+        const request = store.get(productTitle);
+
+        request.onsuccess = function () {
+            const wishlistButton = document.querySelector('.wishlist-button svg path');
+            if (request.result) {
+                store.delete(productTitle);
+                wishlistButton.setAttribute('fill', 'none');
+            } else {
+                store.add({ title: productTitle, price: productPrice });
+                wishlistButton.setAttribute('fill', '#191919');
+            }
+        };
+
+        request.onerror = function () {
+            console.error('Error toggling wishlist status');
+        };
+    }
+
+    const sizeOptions = document.querySelectorAll('.size-option');
+    sizeOptions.forEach(option => {
+        option.addEventListener('click', function () {
+            sizeOptions.forEach(o => o.classList.remove('selected'));
+            this.classList.add('selected');
+        });
+    });
+
+    const decreaseQuantity = document.getElementById('decreaseQuantity');
+    const increaseQuantity = document.getElementById('increaseQuantity');
+    const quantityInput = document.getElementById('quantity');
+
+    decreaseQuantity.addEventListener('click', function () {
+        let currentValue = parseInt(quantityInput.value);
+        if (currentValue > 1) {
+            quantityInput.value = currentValue - 1;
+        }
+    });
+
+    increaseQuantity.addEventListener('click', function () {
+        let currentValue = parseInt(quantityInput.value);
+        quantityInput.value = currentValue + 1;
+    });
 });
     </script>
 
