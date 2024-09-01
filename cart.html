@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Cart</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: #5c4a4a;
+            margin: 0;
+            padding: 0;
+            background-color: #f9f3f1;
+        }
+
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 30px;
+            background-color: #f6e6e0;
+            color: #5c4a4a;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+        }
+
+        .navbar .logo {
+            font-size: 24px;
+            font-weight: bold;
+            letter-spacing: 1px;
+            color: #5c4a4a;
+        }
+
+        .navbar .menu {
+            display: flex;
+            gap: 25px;
+            align-items: center;
+        }
+
+        .navbar .menu a {
+            color: #5c4a4a;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .navbar .menu a:hover {
+            color: #b88b8b;
+        }
+
+        .navbar .icons {
+            display: flex;
+            gap: 15px;
+            font-size: 18px;
+        }
+
+        .navbar .icon {
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+
+        .navbar .icon:hover {
+            color: #b88b8b;
+        }
+
+        .cart-page {
+            display: flex;
+            justify-content: space-between;
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .cart-items {
+            flex: 2;
+            margin-right: 20px;
+        }
+
+        .cart-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #e4c9c4;
+        }
+
+        .cart-item img {
+            width: 80px;
+            height: 80px;
+            object-fit: cover;
+            border-radius: 10px;
+            margin-right: 20px;
+        }
+
+        .cart-item-details {
+            flex: 1;
+        }
+
+        .cart-item-details h3 {
+            margin: 0 0 5px 0;
+            font-size: 16px;
+            color: #7b6464;
+        }
+
+        .cart-item-details p {
+            margin: 0;
+            font-size: 14px;
+            color: #8c6b6b;
+        }
+
+        .quantity-selector {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .quantity-selector input {
+            width: 40px;
+            text-align: center;
+            padding: 5px;
+            border: 1px solid #d8a69a;
+            border-radius: 5px;
+            font-size: 14px;
+            background-color: #f9f3f1;
+        }
+
+        .quantity-selector button {
+            padding: 5px 10px;
+            border: none;
+            background-color: #d8a69a;
+            color: #fff;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            font-size: 14px;
+        }
+
+        .quantity-selector button:hover {
+            background-color: #b88b8b;
+        }
+
+        .cart-item-total {
+            font-size: 16px;
+            font-weight: bold;
+            color: #7b6464;
+            margin-right: 20px; /* Added space between price and remove button */
+        }
+
+        .remove-item {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+            border-radius: 5px;
+            padding: 5px 10px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            font-size: 14px;
+        }
+
+        .remove-item:hover {
+            background-color: #f1b0b7;
+        }
+
+        .order-summary {
+            flex: 1;
+            background-color: #f9f3f1;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+        }
+
+        .order-summary h3 {
+            font-size: 20px;
+            margin-bottom: 20px;
+            color: #7b6464;
+            border-bottom: 1px solid #e4c9c4;
+            padding-bottom: 10px;
+        }
+
+        .order-summary p {
+            margin: 10px 0;
+            font-size: 16px;
+            color: #8c6b6b;
+        }
+
+        .order-summary .total-price {
+            font-size: 24px;
+            font-weight: bold;
+            color: #7b6464;
+            margin-top: 20px;
+        }
+
+        .checkout-button {
+            padding: 15px 30px;
+            background-color: #d8a69a;
+            color: #fff;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            font-size: 16px;
+            display: block;
+            width: 100%;
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        .checkout-button:hover {
+            background-color: #b88b8b;
+        }
+
+        /* Contact Us Section */
+        .contact-us {
+            padding: 50px 20px;
+            background-color: #f2d9d5;
+            text-align: center;
+            border-top: 2px solid #b88b8b;
+        }
+
+        .contact-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            max-width: 1200px;
+            margin: 0 auto;
+            text-align: left;
+        }
+
+        .contact-container .logo {
+            flex: 1;
+        }
+
+        .contact-container .links {
+            flex: 3;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .navbar-logo {
+            font-size: 26px;
+            font-weight: bold;
+            color: #6d4e4e;
+        }
+
+        .link-group {
+            flex: 1;
+        }
+
+        .link-title {
+            font-size: 18px;
+            font-weight: bold;
+            color: #6d4e4e;
+            margin-bottom: 10px;
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+
+        .link-title:hover {
+            color: #b88b8b;
+        }
+
+        .dropdown {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .dropdown li {
+            margin-bottom: 10px;
+            color: #7b6464;
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+
+        .dropdown li:hover {
+            color: #b88b8b;
+        }
+
+        .contact-button {
+            padding: 8px 12px;
+            background-color: #d8a69a;
+            color: #fff;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            font-size: 14px;
+        }
+
+        .contact-button:hover {
+            background-color: #b88b8b;
+        }
+
+        .social-icons {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .social-icons span {
+            font-size: 20px;
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+
+        .social-icons span:hover {
+            color: #b88b8b;
+        }
+
+        /* Footer */
+        .footer {
+            padding: 20px;
+            background-color: #b88b8b;
+            color: #fff;
+            text-align: center;
+            font-size: 14px;
+            letter-spacing: 1px;
+            border-top: 1px solid #a57d7d;
+        }
+
+    </style>
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <div class="navbar">
+        <div class="logo"><img src="https://raw.githubusercontent.com/bestwebsites/smallbusiness/main/Pictures/B%20(79).png" alt="Logo" style="height: 50px;"></div>
+        <div class="menu">
+            <a href="index.html">Shop</a>
+            <a href="reviews.html">Reviews</a>
+            <a href="about.html">About</a>
+            <a href="contact.html">Contact Us</a>
+        </div>
+        <div class="icons">
+            <a href="wishlist.html" class="icon" style="color: inherit; text-decoration: none;">♡</a>
+            <a href="cart.html" class="icon" style="color: inherit; text-decoration: none;">🛒</a>
+        </div>
+    </div>
+
+    <!-- Cart Section -->
+    <div class="cart-page">
+        <div class="cart-items">
+            <!-- Sample Cart Item -->
+            <div class="cart-item">
+                <img src="https://raw.githubusercontent.com/bestwebsites/smallbusiness/main/Pictures/97f9b50623aa00440bb0009848857a6d.jpg" alt="Product 1">
+                <div class="cart-item-details">
+                    <h3>Product 1</h3>
+                    <div class="quantity-selector">
+                        <button onclick="decreaseQuantity(this)">-</button>
+                        <input type="number" value="1" min="1" readonly>
+                        <button onclick="increaseQuantity(this)">+</button>
+                    </div>
+                </div>
+                <p class="cart-item-total">$19.99</p>
+                <button class="remove-item" onclick="removeItem(this)">Remove</button>
+            </div>
+
+            <!-- Repeat similar blocks for more items in the cart -->
+        </div>
+
+        <!-- Cart Summary -->
+        <div class="order-summary">
+            <h3>Order Summary</h3>
+            <p>Total: <span class="total-price">$19.99</span></p>
+            <button class="checkout-button" onclick="proceedToCheckout()">Proceed to Checkout</button>
+        </div>
+    </div>
+
+    <!-- Contact Us Section -->
+    <div class="contact-us">
+        <div class="contact-container">
+            <div class="logo">
+                <img src="https://raw.githubusercontent.com/bestwebsites/smallbusiness/main/Pictures/B%20(79).png" alt="Contact Us Logo" style="height: 50px;">
+            </div>
+            <div class="links">
+                <div class="link-group">
+                    <p class="link-title">Shop</p>
+                    <ul class="dropdown">
+                        <li>Trending Now</li>
+                        <li>Best Sellers</li>
+                        <li>New Arrivals</li>
+                        <li>Gift Ideas</li>
+                    </ul>
+                </div>
+                <div class="link-group">
+                    <p class="link-title">About</p>
+                    <ul class="dropdown">
+                        <li>About Us</li>
+                        <li>Reviews</li>
+                        <li>Shipping</li>
+                    </ul>
+                </div>
+                <div class="link-group">
+                    <p class="link-title">Contact</p>
+                    <ul class="dropdown">
+                        <li><button class="contact-button">Contact Us</button></li>
+                        <li>
+                            <div class="social-icons">
+                                <span>📷</span> <!-- Instagram icon -->
+                                <span>🎵</span> <!-- TikTok icon -->
+                                <span>📘</span> <!-- Facebook icon -->
+                                <span>🐦</span> <!-- X (Twitter) icon -->
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="footer">
+        &copy; 2024 Your Company. All Rights Reserved.
+    </div>
+
+    <script>
+        // JavaScript functions to handle quantity and item removal
+
+        function decreaseQuantity(button) {
+            const input = button.nextElementSibling;
+            let value = parseInt(input.value, 10);
+            if (value > 1) {
+                value--;
+                input.value = value;
+                updateTotal();
+            }
+        }
+
+        function increaseQuantity(button) {
+            const input = button.previousElementSibling;
+            let value = parseInt(input.value, 10);
+            value++;
+            input.value = value;
+            updateTotal();
+        }
+
+        function removeItem(button) {
+            const cartItem = button.parentElement;
+            cartItem.remove();
+            updateTotal();
+        }
+
+        function updateTotal() {
+            let total = 0;
+            const cartItems = document.querySelectorAll('.cart-item');
+            cartItems.forEach(item => {
+                const price = parseFloat(item.querySelector('.cart-item-total').textContent.replace('$', ''));
+                const quantity = parseInt(item.querySelector('.quantity-selector input').value, 10);
+                total += price * quantity;
+            });
+            document.querySelectorAll('.total-price').forEach(elem => elem.textContent = `$${total.toFixed(2)}`);
+        }
+
+        function proceedToCheckout() {
+            alert('Proceeding to checkout...');
+            // Implement checkout logic here
+        }
+    </script>
+</body>
+</html>
