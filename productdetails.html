@@ -658,11 +658,15 @@
     const description = selectedProduct.description || "No description available for this product.";
 
     if (imageUrls.length > 0) {
+        console.log('Main image URL:', imageUrls[0]); // Debugging log for main image URL
         mainImageElement.style.backgroundImage = `url(${imageUrls[0]})`;
+        mainImageElement.style.backgroundSize = 'cover';
+        mainImageElement.style.backgroundPosition = 'center';
         mainImageElement.textContent = ''; // Remove any placeholder text
 
         thumbnailsContainer.innerHTML = '';
         imageUrls.forEach((imageUrl, index) => {
+            console.log(`Thumbnail ${index} URL:`, imageUrl); // Debugging log for each thumbnail
             const thumbnail = document.createElement('div');
             thumbnail.className = 'thumbnail';
             thumbnail.style.backgroundImage = `url(${imageUrl})`;
@@ -679,6 +683,8 @@
 
             thumbnailsContainer.appendChild(thumbnail);
         });
+    } else {
+        mainImageElement.textContent = 'No images available'; // Display a message if no images are available
     }
 
     productTitleElement.textContent = selectedProduct.title;
@@ -686,7 +692,7 @@
     productDescriptionElement.textContent = description;
 }
 
-    function loadSuggestedProducts(db, category, excludeTitle) {
+function loadSuggestedProducts(db, category, excludeTitle) {
     const transaction = db.transaction('products', 'readonly');
     const store = transaction.objectStore('products');
     const request = store.getAll();
@@ -694,21 +700,21 @@
     request.onsuccess = function () {
         const products = request.result;
 
-        // Debugging logs
-        console.log('Category:', category);  // Log the category of the current product
-        console.log('Products:', products);  // Log the array of products retrieved from the database
+        console.log('Category:', category);
+        console.log('Products:', products);
 
         const suggestedProductsContainer = document.getElementById('suggestedProducts');
-        suggestedProductsContainer.innerHTML = ''; // Clear any existing content
+        suggestedProductsContainer.innerHTML = '';
 
-        let suggestionsFound = false;  // Flag to check if any suggestions are found
+        let suggestionsFound = false;
 
         products.forEach(product => {
-            console.log(`Checking product: ${product.title}, Category: ${product.category}`);  // Log each product’s title and category
+            console.log(`Checking product: ${product.title}, Category: ${product.category}`);
             
-            // Check that the product belongs to the same category and isn't the current product
             if (product.title !== excludeTitle && product.category === category) {
                 suggestionsFound = true;
+
+                console.log(`Suggested product: ${product.title}`); // Log the suggested product
 
                 const suggestedProduct = document.createElement('div');
                 suggestedProduct.className = 'suggested-product';
