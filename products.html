@@ -913,8 +913,11 @@
                 const productElement = this.closest('.product');
                 const productTitle = productElement.querySelector('.product-title').textContent;
                 const productPrice = productElement.querySelector('.product-price').textContent;
+                const productImage = productElement.querySelector('img').src;
+                const productCategory = productElement.getAttribute('data-category');
 
                 toggleWishlist(db, productTitle, productPrice, svgPath);
+                storeProductDetails(db, { title: productTitle, price: productPrice, image: productImage, category: productCategory });
             });
         });
 
@@ -938,29 +941,10 @@
             };
         }
 
-        // Add event listener to product images for redirection
-        const productImages = document.querySelectorAll('.image-container');
-
-        productImages.forEach(image => {
-            image.addEventListener('click', function () {
-                const productElement = this.closest('.product');
-                const productTitle = productElement.querySelector('.product-title').textContent;
-                const productPrice = productElement.querySelector('.product-price').textContent;
-                const productImage = productElement.querySelector('img').src;
-
-                storeProductDetails(db, { title: productTitle, price: productPrice, image: productImage });
-
-                window.location.href = 'productdetails.html';
-            });
-        });
-
         function storeProductDetails(db, productDetails) {
             const transaction = db.transaction('products', 'readwrite');
             const store = transaction.objectStore('products');
-
-            store.clear().onsuccess = function () {
-                store.add(productDetails);
-            };
+            store.add(productDetails);
         }
     }
 });
