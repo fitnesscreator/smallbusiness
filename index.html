@@ -912,5 +912,47 @@
             window.location.href = `products.html?category=${selectedCategory}`;
         });
     });
+
+    // Handle click on product image or product container
+    document.querySelectorAll('.product').forEach(product => {
+        product.addEventListener('click', function(event) {
+            const productCategory = this.getAttribute('data-category');
+            const productTitle = this.querySelector('.product-title').textContent;
+            const productPrice = this.querySelector('.product-price').textContent;
+            const productImage = this.querySelector('img').src;
+
+            if (event.target.classList.contains('wishlist-button') || event.target.closest('.wishlist-button')) {
+                // If the click is on the wishlist button, do nothing
+                return;
+            }
+
+            // Redirect to productdetails.html with the product information
+            window.location.href = `productdetails.html?title=${encodeURIComponent(productTitle)}&price=${encodeURIComponent(productPrice)}&image=${encodeURIComponent(productImage)}&category=${encodeURIComponent(productCategory)}`;
+        });
+    });
+
+    // Handle "Add to Cart" button click
+    document.querySelectorAll('.add-to-cart-button').forEach(button => {
+        button.addEventListener('click', function(event) {
+            event.stopPropagation(); // Prevent the product click event
+            window.location.href = 'cart.html';
+        });
+    });
+
+    // Handle "Buy Now" button click
+    document.querySelectorAll('.buy-button').forEach(button => {
+        button.addEventListener('click', function(event) {
+            event.stopPropagation(); // Prevent the product click event
+            const productContainer = this.closest('.product');
+            const productCategory = productContainer.getAttribute('data-category');
+            const productTitle = productContainer.querySelector('.product-title').textContent;
+            const productPrice = productContainer.querySelector('.product-price').textContent;
+            const productImage = productContainer.querySelector('img').src;
+
+            // Redirect to productdetails.html with the product information
+            window.location.href = `productdetails.html?title=${encodeURIComponent(productTitle)}&price=${encodeURIComponent(productPrice)}&image=${encodeURIComponent(productImage)}&category=${encodeURIComponent(productCategory)}`;
+        });
+    });
+    
 </script>
 </html>
