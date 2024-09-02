@@ -917,9 +917,10 @@
     document.querySelectorAll('.product').forEach(product => {
         product.addEventListener('click', function(event) {
             const productCategory = this.getAttribute('data-category');
-            const productTitle = this.querySelector('.product-title').textContent;
-            const productPrice = this.querySelector('.product-price').textContent;
-            const productImage = this.querySelector('img').src;
+            const productTitle = this.getAttribute('data-title');
+            const productPrice = this.getAttribute('data-price');
+            const productImage = this.getAttribute('data-image');
+            const productDescription = this.getAttribute('data-description');
 
             if (event.target.classList.contains('wishlist-button') || event.target.closest('.wishlist-button')) {
                 // If the click is on the wishlist button, do nothing
@@ -927,7 +928,7 @@
             }
 
             // Redirect to productdetails.html with the product information
-            window.location.href = `productdetails.html?title=${encodeURIComponent(productTitle)}&price=${encodeURIComponent(productPrice)}&image=${encodeURIComponent(productImage)}&category=${encodeURIComponent(productCategory)}`;
+            window.location.href = `productdetails.html?title=${encodeURIComponent(productTitle)}&price=${encodeURIComponent(productPrice)}&image=${encodeURIComponent(productImage)}&category=${encodeURIComponent(productCategory)}&description=${encodeURIComponent(productDescription)}`;
         });
     });
 
@@ -937,9 +938,10 @@
             event.stopPropagation(); // Prevent the product click event
             const productContainer = this.closest('.product');
             const productCategory = productContainer.getAttribute('data-category');
-            const productTitle = productContainer.querySelector('.product-title').textContent;
-            const productPrice = productContainer.querySelector('.product-price').textContent;
-            const productImage = productContainer.querySelector('img').src;
+            const productTitle = productContainer.getAttribute('data-title');
+            const productPrice = productContainer.getAttribute('data-price');
+            const productImage = productContainer.getAttribute('data-image');
+            const productDescription = productContainer.getAttribute('data-description');
 
             // Retrieve current cart items from localStorage or create a new array if none exists
             let cartItems = JSON.parse(localStorage.getItem('cartItems')) || [];
@@ -949,7 +951,8 @@
                 title: productTitle,
                 price: productPrice,
                 image: productImage,
-                category: productCategory
+                category: productCategory,
+                description: productDescription
             };
 
             // Add the product to the cartItems array
@@ -969,12 +972,13 @@
             event.stopPropagation(); // Prevent the product click event
             const productContainer = this.closest('.product');
             const productCategory = productContainer.getAttribute('data-category');
-            const productTitle = productContainer.querySelector('.product-title').textContent;
-            const productPrice = productContainer.querySelector('.product-price').textContent;
-            const productImage = productContainer.querySelector('img').src;
+            const productTitle = productContainer.getAttribute('data-title');
+            const productPrice = productContainer.getAttribute('data-price');
+            const productImage = productContainer.getAttribute('data-image');
+            const productDescription = productContainer.getAttribute('data-description');
 
             // Redirect to productdetails.html with the product information
-            window.location.href = `productdetails.html?title=${encodeURIComponent(productTitle)}&price=${encodeURIComponent(productPrice)}&image=${encodeURIComponent(productImage)}&category=${encodeURIComponent(productCategory)}`;
+            window.location.href = `productdetails.html?title=${encodeURIComponent(productTitle)}&price=${encodeURIComponent(productPrice)}&image=${encodeURIComponent(productImage)}&category=${encodeURIComponent(productCategory)}&description=${encodeURIComponent(productDescription)}`;
         });
     });
     
