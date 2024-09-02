@@ -418,31 +418,90 @@
     </div>
 
     <script>
-    window.addEventListener('DOMContentLoaded', (event) => {
+    document.addEventListener('DOMContentLoaded', function() {
+        const cartItemsContainer = document.querySelector('.cart-items');
+        const cartSummaryTotal = document.querySelector('.total-price');
+
         // Retrieve cart items from localStorage
         const cartItems = JSON.parse(localStorage.getItem('cartItems')) || [];
 
-        // Reference the container where you want to display the cart items
-        const cartContainer = document.getElementById('cartContainer');
+        // Clear existing items (if any)
+        cartItemsContainer.innerHTML = '';
 
-        // If there are items in the cart, display them
         if (cartItems.length > 0) {
             cartItems.forEach(item => {
-                const itemElement = document.createElement('div');
-                itemElement.classList.add('cart-item');
-                itemElement.innerHTML = `
-                    <img src="${item.image}" alt="${item.title}" class="cart-item-image">
+                // Create a new cart item element
+                const cartItem = document.createElement('div');
+                cartItem.classList.add('cart-item');
+                
+                cartItem.innerHTML = `
+                    <img src="${item.image}" alt="${item.title}">
                     <div class="cart-item-details">
-                        <h4 class="cart-item-title">${item.title}</h4>
-                        <p class="cart-item-price">${item.price}</p>
-                        <p class="cart-item-category">${item.category}</p>
+                        <h3>${item.title}</h3>
+                        <div class="quantity-selector">
+                            <button onclick="decreaseQuantity(this)">-</button>
+                            <input type="number" value="1" min="1" readonly>
+                            <button onclick="increaseQuantity(this)">+</button>
+                        </div>
                     </div>
+                    <p class="cart-item-total">${item.price}</p>
+                    <button class="remove-item" onclick="removeItem(this)">Remove</button>
                 `;
-                cartContainer.appendChild(itemElement);
+
+                // Add the new item to the cart items container
+                cartItemsContainer.appendChild(cartItem);
             });
+
+            // Update the total price
+            updateTotal();
         } else {
-            cartContainer.innerHTML = '<p>Your cart is empty.</p>';
+            cartItemsContainer.innerHTML = '<p>Your cart is empty.</p>';
         }
+
+        function updateTotal() {
+            let total = 0;
+            const cartItems = document.querySelectorAll('.cart-item');
+            cartItems.forEach(item => {
+                const price = parseFloat(item.querySelector('.cart-item-total').textContent.replace('$', ''));
+                const quantity = parseInt(item.querySelector('.quantity-selector input').value, 10);
+                total += price * quantity;
+            });
+            cartSummaryTotal.textContent = `$${total.toFixed(2)}`;
+        }
+
+        window.decreaseQuantity = function(button) {
+            const input = button.nextElementSibling;
+            let value = parseInt(input.value, 10);
+            if (value > 1) {
+                value--;
+                input.value = value;
+                updateTotal();
+            }
+        };
+
+        window.increaseQuantity = function(button) {
+            const input = button.previousElementSibling;
+            let value = parseInt(input.value, 10);
+            value++;
+            input.value = value;
+            updateTotal();
+        };
+
+        window.removeItem = function(button) {
+            const cartItem = button.parentElement;
+            const itemName = cartItem.querySelector('h3').textContent;
+
+            // Remove from DOM
+            cartItem.remove();
+
+            // Remove from localStorage
+            let updatedCartItems = JSON.parse(localStorage.getItem('cartItems')) || [];
+            updatedCartItems = updatedCartItems.filter(item => item.title !== itemName);
+            localStorage.setItem('cartItems', JSON.stringify(updatedCartItems));
+
+            // Update total
+            updateTotal();
+        };
     });
 </script>
 </body>
