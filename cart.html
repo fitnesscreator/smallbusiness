@@ -418,47 +418,32 @@
     </div>
 
     <script>
-        // JavaScript functions to handle quantity and item removal
+    window.addEventListener('DOMContentLoaded', (event) => {
+        // Retrieve cart items from localStorage
+        const cartItems = JSON.parse(localStorage.getItem('cartItems')) || [];
 
-        function decreaseQuantity(button) {
-            const input = button.nextElementSibling;
-            let value = parseInt(input.value, 10);
-            if (value > 1) {
-                value--;
-                input.value = value;
-                updateTotal();
-            }
-        }
+        // Reference the container where you want to display the cart items
+        const cartContainer = document.getElementById('cartContainer');
 
-        function increaseQuantity(button) {
-            const input = button.previousElementSibling;
-            let value = parseInt(input.value, 10);
-            value++;
-            input.value = value;
-            updateTotal();
-        }
-
-        function removeItem(button) {
-            const cartItem = button.parentElement;
-            cartItem.remove();
-            updateTotal();
-        }
-
-        function updateTotal() {
-            let total = 0;
-            const cartItems = document.querySelectorAll('.cart-item');
+        // If there are items in the cart, display them
+        if (cartItems.length > 0) {
             cartItems.forEach(item => {
-                const price = parseFloat(item.querySelector('.cart-item-total').textContent.replace('$', ''));
-                const quantity = parseInt(item.querySelector('.quantity-selector input').value, 10);
-                total += price * quantity;
+                const itemElement = document.createElement('div');
+                itemElement.classList.add('cart-item');
+                itemElement.innerHTML = `
+                    <img src="${item.image}" alt="${item.title}" class="cart-item-image">
+                    <div class="cart-item-details">
+                        <h4 class="cart-item-title">${item.title}</h4>
+                        <p class="cart-item-price">${item.price}</p>
+                        <p class="cart-item-category">${item.category}</p>
+                    </div>
+                `;
+                cartContainer.appendChild(itemElement);
             });
-            document.querySelectorAll('.total-price').forEach(elem => elem.textContent = `$${total.toFixed(2)}`);
+        } else {
+            cartContainer.innerHTML = '<p>Your cart is empty.</p>';
         }
-
-        function proceedToCheckout() {
-            alert('Proceeding to checkout...');
-            // Implement checkout logic here
-        }
-    </script>
+    });
+</script>
 </body>
 </html>
