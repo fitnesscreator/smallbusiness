@@ -578,10 +578,10 @@
 
     <script>
     window.addEventListener('DOMContentLoaded', function() {
-        // Function to get URL parameters
+        // Function to decode URL parameters safely
         function getParameterByName(name) {
             const url = new URL(window.location.href);
-            return url.searchParams.get(name);
+            return decodeURIComponent(url.searchParams.get(name));
         }
 
         // Get the product data from the URL parameters
@@ -594,7 +594,7 @@
         if (productTitle && productPrice && productImage && productDescription) {
             document.querySelector('.product-title').textContent = productTitle;
             document.querySelector('.product-price').textContent = productPrice;
-            document.querySelector('.product-image').src = decodeURIComponent(productImage);
+            document.querySelector('.product-image').src = productImage;
             document.querySelector('.product-description').textContent = productDescription;
         } else {
             console.error("Product details are missing in the URL.");
