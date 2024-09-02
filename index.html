@@ -935,7 +935,31 @@
     document.querySelectorAll('.add-to-cart-button').forEach(button => {
         button.addEventListener('click', function(event) {
             event.stopPropagation(); // Prevent the product click event
-            window.location.href = 'cart.html';
+            const productContainer = this.closest('.product');
+            const productCategory = productContainer.getAttribute('data-category');
+            const productTitle = productContainer.querySelector('.product-title').textContent;
+            const productPrice = productContainer.querySelector('.product-price').textContent;
+            const productImage = productContainer.querySelector('img').src;
+
+            // Retrieve current cart items from localStorage or create a new array if none exists
+            let cartItems = JSON.parse(localStorage.getItem('cartItems')) || [];
+
+            // Create a product object
+            const product = {
+                title: productTitle,
+                price: productPrice,
+                image: productImage,
+                category: productCategory
+            };
+
+            // Add the product to the cartItems array
+            cartItems.push(product);
+
+            // Save the updated cartItems array back to localStorage
+            localStorage.setItem('cartItems', JSON.stringify(cartItems));
+
+            // Provide feedback to the user (e.g., show a notification that the item was added to the cart)
+            alert(`${productTitle} has been added to your cart.`);
         });
     });
 
