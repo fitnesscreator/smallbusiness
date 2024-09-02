@@ -967,17 +967,20 @@
     });
 
     // Handle "Buy Now" button click
-    document.querySelectorAll('.buy-button').forEach(button => {
-        button.addEventListener('click', function(event) {
-            event.stopPropagation(); // Prevent the product click event
-            const productContainer = this.closest('.product');
-            const productCategory = productContainer.getAttribute('data-category');
-            const productTitle = productContainer.getAttribute('data-title');
-            const productPrice = productContainer.getAttribute('data-price');
-            const productImage = productContainer.getAttribute('data-image');
-            const productDescription = productContainer.getAttribute('data-description');
+    document.querySelectorAll('.product').forEach(product => {
+        product.addEventListener('click', function(event) {
+            const productCategory = this.getAttribute('data-category');
+            const productTitle = this.getAttribute('data-title');
+            const productPrice = this.getAttribute('data-price');
+            const productImage = this.getAttribute('data-image');
+            const productDescription = this.getAttribute('data-description');
 
-            // Redirect to productdetails.html with the product information
+            if (event.target.classList.contains('wishlist-button') || event.target.closest('.wishlist-button')) {
+                // Prevent redirect if clicking on the wishlist button
+                return;
+            }
+
+            // Redirect to productdetails.html with encoded product details
             window.location.href = `productdetails.html?title=${encodeURIComponent(productTitle)}&price=${encodeURIComponent(productPrice)}&image=${encodeURIComponent(productImage)}&category=${encodeURIComponent(productCategory)}&description=${encodeURIComponent(productDescription)}`;
         });
     });
