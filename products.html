@@ -843,132 +843,31 @@
     </div>
 
     <script>
-        document.addEventListener('DOMContentLoaded', function () {
-    let db;
-    const request = indexedDB.open('ProductDatabase', 1);
-
-    request.onupgradeneeded = function (event) {
-        db = event.target.result;
-
-        if (!db.objectStoreNames.contains('wishlist')) {
-            db.createObjectStore('wishlist', { keyPath: 'title' });
-        }
-
-        if (!db.objectStoreNames.contains('products')) {
-            db.createObjectStore('products', { keyPath: 'title' });
-        }
-
-        if (!db.objectStoreNames.contains('categories')) {
-            db.createObjectStore('categories', { keyPath: 'name' });
-        }
-    };
-
-    request.onsuccess = function (event) {
-        db = event.target.result;
-        initializePage(db);
-    };
-
-    request.onerror = function (event) {
-        console.error('IndexedDB error:', event.target.errorCode);
-    };
-
-    function initializePage(db) {
-        const products = document.querySelectorAll('.product');
-        const categoryButtons = document.querySelectorAll('.category');
+    window.addEventListener('DOMContentLoaded', (event) => {
         const urlParams = new URLSearchParams(window.location.search);
         const category = urlParams.get('category');
-
-        // If a category is present in the URL, filter the products
+        
         if (category) {
-            filterProducts(category);
+            // Apply the filter based on the 'category' query parameter
+            applyCategoryFilter(category);
+        } else {
+            // Ensure no filters are applied if there's no 'category' parameter
+            clearAllFilters();
         }
+    });
 
-        // Category button click - filter products
-        categoryButtons.forEach(button => {
-            button.addEventListener('click', function () {
-                const selectedCategory = this.getAttribute('data-category');
-                filterProducts(selectedCategory);
-            });
-        });
-
-        function filterProducts(category) {
-            products.forEach(product => {
-                const productCategory = product.getAttribute('data-category');
-                if (category === 'all' || productCategory === category) {
-                    product.style.display = 'block';
-                } else {
-                    product.style.display = 'none';
-                }
-            });
-        }
-
-        // Wishlist button toggle with IndexedDB
-        const wishlistButtons = document.querySelectorAll('.wishlist-button');
-
-        wishlistButtons.forEach(button => {
-            button.addEventListener('click', function (event) {
-                event.stopPropagation();
-
-                const svgPath = this.querySelector('svg path');
-                const productElement = this.closest('.product');
-                const productTitle = productElement.querySelector('.product-title').textContent;
-                const productPrice = productElement.querySelector('.product-price').textContent;
-                const productImage = productElement.querySelector('img').src;
-                const productCategory = productElement.getAttribute('data-category');
-
-                toggleWishlist(db, productTitle, productPrice, svgPath);
-                storeProductDetails(db, { title: productTitle, price: productPrice, image: productImage, category: productCategory });
-            });
-        });
-
-        function toggleWishlist(db, productTitle, productPrice, svgPath) {
-            const transaction = db.transaction('wishlist', 'readwrite');
-            const store = transaction.objectStore('wishlist');
-            const request = store.get(productTitle);
-
-            request.onsuccess = function () {
-                if (request.result) {
-                    store.delete(productTitle);
-                    svgPath.setAttribute('fill', 'none');
-                } else {
-                    store.add({ title: productTitle, price: productPrice });
-                    svgPath.setAttribute('fill', '#191919');
-                }
-            };
-
-            request.onerror = function () {
-                console.error('Error toggling wishlist status');
-            };
-        }
-
-        // Functionality to navigate to productdetails.html on image click
-        const productImages = document.querySelectorAll('.image-container');
-
-        productImages.forEach(image => {
-            image.addEventListener('click', function () {
-                const productElement = this.closest('.product');
-                const productTitle = productElement.querySelector('.product-title').textContent;
-                const productPrice = productElement.querySelector('.product-price').textContent;
-                const productImage = productElement.querySelector('img').src;
-                const productCategory = productElement.getAttribute('data-category');
-
-                storeProductDetails(db, { title: productTitle, price: productPrice, image: productImage, category: productCategory });
-
-                window.location.href = 'productdetails.html';
-            });
-        });
-
-        function storeProductDetails(db, productDetails) {
-            const transaction = db.transaction('products', 'readwrite');
-            const store = transaction.objectStore('products');
-
-            store.clear().onsuccess = function () {
-                store.add(productDetails);
-            };
-        }
+    function applyCategoryFilter(category) {
+        // Implement logic to filter products based on the category
+        console.log(`Filtering products by category: ${category}`);
+        // Example: filterProducts(category);
     }
-});
-    </script>
+
+    function clearAllFilters() {
+        // Logic to show all products with no filters
+        console.log('Clearing all filters');
+        // Example: showAllProducts();
+    }
+</script>
 
 </body>
 </html>
