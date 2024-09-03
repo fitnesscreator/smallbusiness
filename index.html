@@ -218,24 +218,27 @@
             object-fit: cover;
         }
 
-        .product-card .wishlist-button {
-            border: 0;
+        .wishlist-button {
+            border: none;
+            background: none;
             cursor: pointer;
             position: absolute;
-            right: 10px;
             top: 10px;
+            right: 10px;
             padding: 0;
-            background: none;
         }
 
-        .product-card .wishlist-button svg {
-            fill: transparent;
-            transition: fill 0.3s ease;
+        .wishlist-button svg {
+            width: 24px;
+            height: 24px;
+            fill: none;
+            stroke: #2D2D2D;
+            stroke-width: 2;
         }
 
-        .product-card .wishlist-button.is-active svg {
-            fill: #191919;
-            animation: beat cubic-bezier(0.04, 0.4, 0.5, 0.95) 450ms forwards 1;
+        .wishlist-button.is-active svg path {
+            fill: #333;
+            stroke: #333;
         }
 
         @keyframes beat {
@@ -243,11 +246,9 @@
                 opacity: 1;
                 transform: scale(1.4);
             }
-
             50% {
                 transform: scale(0.8);
             }
-
             100% {
                 transform: scale(1);
             }
@@ -285,23 +286,23 @@
 
         .product-card .buy-button {
             padding: 8px 0;
-    background-color: transparent; /* Make background transparent */
-    color: #d8a69a; /* Set the text color */
-    border: 2px solid #d8a69a; /* Add a border with the same color as the text */
-    border-radius: 20px;
-    cursor: pointer;
-    transition: background-color 0.3s, color 0.3s, border 0.3s; /* Add transition for smooth hover effect */
-    font-size: 14px;
-    display: block;
-    width: 100%;
-    text-align: center;
-}
+            background-color: transparent;
+            color: #d8a69a;
+            border: 2px solid #d8a69a;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: background-color 0.3s, color 0.3s, border 0.3s;
+            font-size: 14px;
+            display: block;
+            width: 100%;
+            text-align: center;
+        }
 
         .product-card .buy-button:hover {
-            background-color: #d8a69a; /* Change background color on hover */
-    color: #fff; /* Change text color to white on hover */
-    border: none; /* Remove the border on hover */
-}
+            background-color: #d8a69a;
+            color: #fff;
+            border: none;
+        }
 
         .view-more-button {
             display: block;
@@ -565,7 +566,7 @@
         }
     </style>
 </head>
-<link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Dancing+Script&display=swap" rel="stylesheet">
 <body>
     <!-- Navigation Bar -->
     <div class="navbar">
@@ -594,58 +595,61 @@
 
     <!-- Categories Section -->
     <div class="categories-section" id="categoriesSection">
-    <h2>Shop by Category</h2>
-    <div class="categories-row">
-        <div class="category" data-category="trending" onclick="filterProductsByCategory('trending')">
-            <div class="category-image">
-                <img src="https://raw.githubusercontent.com/bestwebsites/smallbusiness/main/Pictures/265c9107d09f9fd85d9435a2b3d89938.jpg" alt="Trending Now">
+        <h2>Shop by Category</h2>
+        <div class="categories-row">
+            <div class="category" data-category="trending" onclick="filterProductsByCategory('trending')">
+                <div class="category-image">
+                    <img src="https://raw.githubusercontent.com/bestwebsites/smallbusiness/main/Pictures/265c9107d09f9fd85d9435a2b3d89938.jpg" alt="Trending Now">
+                </div>
+                <p class="category-title">Trending Now</p>
             </div>
-            <p class="category-title">Trending Now</p>
-        </div>
-        <div class="category" data-category="bestsellers" onclick="filterProductsByCategory('bestsellers')">
-            <div class="category-image">
-                <img src="https://raw.githubusercontent.com/bestwebsites/smallbusiness/main/Pictures/2c5d1407655c10ecc8e487989a5b5ecf.jpg" alt="Best Sellers">
+            <div class="category" data-category="bestsellers" onclick="filterProductsByCategory('bestsellers')">
+                <div class="category-image">
+                    <img src="https://raw.githubusercontent.com/bestwebsites/smallbusiness/main/Pictures/2c5d1407655c10ecc8e487989a5b5ecf.jpg" alt="Best Sellers">
+                </div>
+                <p class="category-title">Best Sellers</p>
             </div>
-            <p class="category-title">Best Sellers</p>
-        </div>
-        <div class="category" data-category="newarrivals" onclick="filterProductsByCategory('newarrivals')">
-            <div class="category-image">
-                <img src="https://raw.githubusercontent.com/bestwebsites/smallbusiness/main/Pictures/55f559de0a40aae6dcbf8bcbdfe7457b.jpg" alt="New Arrivals">
+            <div class="category" data-category="newarrivals" onclick="filterProductsByCategory('newarrivals')">
+                <div class="category-image">
+                    <img src="https://raw.githubusercontent.com/bestwebsites/smallbusiness/main/Pictures/55f559de0a40aae6dcbf8bcbdfe7457b.jpg" alt="New Arrivals">
+                </div>
+                <p class="category-title">New Arrivals</p>
             </div>
-            <p class="category-title">New Arrivals</p>
-        </div>
-        <div class="category" data-category="gifts" onclick="filterProductsByCategory('gifts')">
-            <div class="category-image">
-                <img src="https://raw.githubusercontent.com/bestwebsites/smallbusiness/main/Pictures/bb27f0f90d7efa29be9817b7cc85fc1e.jpg" alt="Gift Ideas">
+            <div class="category" data-category="gifts" onclick="filterProductsByCategory('gifts')">
+                <div class="category-image">
+                    <img src="https://raw.githubusercontent.com/bestwebsites/smallbusiness/main/Pictures/bb27f0f90d7efa29be9817b7cc85fc1e.jpg" alt="Gift Ideas">
+                </div>
+                <p class="category-title">Gift Ideas</p>
             </div>
-            <p class="category-title">Gift Ideas</p>
-        </div>
-        <div class="category" data-category="all" onclick="filterProductsByCategory('all')">
-            <div class="category-image">
-                <img src="https://raw.githubusercontent.com/bestwebsites/smallbusiness/main/Pictures/89a8338f68093c7d97ef1d03299d20b0.jpg" alt="All Products">
+            <div class="category" data-category="all" onclick="filterProductsByCategory('all')">
+                <div class="category-image">
+                    <img src="https://raw.githubusercontent.com/bestwebsites/smallbusiness/main/Pictures/89a8338f68093c7d97ef1d03299d20b0.jpg" alt="All Products">
+                </div>
+                <p class="category-title">All Products</p>
             </div>
-            <p class="category-title">All Products</p>
         </div>
     </div>
-</div>
 
     <!-- Featured Products Section -->
     <div class="featured-products-section" id="featuredProducts">
         <h2>Featured Products</h2>
         <div class="products-grid">
             <div class="product-card" 
-     data-title="Product 1" 
-     data-price="$19.99" 
-     data-image="https://raw.githubusercontent.com/bestwebsites/smallbusiness/main/Pictures/97f9b50623aa00440bb0009848857a6d.jpg" 
-     data-description="A wonderful product that is trending now." 
-     data-category="trending"
-     data-images="https://raw.githubusercontent.com/bestwebsites/smallbusiness/main/Pictures/55f559de0a40aae6dcbf8bcbdfe7457b.jpg,https://raw.githubusercontent.com/bestwebsites/smallbusiness/main/Pictures/97f9b50623aa00440bb0009848857a6d.jpg">
-
+                data-title="Product 1" 
+                data-price="$19.99" 
+                data-image="https://raw.githubusercontent.com/bestwebsites/smallbusiness/main/Pictures/97f9b50623aa00440bb0009848857a6d.jpg" 
+                data-description="A wonderful product that is trending now." 
+                data-category="trending">
                 <div class="image-container">
                     <img src="https://raw.githubusercontent.com/bestwebsites/smallbusiness/main/Pictures/97f9b50623aa00440bb0009848857a6d.jpg" alt="Product 1">
                     <button type="button" class="wishlist-button">
                         <svg width="18" height="16" viewBox="0 0 18 16">
-                            <path d="M9 14s-4-3.33-6-6a3.5 3.5 0 1 1 6-4 3.5 3.5 0 1 1 6 4c-2 2.67-6 6-6 6z" stroke="#2D2D2D" stroke-width="1" fill="none" />
+                            <path
+                                d="M9 14s-4-3.33-6-6a3.5 3.5 0 1 1 6-4 3.5 3.5 0 1 1 6 4c-2 2.67-6 6-6 6z"
+                                stroke="#2D2D2D"
+                                stroke-width="2"
+                                fill="none"
+                            />
                         </svg>
                     </button>
                 </div>
@@ -659,17 +663,21 @@
             </div>
 
             <div class="product-card" 
-     data-title="Product 2" 
-     data-price="$29.99" 
-     data-image="https://raw.githubusercontent.com/bestwebsites/smallbusiness/main/Pictures/9a08fcfea078d7119310bef13452adc3.jpg" 
-     data-description="A top-selling product with rave reviews." 
-     data-category="trending"
-     data-images="https://raw.githubusercontent.com/bestwebsites/smallbusiness/main/Pictures/9a08fcfea078d7119310bef13452adc3.jpg">
+                data-title="Product 2" 
+                data-price="$29.99" 
+                data-image="https://raw.githubusercontent.com/bestwebsites/smallbusiness/main/Pictures/9a08fcfea078d7119310bef13452adc3.jpg" 
+                data-description="A top-selling product with rave reviews." 
+                data-category="trending">
                 <div class="image-container">
                     <img src="https://raw.githubusercontent.com/bestwebsites/smallbusiness/main/Pictures/9a08fcfea078d7119310bef13452adc3.jpg" alt="Product 2">
                     <button type="button" class="wishlist-button">
                         <svg width="18" height="16" viewBox="0 0 18 16">
-                            <path d="M9 14s-4-3.33-6-6a3.5 3.5 0 1 1 6-4 3.5 3.5 0 1 1 6 4c-2 2.67-6 6-6 6z" stroke="#2D2D2D" stroke-width="1" fill="none" />
+                            <path
+                                d="M9 14s-4-3.33-6-6a3.5 3.5 0 1 1 6-4 3.5 3.5 0 1 1 6 4c-2 2.67-6 6-6 6z"
+                                stroke="#2D2D2D"
+                                stroke-width="2"
+                                fill="none"
+                            />
                         </svg>
                     </button>
                 </div>
@@ -683,17 +691,21 @@
             </div>
 
             <div class="product-card" 
-     data-title="Product 3" 
-     data-price="$39.99" 
-     data-image="https://raw.githubusercontent.com/bestwebsites/smallbusiness/main/Pictures/e6cfab0ebbe1289cee728a546ec4f54a.jpg" 
-     data-description="One of our bestsellers with excellent feedback." 
-     data-category="bestsellers"
-     data-images="https://raw.githubusercontent.com/bestwebsites/smallbusiness/main/Pictures/e6cfab0ebbe1289cee728a546ec4f54a.jpg">
+                data-title="Product 3" 
+                data-price="$39.99" 
+                data-image="https://raw.githubusercontent.com/bestwebsites/smallbusiness/main/Pictures/e6cfab0ebbe1289cee728a546ec4f54a.jpg" 
+                data-description="One of our bestsellers with excellent feedback." 
+                data-category="bestsellers">
                 <div class="image-container">
                     <img src="https://raw.githubusercontent.com/bestwebsites/smallbusiness/main/Pictures/e6cfab0ebbe1289cee728a546ec4f54a.jpg" alt="Product 3">
                     <button type="button" class="wishlist-button">
                         <svg width="18" height="16" viewBox="0 0 18 16">
-                            <path d="M9 14s-4-3.33-6-6a3.5 3.5 0 1 1 6-4 3.5 3.5 0 1 1 6 4c-2 2.67-6 6-6 6z" stroke="#2D2D2D" stroke-width="1" fill="none" />
+                            <path
+                                d="M9 14s-4-3.33-6-6a3.5 3.5 0 1 1 6-4 3.5 3.5 0 1 1 6 4c-2 2.67-6 6-6 6z"
+                                stroke="#2D2D2D"
+                                stroke-width="2"
+                                fill="none"
+                            />
                         </svg>
                     </button>
                 </div>
@@ -707,17 +719,21 @@
             </div>
 
             <div class="product-card" 
-     data-title="Product 4" 
-     data-price="$49.99" 
-     data-image="https://raw.githubusercontent.com/bestwebsites/smallbusiness/main/Pictures/43832097ede022bd532caeb02d124435.jpg" 
-     data-description="A premium product that is flying off the shelves." 
-     data-category="bestsellers"
-     data-images="https://raw.githubusercontent.com/bestwebsites/smallbusiness/main/Pictures/43832097ede022bd532caeb02d124435.jpg">
+                data-title="Product 4" 
+                data-price="$49.99" 
+                data-image="https://raw.githubusercontent.com/bestwebsites/smallbusiness/main/Pictures/43832097ede022bd532caeb02d124435.jpg" 
+                data-description="A premium product that is flying off the shelves." 
+                data-category="bestsellers">
                 <div class="image-container">
                     <img src="https://raw.githubusercontent.com/bestwebsites/smallbusiness/main/Pictures/43832097ede022bd532caeb02d124435.jpg" alt="Product 4">
                     <button type="button" class="wishlist-button">
                         <svg width="18" height="16" viewBox="0 0 18 16">
-                            <path d="M9 14s-4-3.33-6-6a3.5 3.5 0 1 1 6-4 3.5 3.5 0 1 1 6 4c-2 2.67-6 6-6 6z" stroke="#2D2D2D" stroke-width="1" fill="none" />
+                            <path
+                                d="M9 14s-4-3.33-6-6a3.5 3.5 0 1 1 6-4 3.5 3.5 0 1 1 6 4c-2 2.67-6 6-6 6z"
+                                stroke="#2D2D2D"
+                                stroke-width="2"
+                                fill="none"
+                            />
                         </svg>
                     </button>
                 </div>
@@ -734,17 +750,21 @@
         <!-- Hidden Products Section -->
         <div class="products-grid hidden-products">
             <div class="product-card" 
-     data-title="Product 5" 
-     data-price="$19.99" 
-     data-image="https://raw.githubusercontent.com/bestwebsites/smallbusiness/main/Pictures/9a08fcfea078d7119310bef13452adc3.jpg" 
-     data-description="An exclusive new product." 
-     data-category="newarrivals"
-     data-images="https://raw.githubusercontent.com/bestwebsites/smallbusiness/main/Pictures/9a08fcfea078d7119310bef13452adc3.jpg">
+                data-title="Product 5" 
+                data-price="$19.99" 
+                data-image="https://raw.githubusercontent.com/bestwebsites/smallbusiness/main/Pictures/9a08fcfea078d7119310bef13452adc3.jpg" 
+                data-description="An exclusive new product." 
+                data-category="newarrivals">
                 <div class="image-container">
                     <img src="https://raw.githubusercontent.com/bestwebsites/smallbusiness/main/Pictures/9a08fcfea078d7119310bef13452adc3.jpg" alt="Product 5">
                     <button type="button" class="wishlist-button">
                         <svg width="18" height="16" viewBox="0 0 18 16">
-                            <path d="M9 14s-4-3.33-6-6a3.5 3.5 0 1 1 6-4 3.5 3.5 0 1 1 6 4c-2 2.67-6 6-6 6z" stroke="#2D2D2D" stroke-width="1" fill="none" />
+                            <path
+                                d="M9 14s-4-3.33-6-6a3.5 3.5 0 1 1 6-4 3.5 3.5 0 1 1 6 4c-2 2.67-6 6-6 6z"
+                                stroke="#2D2D2D"
+                                stroke-width="2"
+                                fill="none"
+                            />
                         </svg>
                     </button>
                 </div>
@@ -758,17 +778,21 @@
             </div>
 
             <div class="product-card" 
-     data-title="Product 6" 
-     data-price="$24.99" 
-     data-image="https://raw.githubusercontent.com/bestwebsites/smallbusiness/main/Pictures/55f559de0a40aae6dcbf8bcbdfe7457b.jpg" 
-     data-description="Another new arrival that customers love." 
-     data-category="newarrivals"
-     data-images="https://raw.githubusercontent.com/bestwebsites/smallbusiness/main/Pictures/55f559de0a40aae6dcbf8bcbdfe7457b.jpg">
+                data-title="Product 6" 
+                data-price="$24.99" 
+                data-image="https://raw.githubusercontent.com/bestwebsites/smallbusiness/main/Pictures/55f559de0a40aae6dcbf8bcbdfe7457b.jpg" 
+                data-description="Another new arrival that customers love." 
+                data-category="newarrivals">
                 <div class="image-container">
                     <img src="https://raw.githubusercontent.com/bestwebsites/smallbusiness/main/Pictures/55f559de0a40aae6dcbf8bcbdfe7457b.jpg" alt="Product 6">
                     <button type="button" class="wishlist-button">
                         <svg width="18" height="16" viewBox="0 0 18 16">
-                            <path d="M9 14s-4-3.33-6-6a3.5 3.5 0 1 1 6-4 3.5 3.5 0 1 1 6 4c-2 2.67-6 6-6 6z" stroke="#2D2D2D" stroke-width="1" fill="none" />
+                            <path
+                                d="M9 14s-4-3.33-6-6a3.5 3.5 0 1 1 6-4 3.5 3.5 0 1 1 6 4c-2 2.67-6 6-6 6z"
+                                stroke="#2D2D2D"
+                                stroke-width="2"
+                                fill="none"
+                            />
                         </svg>
                     </button>
                 </div>
@@ -782,17 +806,21 @@
             </div>
 
             <div class="product-card" 
-     data-title="Product 7" 
-     data-price="$34.99" 
-     data-image="https://raw.githubusercontent.com/bestwebsites/smallbusiness/main/Pictures/bb27f0f90d7efa29be9817b7cc85fc1e.jpg" 
-     data-description="A perfect gift for someone special." 
-     data-category="gifts"
-     data-images="https://raw.githubusercontent.com/bestwebsites/smallbusiness/main/Pictures/bb27f0f90d7efa29be9817b7cc85fc1e.jpg">
+                data-title="Product 7" 
+                data-price="$34.99" 
+                data-image="https://raw.githubusercontent.com/bestwebsites/smallbusiness/main/Pictures/bb27f0f90d7efa29be9817b7cc85fc1e.jpg" 
+                data-description="A perfect gift for someone special." 
+                data-category="gifts">
                 <div class="image-container">
                     <img src="https://raw.githubusercontent.com/bestwebsites/smallbusiness/main/Pictures/bb27f0f90d7efa29be9817b7cc85fc1e.jpg" alt="Product 7">
                     <button type="button" class="wishlist-button">
                         <svg width="18" height="16" viewBox="0 0 18 16">
-                            <path d="M9 14s-4-3.33-6-6a3.5 3.5 0 1 1 6-4 3.5 3.5 0 1 1 6 4c-2 2.67-6 6-6 6z" stroke="#2D2D2D" stroke-width="1" fill="none" />
+                            <path
+                                d="M9 14s-4-3.33-6-6a3.5 3.5 0 1 1 6-4 3.5 3.5 0 1 1 6 4c-2 2.67-6 6-6 6z"
+                                stroke="#2D2D2D"
+                                stroke-width="2"
+                                fill="none"
+                            />
                         </svg>
                     </button>
                 </div>
@@ -806,17 +834,21 @@
             </div>
 
             <div class="product-card" 
-     data-title="Product 8" 
-     data-price="$44.99" 
-     data-image="https://raw.githubusercontent.com/bestwebsites/smallbusiness/main/Pictures/89a8338f68093c7d97ef1d03299d20b0.jpg" 
-     data-description="A bestseller that everyone wants." 
-     data-category="bestsellers"
-     data-images="https://raw.githubusercontent.com/bestwebsites/smallbusiness/main/Pictures/89a8338f68093c7d97ef1d03299d20b0.jpg,https://example.com/image2.jpg,https://example.com/image3.jpg">
+                data-title="Product 8" 
+                data-price="$44.99" 
+                data-image="https://raw.githubusercontent.com/bestwebsites/smallbusiness/main/Pictures/89a8338f68093c7d97ef1d03299d20b0.jpg" 
+                data-description="A bestseller that everyone wants." 
+                data-category="bestsellers">
                 <div class="image-container">
                     <img src="https://raw.githubusercontent.com/bestwebsites/smallbusiness/main/Pictures/89a8338f68093c7d97ef1d03299d20b0.jpg" alt="Product 8">
                     <button type="button" class="wishlist-button">
                         <svg width="18" height="16" viewBox="0 0 18 16">
-                            <path d="M9 14s-4-3.33-6-6a3.5 3.5 0 1 1 6-4 3.5 3.5 0 1 1 6 4c-2 2.67-6 6-6 6z" stroke="#2D2D2D" stroke-width="1" fill="none" />
+                            <path
+                                d="M9 14s-4-3.33-6-6a3.5 3.5 0 1 1 6-4 3.5 3.5 0 1 1 6 4c-2 2.67-6 6-6 6z"
+                                stroke="#2D2D2D"
+                                stroke-width="2"
+                                fill="none"
+                            />
                         </svg>
                     </button>
                 </div>
@@ -937,41 +969,85 @@
     <div class="footer">
         &copy; 2024 Your Company. All Rights Reserved.
     </div>
+
+    <!-- JavaScript -->
     <script>
-    function toggleProducts() {
-        const hiddenProducts = document.querySelector('.hidden-products');
-        const viewMoreButton = document.getElementById('viewMoreProducts');
+        function toggleProducts() {
+            const hiddenProducts = document.querySelector('.hidden-products');
+            const viewMoreButton = document.getElementById('viewMoreProducts');
 
-        if (hiddenProducts.style.display === "none" || hiddenProducts.style.display === "") {
-            hiddenProducts.style.display = "grid"; // or 'flex' depending on your layout
-            viewMoreButton.textContent = "View Less Products";
-        } else {
-            hiddenProducts.style.display = "none";
-            viewMoreButton.textContent = "View More Products";
-        }
-    }
-
-    function filterProductsByCategory(category) {
-        // Get all product cards
-        const products = document.querySelectorAll('.product-card');
-
-        // Loop through each product
-        products.forEach(product => {
-            const productCategory = product.getAttribute('data-category');
-
-            // Show or hide products based on category
-            if (category === 'all' || productCategory === category) {
-                product.style.display = 'flex'; // Ensure proper display style
+            if (hiddenProducts.style.display === "none" || hiddenProducts.style.display === "") {
+                hiddenProducts.style.display = "grid";
+                viewMoreButton.textContent = "View Less Products";
             } else {
-                product.style.display = 'none';
+                hiddenProducts.style.display = "none";
+                viewMoreButton.textContent = "View More Products";
+            }
+        }
+
+        function filterProductsByCategory(category) {
+            const products = document.querySelectorAll('.product-card');
+
+            products.forEach(product => {
+                const productCategory = product.getAttribute('data-category');
+
+                if (category === 'all' || productCategory === category) {
+                    product.style.display = 'flex';
+                } else {
+                    product.style.display = 'none';
+                }
+            });
+
+            const hiddenProducts = document.querySelector('.hidden-products');
+            hiddenProducts.style.display = (category === 'all' || hiddenProducts.querySelector(`.product-card[data-category="${category}"]`)) ? "grid" : "none";
+        }
+
+        document.addEventListener("DOMContentLoaded", function() {
+            const wishlistButtons = document.querySelectorAll(".wishlist-button");
+
+            wishlistButtons.forEach(button => {
+                const productCard = button.closest('.product-card');
+                const productTitle = productCard.querySelector(".product-title").textContent;
+
+                if (isInWishlist(productTitle)) {
+                    button.classList.add("is-active");
+                }
+
+                button.addEventListener("click", function() {
+                    const isAdded = button.classList.toggle("is-active");
+
+                    const productData = {
+                        title: productCard.querySelector(".product-title").textContent,
+                        price: productCard.querySelector(".product-price").textContent,
+                        imageUrl: productCard.querySelector(".image-container img").src
+                    };
+
+                    if (isAdded) {
+                        saveToWishlist(productData);
+                    } else {
+                        removeFromWishlist(productData.title);
+                    }
+                });
+            });
+
+            function isInWishlist(title) {
+                const wishlist = JSON.parse(localStorage.getItem('wishlist')) || [];
+                return wishlist.some(product => product.title === title);
+            }
+
+            function saveToWishlist(product) {
+                let wishlist = JSON.parse(localStorage.getItem('wishlist')) || [];
+                wishlist.push(product);
+                localStorage.setItem('wishlist', JSON.stringify(wishlist));
+            }
+
+            function removeFromWishlist(title) {
+                let wishlist = JSON.parse(localStorage.getItem('wishlist')) || [];
+                wishlist = wishlist.filter(product => product.title !== title);
+                localStorage.setItem('wishlist', JSON.stringify(wishlist));
             }
         });
-
-        // After filtering, ensure hidden products are displayed if they match the category
-        const hiddenProducts = document.querySelector('.hidden-products');
-        hiddenProducts.style.display = (category === 'all' || hiddenProducts.querySelector(`.product-card[data-category="${category}"]`)) ? "grid" : "none";
-    }
-</script>
+    </script>
 </body>
 
 </html>
