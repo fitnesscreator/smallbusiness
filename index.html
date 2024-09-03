@@ -853,60 +853,72 @@
 
     <!-- JavaScript -->
     <script>
-    document.addEventListener('DOMContentLoaded', function () {
-        function isInWishlist(title) {
-            const wishlist = JSON.parse(localStorage.getItem('wishlist')) || [];
-            return wishlist.some(product => product.title === title);
-        }
+document.addEventListener('DOMContentLoaded', function () {
+    // Category click functionality
+    const categories = document.querySelectorAll(".category");
 
-        function saveToWishlist(product) {
-            let wishlist = JSON.parse(localStorage.getItem('wishlist')) || [];
-            wishlist.push(product);
-            localStorage.setItem('wishlist', JSON.stringify(wishlist));
-            updateWishlistPage(); // Notify other pages
-        }
-
-        function removeFromWishlist(title) {
-            let wishlist = JSON.parse(localStorage.getItem('wishlist')) || [];
-            wishlist = wishlist.filter(product => product.title !== title);
-            localStorage.setItem('wishlist', JSON.stringify(wishlist));
-            updateWishlistPage(); // Notify other pages
-        }
-
-        function updateWishlistPage() {
-            if (window.BroadcastChannel) {
-                const bc = new BroadcastChannel('wishlist_channel');
-                bc.postMessage('update_wishlist');
-            }
-        }
-
-        const wishlistButtons = document.querySelectorAll('.wishlist-button');
-
-        wishlistButtons.forEach(button => {
-            const productCard = button.closest('.product-card');
-            const productTitle = productCard.querySelector('.product-title').textContent;
-
-            if (isInWishlist(productTitle)) {
-                button.classList.add('is-active');
-            }
-
-            button.addEventListener('click', function () {
-                const isAdded = button.classList.toggle('is-active');
-
-                const productData = {
-                    title: productCard.getAttribute('data-title'),
-                    price: productCard.getAttribute('data-price'),
-                    imageUrl: productCard.getAttribute('data-image'),
-                };
-
-                if (isAdded) {
-                    saveToWishlist(productData);
-                } else {
-                    removeFromWishlist(productData.title);
-                }
-            });
+    categories.forEach(category => {
+        category.addEventListener("click", function () {
+            const selectedCategory = category.getAttribute("data-category");
+            // Redirect to products.html with the selected category as a query parameter
+            window.location.href = `products.html?category=${selectedCategory}`;
         });
     });
+
+    // Wishlist functionality
+    function isInWishlist(title) {
+        const wishlist = JSON.parse(localStorage.getItem('wishlist')) || [];
+        return wishlist.some(product => product.title === title);
+    }
+
+    function saveToWishlist(product) {
+        let wishlist = JSON.parse(localStorage.getItem('wishlist')) || [];
+        wishlist.push(product);
+        localStorage.setItem('wishlist', JSON.stringify(wishlist));
+        updateWishlistPage(); // Notify other pages
+    }
+
+    function removeFromWishlist(title) {
+        let wishlist = JSON.parse(localStorage.getItem('wishlist')) || [];
+        wishlist = wishlist.filter(product => product.title !== title);
+        localStorage.setItem('wishlist', JSON.stringify(wishlist));
+        updateWishlistPage(); // Notify other pages
+    }
+
+    function updateWishlistPage() {
+        if (window.BroadcastChannel) {
+            const bc = new BroadcastChannel('wishlist_channel');
+            bc.postMessage('update_wishlist');
+        }
+    }
+
+    const wishlistButtons = document.querySelectorAll('.wishlist-button');
+
+    wishlistButtons.forEach(button => {
+        const productCard = button.closest('.product-card');
+        const productTitle = productCard.querySelector('.product-title').textContent;
+
+        if (isInWishlist(productTitle)) {
+            button.classList.add('is-active');
+        }
+
+        button.addEventListener('click', function () {
+            const isAdded = button.classList.toggle('is-active');
+
+            const productData = {
+                title: productCard.getAttribute('data-title'),
+                price: productCard.getAttribute('data-price'),
+                imageUrl: productCard.getAttribute('data-image'),
+            };
+
+            if (isAdded) {
+                saveToWishlist(productData);
+            } else {
+                removeFromWishlist(productData.title);
+            }
+        });
+    });
+});
 </script>
 </body>
 
