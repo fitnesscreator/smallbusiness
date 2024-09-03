@@ -1,0 +1,789 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Products - Modern Soft Shades</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: #5c4a4a;
+            margin: 0;
+            padding: 0;
+            background-color: #FFFFFF;
+        }
+
+        /* Navigation Bar */
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 30px;
+            background-color: #f6e6e0;
+            color: #5c4a4a;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+        }
+
+        .navbar .logo img {
+            height: 50px;
+        }
+
+        .navbar .menu {
+            display: flex;
+            gap: 25px;
+            align-items: center;
+        }
+
+        .navbar .menu a {
+            color: #5c4a4a;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .navbar .menu a:hover {
+            color: #b88b8b;
+        }
+
+        .navbar .icons {
+            display: flex;
+            gap: 15px;
+            font-size: 18px;
+        }
+
+        .navbar .icons a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        .navbar .icons a:hover {
+            color: #b88b8b;
+        }
+        
+        /* Categories section */
+        .categories-section {
+            padding: 50px 20px;
+            background-color: #f4e5e0;
+            margin-bottom: 40px;
+            text-align: center;
+        }
+
+        .categories-section h2 {
+            font-size: 26px;
+            color: #7b6464;
+            margin-bottom: 20px;
+        }
+
+        .categories-row {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+        }
+
+        .category {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            cursor: pointer;
+        }
+
+        .category-image {
+            width: 120px;
+            height: 120px;
+            background-color: #e9d7d2; /* Placeholder for category image */
+            border-radius: 50%;
+            margin-bottom: 15px;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .category-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 50%;
+        }
+
+        .category-image:hover {
+            transform: scale(1.1); /* Slightly enlarges the circle */
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1); /* Adds a soft shadow */
+        }
+
+        .category-title {
+            font-size: 16px;
+            color: #7b6464;
+            margin: 0;
+            font-weight: 600;
+        }
+
+        /* Products Section */
+        .products-section {
+            padding: 20px;
+            background-color: #f9f3f1;
+            margin: 0 20px 40px 20px;
+        }
+
+        .products-section h2 {
+            text-align: center;
+            font-size: 26px;
+            margin-bottom: 20px;
+            color: #7b6464;
+        }
+
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .product-card {
+            border: 1px solid #e4c9c4;
+            border-radius: 10px;
+            overflow: hidden;
+            transition: transform 0.3s, box-shadow 0.3s;
+            background-color: #fff;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            position: relative;
+        }
+
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+        }
+
+        .product-card .image-container {
+            position: relative;
+            width: 100%;
+            padding-top: 100%;
+            background-color: #e9d7d2;
+        }
+
+        .product-card .image-container img {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .wishlist-button {
+            border: none;
+            background: none;
+            cursor: pointer;
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            padding: 0;
+        }
+
+        .wishlist-button svg {
+            width: 24px;
+            height: 24px;
+            fill: none;
+            stroke: #2D2D2D;
+            stroke-width: 2;
+        }
+
+        .wishlist-button.is-active svg path {
+            fill: #333;
+            stroke: #333;
+        }
+
+        @keyframes beat {
+            30% {
+                opacity: 1;
+                transform: scale(1.4);
+            }
+            50% {
+                transform: scale(0.8);
+            }
+            100% {
+                transform: scale(1);
+            }
+        }
+
+        .product-card .product-details {
+            padding: 10px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .product-card .product-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+        }
+
+        .product-card .product-info .product-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: #7b6464;
+            margin: 0;
+            text-align: left;
+        }
+
+        .product-card .product-info .product-price {
+            font-size: 14px;
+            color: #8c6b6b;
+            margin: 0;
+            font-weight: bold;
+            text-align: right;
+        }
+
+        .product-card .buy-button {
+            padding: 8px 0;
+            background-color: transparent;
+            color: #d8a69a;
+            border: 2px solid #d8a69a;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: background-color 0.3s, color 0.3s, border 0.3s;
+            font-size: 14px;
+            display: block;
+            width: 100%;
+            text-align: center;
+        }
+
+        .product-card .buy-button:hover {
+            background-color: #d8a69a;
+            color: #fff;
+            border: none;
+        }
+        
+        /* Contact us section */
+        .contact-us {
+            padding: 50px 20px;
+            background-color: #f2d9d5;
+            text-align: center;
+            border-top: 2px solid #b88b8b;
+        }
+
+        .contact-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            max-width: 1200px;
+            margin: 0 auto;
+            text-align: left;
+        }
+
+        .contact-container .logo {
+            flex: 1;
+        }
+
+        .contact-container .links {
+            flex: 3;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .navbar-logo {
+            font-size: 26px;
+            font-weight: bold;
+            color: #6d4e4e;
+        }
+
+        .link-group {
+            flex: 1;
+        }
+
+        .link-title {
+            font-size: 18px;
+            font-weight: bold;
+            color: #6d4e4e;
+            margin-bottom: 10px;
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+
+        .link-title:hover {
+            color: #b88b8b;
+        }
+
+        .dropdown {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .dropdown li {
+            margin-bottom: 10px;
+            color: #7b6464;
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+
+        .dropdown li:hover {
+            color: #b88b8b;
+        }
+
+        .contact-button {
+            padding: 8px 12px;
+            background-color: #d8a69a;
+            color: #fff;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            font-size: 14px;
+        }
+
+        .contact-button:hover {
+            background-color: #b88b8b;
+        }
+
+        .social-icons {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .social-icons span {
+            font-size: 20px;
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+
+        .social-icons span:hover {
+            color: #b88b8b;
+        }
+
+        /* Footer */
+        .footer {
+            padding: 20px;
+            background-color: #b88b8b;
+            color: #fff;
+            text-align: center;
+            font-size: 14px;
+            letter-spacing: 1px;
+            border-top: 1px solid #a57d7d;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <div class="navbar">
+        <div class="logo">
+            <img src="https://raw.githubusercontent.com/bestwebsites/smallbusiness/main/Pictures/B%20(79).png" alt="Logo">
+        </div>
+        <div class="menu">
+            <a href="index.html">Home</a>
+            <a href="index.html#reviewsSection">Reviews</a>
+            <a href="about.html">About</a>
+            <a href="#contactSection">Contact Us</a>
+        </div>
+        <div class="icons">
+            <a href="wishlist.html" class="icon">♡</a>
+            <a href="cart.html" class="icon">🛒</a>
+        </div>
+    </div>
+    
+    <!-- Categories Section -->
+    <div class="categories-section" id="categoriesSection">
+        <h2>Shop by Category</h2>
+        <div class="categories-row">
+            <div class="category" data-category="trending">
+                <div class="category-image">
+                    <img src="https://raw.githubusercontent.com/bestwebsites/smallbusiness/main/Pictures/265c9107d09f9fd85d9435a2b3d89938.jpg" alt="Trending Now">
+                </div>
+                <p class="category-title">Trending Now</p>
+            </div>
+            <div class="category" data-category="bestsellers">
+                <div class="category-image">
+                    <img src="https://raw.githubusercontent.com/bestwebsites/smallbusiness/main/Pictures/2c5d1407655c10ecc8e487989a5b5ecf.jpg" alt="Best Sellers">
+                </div>
+                <p class="category-title">Best Sellers</p>
+            </div>
+            <div class="category" data-category="newarrivals">
+                <div class="category-image">
+                    <img src="https://raw.githubusercontent.com/bestwebsites/smallbusiness/main/Pictures/55f559de0a40aae6dcbf8bcbdfe7457b.jpg" alt="New Arrivals">
+                </div>
+                <p class="category-title">New Arrivals</p>
+            </div>
+            <div class="category" data-category="gifts">
+                <div class="category-image">
+                    <img src="https://raw.githubusercontent.com/bestwebsites/smallbusiness/main/Pictures/bb27f0f90d7efa29be9817b7cc85fc1e.jpg" alt="Gift Ideas">
+                </div>
+                <p class="category-title">Gift Ideas</p>
+            </div>
+            <div class="category" data-category="all">
+                <div class="category-image">
+                    <img src="https://raw.githubusercontent.com/bestwebsites/smallbusiness/main/Pictures/89a8338f68093c7d97ef1d03299d20b0.jpg" alt="All Products">
+                </div>
+                <p class="category-title">All Products</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Products Section -->
+    <div class="products-section">
+        <h2>All Products</h2>
+        <div class="products-grid">
+            <!-- Product 1 -->
+            <div class="product-card" data-title="Product 1" data-price="$19.99" data-image="https://raw.githubusercontent.com/bestwebsites/smallbusiness/main/Pictures/97f9b50623aa00440bb0009848857a6d.jpg" data-description="A wonderful product that is trending now." data-category="trending">
+                <div class="image-container">
+                    <img src="https://raw.githubusercontent.com/bestwebsites/smallbusiness/main/Pictures/97f9b50623aa00440bb0009848857a6d.jpg" alt="Product 1">
+                    <button type="button" class="wishlist-button">
+                        <svg width="18" height="16" viewBox="0 0 18 16">
+                            <path d="M9 14s-4-3.33-6-6a3.5 3.5 0 1 1 6-4 3.5 3.5 0 1 1 6 4c-2 2.67-6 6-6 6z" stroke="#2D2D2D" stroke-width="2" fill="none" />
+                        </svg>
+                    </button>
+                </div>
+                <div class="product-details">
+                    <div class="product-info">
+                        <p class="product-title">Product 1</p>
+                        <p class="product-price">$19.99</p>
+                    </div>
+                    <button class="buy-button">Buy Now</button>
+                </div>
+            </div>
+
+            <!-- Product 2 -->
+            <div class="product-card" data-title="Product 2" data-price="$29.99" data-image="https://raw.githubusercontent.com/bestwebsites/smallbusiness/main/Pictures/9a08fcfea078d7119310bef13452adc3.jpg" data-description="A top-selling product with rave reviews." data-category="trending">
+                <div class="image-container">
+                    <img src="https://raw.githubusercontent.com/bestwebsites/smallbusiness/main/Pictures/9a08fcfea078d7119310bef13452adc3.jpg" alt="Product 2">
+                    <button type="button" class="wishlist-button">
+                        <svg width="18" height="16" viewBox="0 0 18 16">
+                            <path d="M9 14s-4-3.33-6-6a3.5 3.5 0 1 1 6-4 3.5 3.5 0 1 1 6 4c-2 2.67-6 6-6 6z" stroke="#2D2D2D" stroke-width="2" fill="none" />
+                        </svg>
+                    </button>
+                </div>
+                <div class="product-details">
+                    <div class="product-info">
+                        <p class="product-title">Product 2</p>
+                        <p class="product-price">$29.99</p>
+                    </div>
+                    <button class="buy-button">Buy Now</button>
+                </div>
+            </div>
+
+            <!-- Product 3 -->
+            <div class="product-card" data-title="Product 3" data-price="$39.99" data-image="https://raw.githubusercontent.com/bestwebsites/smallbusiness/main/Pictures/e6cfab0ebbe1289cee728a546ec4f54a.jpg" data-description="One of our bestsellers with excellent feedback." data-category="bestsellers">
+                <div class="image-container">
+                    <img src="https://raw.githubusercontent.com/bestwebsites/smallbusiness/main/Pictures/e6cfab0ebbe1289cee728a546ec4f54a.jpg" alt="Product 3">
+                    <button type="button" class="wishlist-button">
+                        <svg width="18" height="16" viewBox="0 0 18 16">
+                            <path d="M9 14s-4-3.33-6-6a3.5 3.5 0 1 1 6-4 3.5 3.5 0 1 1 6 4c-2 2.67-6 6-6 6z" stroke="#2D2D2D" stroke-width="2" fill="none" />
+                        </svg>
+                    </button>
+                </div>
+                <div class="product-details">
+                    <div class="product-info">
+                        <p class="product-title">Product 3</p>
+                        <p class="product-price">$39.99</p>
+                    </div>
+                    <button class="buy-button">Buy Now</button>
+                </div>
+            </div>
+
+            <!-- Product 4 -->
+            <div class="product-card" data-title="Product 4" data-price="$49.99" data-image="https://raw.githubusercontent.com/bestwebsites/smallbusiness/main/Pictures/43832097ede022bd532caeb02d124435.jpg" data-description="A premium product that is flying off the shelves." data-category="bestsellers">
+                <div class="image-container">
+                    <img src="https://raw.githubusercontent.com/bestwebsites/smallbusiness/main/Pictures/43832097ede022bd532caeb02d124435.jpg" alt="Product 4">
+                    <button type="button" class="wishlist-button">
+                        <svg width="18" height="16" viewBox="0 0 18 16">
+                            <path d="M9 14s-4-3.33-6-6a3.5 3.5 0 1 1 6-4 3.5 3.5 0 1 1 6 4c-2 2.67-6 6-6 6z" stroke="#2D2D2D" stroke-width="2" fill="none" />
+                        </svg>
+                    </button>
+                </div>
+                <div class="product-details">
+                    <div class="product-info">
+                        <p class="product-title">Product 4</p>
+                        <p class="product-price">$49.99</p>
+                    </div>
+                    <button class="buy-button">Buy Now</button>
+                </div>
+            </div>
+          
+          <!-- Product 5 -->
+<div class="product-card" data-title="Product 5" data-price="$59.99" data-image="https://raw.githubusercontent.com/bestwebsites/smallbusiness/main/Pictures/3b7f217748256ed8576cce43d1c85b38.jpg" data-description="A stylish product for those who love elegance." data-category="newarrivals">
+    <div class="image-container">
+        <img src="https://raw.githubusercontent.com/bestwebsites/smallbusiness/main/Pictures/3b7f217748256ed8576cce43d1c85b38.jpg" alt="Product 5">
+        <button type="button" class="wishlist-button">
+            <svg width="18" height="16" viewBox="0 0 18 16">
+                <path d="M9 14s-4-3.33-6-6a3.5 3.5 0 1 1 6-4 3.5 3.5 0 1 1 6 4c-2 2.67-6 6-6 6z" stroke="#2D2D2D" stroke-width="2" fill="none" />
+            </svg>
+        </button>
+    </div>
+    <div class="product-details">
+        <div class="product-info">
+            <p class="product-title">Product 5</p>
+            <p class="product-price">$59.99</p>
+        </div>
+        <button class="buy-button">Buy Now</button>
+    </div>
+</div>
+
+<!-- Product 6 -->
+<div class="product-card" data-title="Product 6" data-price="$69.99" data-image="https://raw.githubusercontent.com/bestwebsites/smallbusiness/main/Pictures/5a6020bb3e2e89d44f8c94fd0570e2aa.jpg" data-description="A luxury item perfect for special occasions." data-category="gifts">
+    <div class="image-container">
+        <img src="https://raw.githubusercontent.com/bestwebsites/smallbusiness/main/Pictures/5a6020bb3e2e89d44f8c94fd0570e2aa.jpg" alt="Product 6">
+        <button type="button" class="wishlist-button">
+            <svg width="18" height="16" viewBox="0 0 18 16">
+                <path d="M9 14s-4-3.33-6-6a3.5 3.5 0 1 1 6-4 3.5 3.5 0 1 1 6 4c-2 2.67-6 6-6 6z" stroke="#2D2D2D" stroke-width="2" fill="none" />
+            </svg>
+        </button>
+    </div>
+    <div class="product-details">
+        <div class="product-info">
+            <p class="product-title">Product 6</p>
+            <p class="product-price">$69.99</p>
+        </div>
+        <button class="buy-button">Buy Now</button>
+    </div>
+</div>
+
+<!-- Product 7 -->
+<div class="product-card" data-title="Product 7" data-price="$79.99" data-image="https://raw.githubusercontent.com/bestwebsites/smallbusiness/main/Pictures/97ddf6c5b9dee52246d6c9c88884e3aa.jpg" data-description="A must-have product for trendsetters." data-category="trending">
+    <div class="image-container">
+        <img src="https://raw.githubusercontent.com/bestwebsites/smallbusiness/main/Pictures/97ddf6c5b9dee52246d6c9c88884e3aa.jpg" alt="Product 7">
+        <button type="button" class="wishlist-button">
+            <svg width="18" height="16" viewBox="0 0 18 16">
+                <path d="M9 14s-4-3.33-6-6a3.5 3.5 0 1 1 6-4 3.5 3.5 0 1 1 6 4c-2 2.67-6 6-6 6z" stroke="#2D2D2D" stroke-width="2" fill="none" />
+            </svg>
+        </button>
+    </div>
+    <div class="product-details">
+        <div class="product-info">
+            <p class="product-title">Product 7</p>
+            <p class="product-price">$79.99</p>
+        </div>
+        <button class="buy-button">Buy Now</button>
+    </div>
+</div>
+
+<!-- Product 8 -->
+<div class="product-card" data-title="Product 8" data-price="$89.99" data-image="https://raw.githubusercontent.com/bestwebsites/smallbusiness/main/Pictures/b7d83da82d33ee85254b322fdb4d707a.jpg" data-description="A bestselling product that everyone loves." data-category="bestsellers">
+    <div class="image-container">
+        <img src="https://raw.githubusercontent.com/bestwebsites/smallbusiness/main/Pictures/b7d83da82d33ee85254b322fdb4d707a.jpg" alt="Product 8">
+        <button type="button" class="wishlist-button">
+            <svg width="18" height="16" viewBox="0 0 18 16">
+                <path d="M9 14s-4-3.33-6-6a3.5 3.5 0 1 1 6-4 3.5 3.5 0 1 1 6 4c-2 2.67-6 6-6 6z" stroke="#2D2D2D" stroke-width="2" fill="none" />
+            </svg>
+        </button>
+    </div>
+    <div class="product-details">
+        <div class="product-info">
+            <p class="product-title">Product 8</p>
+            <p class="product-price">$89.99</p>
+        </div>
+        <button class="buy-button">Buy Now</button>
+    </div>
+</div>
+
+<!-- Product 9 -->
+<div class="product-card" data-title="Product 9" data-price="$99.99" data-image="https://raw.githubusercontent.com/bestwebsites/smallbusiness/main/Pictures/cb48eed56f84be0b88119cda3ffb9a86.jpg" data-description="A premium choice for those with exquisite taste." data-category="gifts">
+    <div class="image-container">
+        <img src="https://raw.githubusercontent.com/bestwebsites/smallbusiness/main/Pictures/cb48eed56f84be0b88119cda3ffb9a86.jpg" alt="Product 9">
+        <button type="button" class="wishlist-button">
+            <svg width="18" height="16" viewBox="0 0 18 16">
+                <path d="M9 14s-4-3.33-6-6a3.5 3.5 0 1 1 6-4 3.5 3.5 0 1 1 6 4c-2 2.67-6 6-6 6z" stroke="#2D2D2D" stroke-width="2" fill="none" />
+            </svg>
+        </button>
+    </div>
+    <div class="product-details">
+        <div class="product-info">
+            <p class="product-title">Product 9</p>
+            <p class="product-price">$99.99</p>
+        </div>
+        <button class="buy-button">Buy Now</button>
+    </div>
+</div>
+
+<!-- Product 10 -->
+<div class="product-card" data-title="Product 10" data-price="$109.99" data-image="https://raw.githubusercontent.com/bestwebsites/smallbusiness/main/Pictures/cd4dce5b826bdc9c8489db224767f1d4.jpg" data-description="An innovative product that sets trends." data-category="newarrivals">
+    <div class="image-container">
+        <img src="https://raw.githubusercontent.com/bestwebsites/smallbusiness/main/Pictures/cd4dce5b826bdc9c8489db224767f1d4.jpg" alt="Product 10">
+        <button type="button" class="wishlist-button">
+            <svg width="18" height="16" viewBox="0 0 18 16">
+                <path d="M9 14s-4-3.33-6-6a3.5 3.5 0 1 1 6-4 3.5 3.5 0 1 1 6 4c-2 2.67-6 6-6 6z" stroke="#2D2D2D" stroke-width="2" fill="none" />
+            </svg>
+        </button>
+    </div>
+    <div class="product-details">
+        <div class="product-info">
+            <p class="product-title">Product 10</p>
+            <p class="product-price">$109.99</p>
+        </div>
+        <button class="buy-button">Buy Now</button>
+    </div>
+</div>
+
+<!-- Product 11 -->
+<div class="product-card" data-title="Product 11" data-price="$119.99" data-image="https://raw.githubusercontent.com/bestwebsites/smallbusiness/main/Pictures/f20ebce81e13e6ddd2d6f7ffcf6a8c9a.jpg" data-description="A luxurious product for discerning customers." data-category="bestsellers">
+    <div class="image-container">
+        <img src="https://raw.githubusercontent.com/bestwebsites/smallbusiness/main/Pictures/f20ebce81e13e6ddd2d6f7ffcf6a8c9a.jpg" alt="Product 11">
+        <button type="button" class="wishlist-button">
+            <svg width="18" height="16" viewBox="0 0 18 16">
+                <path d="M9 14s-4-3.33-6-6a3.5 3.5 0 1 1 6-4 3.5 3.5 0 1 1 6 4c-2 2.67-6 6-6 6z" stroke="#2D2D2D" stroke-width="2" fill="none" />
+            </svg>
+        </button>
+    </div>
+    <div class="product-details">
+        <div class="product-info">
+            <p class="product-title">Product 11</p>
+            <p class="product-price">$119.99</p>
+        </div>
+        <button class="buy-button">Buy Now</button>
+    </div>
+</div>
+
+<!-- Product 12 -->
+<div class="product-card" data-title="Product 12" data-price="$129.99" data-image="https://raw.githubusercontent.com/bestwebsites/smallbusiness/main/Pictures/24fe80912786113c43193e1fbb242fab.jpg" data-description="An exclusive product that stands out." data-category="trending">
+    <div class="image-container">
+        <img src="https://raw.githubusercontent.com/bestwebsites/smallbusiness/main/Pictures/24fe80912786113c43193e1fbb242fab.jpg" alt="Product 12">
+        <button type="button" class="wishlist-button">
+            <svg width="18" height="16" viewBox="0 0 18 16">
+                <path d="M9 14s-4-3.33-6-6a3.5 3.5 0 1 1 6-4 3.5 3.5 0 1 1 6 4c-2 2.67-6 6-6 6z" stroke="#2D2D2D" stroke-width="2" fill="none" />
+            </svg>
+        </button>
+    </div>
+    <div class="product-details">
+        <div class="product-info">
+            <p class="product-title">Product 12</p>
+            <p class="product-price">$129.99</p>
+        </div>
+        <button class="buy-button">Buy Now</button>
+    </div>
+</div>
+
+
+            <!-- Additional products can be added here following the same structure -->
+
+        </div>
+    </div>
+    
+    <!-- Contact Us Section -->
+    <div class="contact-us" id="contactSection">
+        <div class="contact-container">
+            <div class="logo">
+                <img src="https://raw.githubusercontent.com/bestwebsites/smallbusiness/main/Pictures/B%20(79).png" alt="Contact Us Logo" style="height: 50px;">
+            </div>
+            <div class="links">
+                <div class="link-group">
+                    <p class="link-title">Shop</p>
+                    <ul class="dropdown">
+                        <li>Trending Now</li>
+                        <li>Best Sellers</li>
+                        <li>New Arrivals</li>
+                        <li>Gift Ideas</li>
+                    </ul>
+                </div>
+                <div class="link-group">
+                    <p class="link-title">About</p>
+                    <ul class="dropdown">
+                        <li>About Us</li>
+                        <li>Reviews</li>
+                        <li>Shipping</li>
+                    </ul>
+                </div>
+                <div class="link-group">
+                    <p class="link-title">Contact</p>
+                    <ul class="dropdown">
+                        <li><button class="contact-button">Contact Us</button></li>
+                        <li>
+                            <div class="social-icons">
+                                <span>📷</span> <!-- Instagram icon -->
+                                <span>🎵</span> <!-- TikTok icon -->
+                                <span>📘</span> <!-- Facebook icon -->
+                                <span>🐦</span> <!-- X (Twitter) icon -->
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="footer">
+        &copy; 2024 Your Company. All Rights Reserved.
+    </div>
+
+    <!-- JavaScript -->
+    <script>
+      document.addEventListener("DOMContentLoaded", function() {
+    const categories = document.querySelectorAll(".category");
+    const products = document.querySelectorAll(".product-card");
+    const allProductsCategory = "all"; // The category that shows all products
+
+    categories.forEach(category => {
+        category.addEventListener("click", function() {
+            const selectedCategory = category.getAttribute("data-category");
+
+            products.forEach(product => {
+                const productCategory = product.getAttribute("data-category");
+                
+                if (selectedCategory === allProductsCategory || productCategory === selectedCategory) {
+                    product.style.display = "block"; // Show the product
+                } else {
+                    product.style.display = "none"; // Hide the product
+                }
+            });
+
+            // Update the section title to reflect the selected category
+            const sectionTitle = document.querySelector(".products-section h2");
+            sectionTitle.textContent = selectedCategory === allProductsCategory ? "All Products" : `Products in "${selectedCategory}"`;
+        });
+    });
+
+    // Wishlist functionality remains the same as before
+    const wishlistButtons = document.querySelectorAll(".wishlist-button");
+
+    wishlistButtons.forEach(button => {
+        const productCard = button.closest('.product-card');
+        const productTitle = productCard.querySelector(".product-title").textContent;
+
+        if (isInWishlist(productTitle)) {
+            button.classList.add("is-active");
+        }
+
+        button.addEventListener("click", function() {
+            const isAdded = button.classList.toggle("is-active");
+
+            const productData = {
+                title: productCard.querySelector(".product-title").textContent,
+                price: productCard.querySelector(".product-price").textContent,
+                imageUrl: productCard.querySelector(".image-container img").src
+            };
+
+            if (isAdded) {
+                saveToWishlist(productData);
+            } else {
+                removeFromWishlist(productData.title);
+            }
+        });
+    });
+
+    function isInWishlist(title) {
+        const wishlist = JSON.parse(localStorage.getItem('wishlist')) || [];
+        return wishlist.some(product => product.title === title);
+    }
+
+    function saveToWishlist(product) {
+        let wishlist = JSON.parse(localStorage.getItem('wishlist')) || [];
+        wishlist.push(product);
+        localStorage.setItem('wishlist', JSON.stringify(wishlist));
+    }
+
+    function removeFromWishlist(title) {
+        let wishlist = JSON.parse(localStorage.getItem('wishlist')) || [];
+        wishlist = wishlist.filter(product => product.title !== title);
+        localStorage.setItem('wishlist', JSON.stringify(wishlist));
+    }
+});
+    </script>
+</body>
+</html>
