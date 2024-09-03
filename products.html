@@ -712,78 +712,74 @@
         &copy; 2024 Your Company. All Rights Reserved.
     </div>
 
-    <!-- JavaScript -->
-    <script>
-      document.addEventListener("DOMContentLoaded", function() {
-    const categories = document.querySelectorAll(".category");
-    const products = document.querySelectorAll(".product-card");
-    const allProductsCategory = "all"; // The category that shows all products
+    <!-- JavaScript to Apply Filters Based on Query Parameter -->
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const selectedCategory = urlParams.get('category') || 'all';
+        const products = document.querySelectorAll(".product-card");
+        const allProductsCategory = "all"; // The category that shows all products
 
-    categories.forEach(category => {
-        category.addEventListener("click", function() {
-            const selectedCategory = category.getAttribute("data-category");
+        // Apply the filter based on the selected category
+        products.forEach(product => {
+            const productCategory = product.getAttribute("data-category");
 
-            products.forEach(product => {
-                const productCategory = product.getAttribute("data-category");
-                
-                if (selectedCategory === allProductsCategory || productCategory === selectedCategory) {
-                    product.style.display = "block"; // Show the product
-                } else {
-                    product.style.display = "none"; // Hide the product
-                }
-            });
-
-            // Update the section title to reflect the selected category
-            const sectionTitle = document.querySelector(".products-section h2");
-            sectionTitle.textContent = selectedCategory === allProductsCategory ? "All Products" : `Products in "${selectedCategory}"`;
-        });
-    });
-
-    // Wishlist functionality remains the same as before
-    const wishlistButtons = document.querySelectorAll(".wishlist-button");
-
-    wishlistButtons.forEach(button => {
-        const productCard = button.closest('.product-card');
-        const productTitle = productCard.querySelector(".product-title").textContent;
-
-        if (isInWishlist(productTitle)) {
-            button.classList.add("is-active");
-        }
-
-        button.addEventListener("click", function() {
-            const isAdded = button.classList.toggle("is-active");
-
-            const productData = {
-                title: productCard.querySelector(".product-title").textContent,
-                price: productCard.querySelector(".product-price").textContent,
-                imageUrl: productCard.querySelector(".image-container img").src
-            };
-
-            if (isAdded) {
-                saveToWishlist(productData);
+            if (selectedCategory === allProductsCategory || productCategory === selectedCategory) {
+                product.style.display = "block"; // Show the product
             } else {
-                removeFromWishlist(productData.title);
+                product.style.display = "none"; // Hide the product
             }
         });
+
+        // Update the section title to reflect the selected category
+        const sectionTitle = document.querySelector(".products-section h2");
+        sectionTitle.textContent = selectedCategory === allProductsCategory ? "All Products" : `Products in "${selectedCategory}"`;
+
+        // Wishlist functionality remains the same as before
+        const wishlistButtons = document.querySelectorAll(".wishlist-button");
+
+        wishlistButtons.forEach(button => {
+            const productCard = button.closest('.product-card');
+            const productTitle = productCard.querySelector(".product-title").textContent;
+
+            if (isInWishlist(productTitle)) {
+                button.classList.add("is-active");
+            }
+
+            button.addEventListener("click", function() {
+                const isAdded = button.classList.toggle("is-active");
+
+                const productData = {
+                    title: productCard.querySelector(".product-title").textContent,
+                    price: productCard.querySelector(".product-price").textContent,
+                    imageUrl: productCard.querySelector(".image-container img").src
+                };
+
+                if (isAdded) {
+                    saveToWishlist(productData);
+                } else {
+                    removeFromWishlist(productData.title);
+                }
+            });
+        });
+
+        function isInWishlist(title) {
+            const wishlist = JSON.parse(localStorage.getItem('wishlist')) || [];
+            return wishlist.some(product => product.title === title);
+        }
+
+        function saveToWishlist(product) {
+            let wishlist = JSON.parse(localStorage.getItem('wishlist')) || [];
+            wishlist.push(product);
+            localStorage.setItem('wishlist', JSON.stringify(wishlist));
+        }
+
+        function removeFromWishlist(title) {
+            let wishlist = JSON.parse(localStorage.getItem('wishlist')) || [];
+            wishlist = wishlist.filter(product => product.title !== title);
+            localStorage.setItem('wishlist', JSON.stringify(wishlist));
+        }
     });
-
-    function isInWishlist(title) {
-        const wishlist = JSON.parse(localStorage.getItem('wishlist')) || [];
-        return wishlist.some(product => product.title === title);
-    }
-
-    function saveToWishlist(product) {
-        let wishlist = JSON.parse(localStorage.getItem('wishlist')) || [];
-        wishlist.push(product);
-        localStorage.setItem('wishlist', JSON.stringify(wishlist));
-    }
-
-    function removeFromWishlist(title) {
-        let wishlist = JSON.parse(localStorage.getItem('wishlist')) || [];
-        wishlist = wishlist.filter(product => product.title !== title);
-        localStorage.setItem('wishlist', JSON.stringify(wishlist));
-    }
-});
-    </script>
+</script>
 </body>
 </html>
