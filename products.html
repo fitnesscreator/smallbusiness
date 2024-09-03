@@ -715,25 +715,49 @@
     <!-- JavaScript to Apply Filters Based on Query Parameter -->
 <script>
     document.addEventListener("DOMContentLoaded", function() {
+        // Function to filter products based on category
+        function filterProducts(selectedCategory) {
+            const products = document.querySelectorAll(".product-card");
+            const allProductsCategory = "all";
+
+            // Apply the filter based on the selected category
+            products.forEach(product => {
+                const productCategory = product.getAttribute("data-category");
+
+                if (selectedCategory === allProductsCategory || productCategory === selectedCategory) {
+                    product.style.display = "block"; // Show the product
+                } else {
+                    product.style.display = "none"; // Hide the product
+                }
+            });
+
+            // Update the section title to reflect the selected category
+            const sectionTitle = document.querySelector(".products-section h2");
+            sectionTitle.textContent = selectedCategory === allProductsCategory ? "All Products" : `Products in "${selectedCategory}"`;
+        }
+
+        // Get the selected category from the URL
         const urlParams = new URLSearchParams(window.location.search);
         const selectedCategory = urlParams.get('category') || 'all';
-        const products = document.querySelectorAll(".product-card");
-        const allProductsCategory = "all"; // The category that shows all products
 
-        // Apply the filter based on the selected category
-        products.forEach(product => {
-            const productCategory = product.getAttribute("data-category");
+        // Apply the filter initially based on the URL parameter
+        filterProducts(selectedCategory);
 
-            if (selectedCategory === allProductsCategory || productCategory === selectedCategory) {
-                product.style.display = "block"; // Show the product
-            } else {
-                product.style.display = "none"; // Hide the product
-            }
+        // Add event listeners to category elements to allow filtering without reloading
+        const categories = document.querySelectorAll(".category");
+
+        categories.forEach(category => {
+            category.addEventListener("click", function() {
+                const newCategory = category.getAttribute("data-category");
+
+                // Update the URL to reflect the new filter, without reloading the page
+                const newUrl = `${window.location.pathname}?category=${newCategory}`;
+                window.history.pushState({ path: newUrl }, '', newUrl);
+
+                // Apply the new filter
+                filterProducts(newCategory);
+            });
         });
-
-        // Update the section title to reflect the selected category
-        const sectionTitle = document.querySelector(".products-section h2");
-        sectionTitle.textContent = selectedCategory === allProductsCategory ? "All Products" : `Products in "${selectedCategory}"`;
 
         // Wishlist functionality remains the same as before
         const wishlistButtons = document.querySelectorAll(".wishlist-button");
