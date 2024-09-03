@@ -759,7 +759,7 @@
             });
         });
 
-        // Wishlist functionality remains the same as before
+        // Wishlist functionality
         const wishlistButtons = document.querySelectorAll(".wishlist-button");
 
         wishlistButtons.forEach(button => {
@@ -774,9 +774,9 @@
                 const isAdded = button.classList.toggle("is-active");
 
                 const productData = {
-                    title: productCard.querySelector(".product-title").textContent,
-                    price: productCard.querySelector(".product-price").textContent,
-                    imageUrl: productCard.querySelector(".image-container img").src
+                    title: productCard.getAttribute('data-title'),
+                    price: productCard.getAttribute('data-price'),
+                    imageUrl: productCard.getAttribute('data-image'),
                 };
 
                 if (isAdded) {
@@ -796,13 +796,46 @@
             let wishlist = JSON.parse(localStorage.getItem('wishlist')) || [];
             wishlist.push(product);
             localStorage.setItem('wishlist', JSON.stringify(wishlist));
+            updateWishlistPage(); // Notify other pages
         }
 
         function removeFromWishlist(title) {
             let wishlist = JSON.parse(localStorage.getItem('wishlist')) || [];
             wishlist = wishlist.filter(product => product.title !== title);
             localStorage.setItem('wishlist', JSON.stringify(wishlist));
+            updateWishlistPage(); // Notify other pages
         }
+
+        function updateWishlistPage() {
+            if (window.BroadcastChannel) {
+                const bc = new BroadcastChannel('wishlist_channel');
+                bc.postMessage('update_wishlist');
+            }
+        }
+
+        // Listen for updates from other pages
+        if (window.BroadcastChannel) {
+            const bc = new BroadcastChannel('wishlist_channel');
+            bc.onmessage = function() {
+                updateWishlistDisplay();
+            };
+        }
+
+        function updateWishlistDisplay() {
+            wishlistButtons.forEach(button => {
+                const productCard = button.closest('.product-card');
+                const productTitle = productCard.querySelector(".product-title").textContent;
+
+                if (isInWishlist(productTitle)) {
+                    button.classList.add("is-active");
+                } else {
+                    button.classList.remove("is-active");
+                }
+            });
+        }
+
+        // Initially update the display based on current wishlist state
+        updateWishlistDisplay();
     });
 </script>
 </body>
