@@ -421,10 +421,10 @@
     document.addEventListener('DOMContentLoaded', function() {
     const cartItemsContainer = document.querySelector('.cart-items');
     const cartSummaryTotal = document.querySelector('.total-price');
-    const checkoutButton = document.querySelector('.checkout-button');
+    const checkoutButton = document.querySelector('.checkout-button'); // Assuming there's a button with this class for checkout
 
     // Retrieve cart items from localStorage
-    const cartItems = JSON.parse(localStorage.getItem('cartItems')) || [];
+    const cartItems = JSON.parse(localStorage.getItem('cart')) || [];
 
     // Clear existing items (if any)
     cartItemsContainer.innerHTML = '';
@@ -434,20 +434,14 @@
             // Create a new cart item element
             const cartItem = document.createElement('div');
             cartItem.classList.add('cart-item');
-            
+
+            // Only display the title, price, and image
             cartItem.innerHTML = `
                 <img src="${item.imageUrl}" alt="${item.title}">
                 <div class="cart-item-details">
                     <h3>${item.title}</h3>
-                    <p>Color: ${item.color}</p>
-                    <p>Font: ${item.font}</p>
-                    <div class="quantity-selector">
-                        <button onclick="decreaseQuantity(this)">-</button>
-                        <input type="number" value="${item.quantity}" min="1" readonly>
-                        <button onclick="increaseQuantity(this)">+</button>
-                    </div>
+                    <p class="cart-item-total">${item.price}</p>
                 </div>
-                <p class="cart-item-total">${item.price}</p>
                 <button class="remove-item" onclick="removeItem(this)">Remove</button>
             `;
 
@@ -461,35 +455,16 @@
         cartItemsContainer.innerHTML = '<p>Your cart is empty.</p>';
     }
 
+    // Function to update the total price
     function updateTotal() {
         let total = 0;
-        const cartItems = document.querySelectorAll('.cart-item');
         cartItems.forEach(item => {
-            const price = parseFloat(item.querySelector('.cart-item-total').textContent.replace('$', ''));
-            const quantity = parseInt(item.querySelector('.quantity-selector input').value, 10);
-            total += price * quantity;
+            total += parseFloat(item.price.replace('$', '')) * (item.quantity || 1);
         });
         cartSummaryTotal.textContent = `$${total.toFixed(2)}`;
     }
 
-    window.decreaseQuantity = function(button) {
-        const input = button.nextElementSibling;
-        let value = parseInt(input.value, 10);
-        if (value > 1) {
-            value--;
-            input.value = value;
-            updateTotal();
-        }
-    };
-
-    window.increaseQuantity = function(button) {
-        const input = button.previousElementSibling;
-        let value = parseInt(input.value, 10);
-        value++;
-        input.value = value;
-        updateTotal();
-    };
-
+    // Remove item from cart
     window.removeItem = function(button) {
         const cartItem = button.parentElement;
         const itemName = cartItem.querySelector('h3').textContent;
@@ -498,22 +473,29 @@
         cartItem.remove();
 
         // Remove from localStorage
-        let updatedCartItems = JSON.parse(localStorage.getItem('cartItems')) || [];
+        let updatedCartItems = JSON.parse(localStorage.getItem('cart')) || [];
         updatedCartItems = updatedCartItems.filter(item => item.title !== itemName);
-        localStorage.setItem('cartItems', JSON.stringify(updatedCartItems));
+        localStorage.setItem('cart', JSON.stringify(updatedCartItems));
 
         // Update total
         updateTotal();
+
+        // If the cart is empty, show the "cart is empty" message
+        if (updatedCartItems.length === 0) {
+            cartItemsContainer.innerHTML = '<p>Your cart is empty.</p>';
+        }
     };
 
-    // Proceed to Checkout
+    // Checkout functionality
     checkoutButton.addEventListener('click', function() {
-        // Clear the cart items in localStorage
-        localStorage.removeItem('cartItems');
-
-        // Optionally, you can redirect to a checkout page or display a success message
-        alert('Checkout successful! Your cart is now empty.');
-        window.location.href = 'checkout.html'; // Redirect to the checkout page
+        if (cartItems.length > 0) {
+            // Clear the cart after checkout
+            localStorage.removeItem('cart');
+            alert('Checkout successful!');
+            window.location.href = 'checkout.html'; // Redirect to checkout page
+        } else {
+            alert('Your cart is empty!');
+        }
     });
 });
 </script>
