@@ -419,90 +419,103 @@
 
     <script>
     document.addEventListener('DOMContentLoaded', function() {
-        const cartItemsContainer = document.querySelector('.cart-items');
-        const cartSummaryTotal = document.querySelector('.total-price');
+    const cartItemsContainer = document.querySelector('.cart-items');
+    const cartSummaryTotal = document.querySelector('.total-price');
+    const checkoutButton = document.querySelector('.checkout-button');
 
-        // Retrieve cart items from localStorage
-        const cartItems = JSON.parse(localStorage.getItem('cartItems')) || [];
+    // Retrieve cart items from localStorage
+    const cartItems = JSON.parse(localStorage.getItem('cartItems')) || [];
 
-        // Clear existing items (if any)
-        cartItemsContainer.innerHTML = '';
+    // Clear existing items (if any)
+    cartItemsContainer.innerHTML = '';
 
-        if (cartItems.length > 0) {
-            cartItems.forEach(item => {
-                // Create a new cart item element
-                const cartItem = document.createElement('div');
-                cartItem.classList.add('cart-item');
-                
-                cartItem.innerHTML = `
-                    <img src="${item.image}" alt="${item.title}">
-                    <div class="cart-item-details">
-                        <h3>${item.title}</h3>
-                        <div class="quantity-selector">
-                            <button onclick="decreaseQuantity(this)">-</button>
-                            <input type="number" value="1" min="1" readonly>
-                            <button onclick="increaseQuantity(this)">+</button>
-                        </div>
+    if (cartItems.length > 0) {
+        cartItems.forEach(item => {
+            // Create a new cart item element
+            const cartItem = document.createElement('div');
+            cartItem.classList.add('cart-item');
+            
+            cartItem.innerHTML = `
+                <img src="${item.imageUrl}" alt="${item.title}">
+                <div class="cart-item-details">
+                    <h3>${item.title}</h3>
+                    <p>Color: ${item.color}</p>
+                    <p>Font: ${item.font}</p>
+                    <div class="quantity-selector">
+                        <button onclick="decreaseQuantity(this)">-</button>
+                        <input type="number" value="${item.quantity}" min="1" readonly>
+                        <button onclick="increaseQuantity(this)">+</button>
                     </div>
-                    <p class="cart-item-total">${item.price}</p>
-                    <button class="remove-item" onclick="removeItem(this)">Remove</button>
-                `;
+                </div>
+                <p class="cart-item-total">${item.price}</p>
+                <button class="remove-item" onclick="removeItem(this)">Remove</button>
+            `;
 
-                // Add the new item to the cart items container
-                cartItemsContainer.appendChild(cartItem);
-            });
+            // Add the new item to the cart items container
+            cartItemsContainer.appendChild(cartItem);
+        });
 
-            // Update the total price
-            updateTotal();
-        } else {
-            cartItemsContainer.innerHTML = '<p>Your cart is empty.</p>';
-        }
+        // Update the total price
+        updateTotal();
+    } else {
+        cartItemsContainer.innerHTML = '<p>Your cart is empty.</p>';
+    }
 
-        function updateTotal() {
-            let total = 0;
-            const cartItems = document.querySelectorAll('.cart-item');
-            cartItems.forEach(item => {
-                const price = parseFloat(item.querySelector('.cart-item-total').textContent.replace('$', ''));
-                const quantity = parseInt(item.querySelector('.quantity-selector input').value, 10);
-                total += price * quantity;
-            });
-            cartSummaryTotal.textContent = `$${total.toFixed(2)}`;
-        }
+    function updateTotal() {
+        let total = 0;
+        const cartItems = document.querySelectorAll('.cart-item');
+        cartItems.forEach(item => {
+            const price = parseFloat(item.querySelector('.cart-item-total').textContent.replace('$', ''));
+            const quantity = parseInt(item.querySelector('.quantity-selector input').value, 10);
+            total += price * quantity;
+        });
+        cartSummaryTotal.textContent = `$${total.toFixed(2)}`;
+    }
 
-        window.decreaseQuantity = function(button) {
-            const input = button.nextElementSibling;
-            let value = parseInt(input.value, 10);
-            if (value > 1) {
-                value--;
-                input.value = value;
-                updateTotal();
-            }
-        };
-
-        window.increaseQuantity = function(button) {
-            const input = button.previousElementSibling;
-            let value = parseInt(input.value, 10);
-            value++;
+    window.decreaseQuantity = function(button) {
+        const input = button.nextElementSibling;
+        let value = parseInt(input.value, 10);
+        if (value > 1) {
+            value--;
             input.value = value;
             updateTotal();
-        };
+        }
+    };
 
-        window.removeItem = function(button) {
-            const cartItem = button.parentElement;
-            const itemName = cartItem.querySelector('h3').textContent;
+    window.increaseQuantity = function(button) {
+        const input = button.previousElementSibling;
+        let value = parseInt(input.value, 10);
+        value++;
+        input.value = value;
+        updateTotal();
+    };
 
-            // Remove from DOM
-            cartItem.remove();
+    window.removeItem = function(button) {
+        const cartItem = button.parentElement;
+        const itemName = cartItem.querySelector('h3').textContent;
 
-            // Remove from localStorage
-            let updatedCartItems = JSON.parse(localStorage.getItem('cartItems')) || [];
-            updatedCartItems = updatedCartItems.filter(item => item.title !== itemName);
-            localStorage.setItem('cartItems', JSON.stringify(updatedCartItems));
+        // Remove from DOM
+        cartItem.remove();
 
-            // Update total
-            updateTotal();
-        };
+        // Remove from localStorage
+        let updatedCartItems = JSON.parse(localStorage.getItem('cartItems')) || [];
+        updatedCartItems = updatedCartItems.filter(item => item.title !== itemName);
+        localStorage.setItem('cartItems', JSON.stringify(updatedCartItems));
+
+        // Update total
+        updateTotal();
+    };
+
+    // Proceed to Checkout
+    checkoutButton.addEventListener('click', function() {
+        // Clear the cart items in localStorage
+        localStorage.removeItem('cartItems');
+
+        // Optionally, you can redirect to a checkout page or display a success message
+        alert('Checkout successful! Your cart is now empty.');
+        window.location.href = 'checkout.html'; // Redirect to the checkout page
     });
+});
 </script>
 </body>
 </html>
