@@ -227,34 +227,75 @@
             background-color: #b88b8b;
         }
 
-        /* Style for non-clickable section titles */
-.link-title {
+        /* Contact Us Section */
+.contact-us-section {
+    padding: 50px 20px;
+    background-color: #f2d9d5;
+    text-align: center;
+    border-top: 2px solid #b88b8b;
+}
+
+.contact-us-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    max-width: 1200px;
+    margin: 0 auto;
+    text-align: left;
+}
+
+.contact-us-container .logo {
+    margin-right: 160px; /* Adjust the value to your preference */
+}
+
+.contact-us-container .logo img {
+    height: 70px;
+}
+
+.contact-us-container .links {
+    flex: 3;
+    display: flex;
+    justify-content: space-between;
+}
+
+.contact-us-container .link-group {
+    flex: 1;
+}
+
+/* Non-clickable section titles */
+.contact-us-container .link-group .link-title {
     font-size: 18px;
     font-weight: bold;
     color: #6d4e4e;
     margin-bottom: 10px;
+    cursor: default; /* Default cursor, indicating it's not clickable */
+    transition: none; /* Remove hover effect */
 }
 
-/* Style for the clickable list items */
-.dropdown li {
+.contact-us-container .link-group .link-title:hover {
+    color: #6d4e4e; /* No color change on hover */
+}
+
+/* Clickable list items with hover effect */
+.contact-us-container .link-group .dropdown {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
+.contact-us-container .link-group .dropdown li {
     margin-bottom: 10px;
     color: #7b6464;
-    cursor: pointer;
+    cursor: pointer; /* Pointer cursor, indicating it's clickable */
     transition: color 0.3s ease;
 }
 
-.dropdown li:hover {
-    color: #b88b8b; /* Hover effect only on clickable items */
-}
-
-/* Ensuring link-title doesn't have hover effect */
-.link-title:hover {
-    color: #6d4e4e; /* Maintain the original color */
-    cursor: default; /* Disable pointer cursor */
+.contact-us-container .link-group .dropdown li:hover {
+    color: #b88b8b; /* Color change on hover */
 }
 
 /* Styles for the contact button */
-.contact-button {
+.contact-us-container .contact-button {
     padding: 8px 12px;
     background-color: #d8a69a;
     color: #fff;
@@ -265,8 +306,25 @@
     font-size: 14px;
 }
 
-.contact-button:hover {
+.contact-us-container .contact-button:hover {
     background-color: #b88b8b;
+}
+
+/* Social media icons styling */
+.contact-us-container .social-icons {
+    display: flex;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.contact-us-container .social-icons span {
+    font-size: 20px;
+    cursor: pointer;
+    transition: color 0.3s ease;
+}
+
+.contact-us-container .social-icons span:hover {
+    color: #b88b8b;
 }
 
         /* Footer */
