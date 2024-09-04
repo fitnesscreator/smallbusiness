@@ -636,9 +636,9 @@
                 data-image="https://raw.githubusercontent.com/bestwebsites/smallbusiness/main/Pictures/97f9b50623aa00440bb0009848857a6d.jpg" 
                 data-description="A wonderful product that is trending now." 
                 data-category="Custom">
-                <div class="image-container">
+                <div class="image-container" onclick="window.location.href='product1details.html';"> 
                     <img src="https://raw.githubusercontent.com/bestwebsites/smallbusiness/main/Pictures/97f9b50623aa00440bb0009848857a6d.jpg" alt="Product 1">
-                    <button type="button" class="wishlist-button">
+                    <button type="button" class="wishlist-button" onclick="event.stopPropagation(); toggleWishlist(this);">
                         <svg width="18" height="16" viewBox="0 0 18 16">
                             <path
                                 d="M9 14s-4-3.33-6-6a3.5 3.5 0 1 1 6-4 3.5 3.5 0 1 1 6 4c-2 2.67-6 6-6 6z"
@@ -654,7 +654,7 @@
                         <p class="product-title">Product 1</p>
                         <p class="product-price">$19.99</p>
                     </div>
-                    <button class="buy-button">Buy Now</button>
+                    <button class="buy-button" onclick="window.location.href='product1details.html';">Buy Now</button>
                 </div>
             </div>
 
