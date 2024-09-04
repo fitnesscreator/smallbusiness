@@ -1042,8 +1042,8 @@ document.addEventListener("DOMContentLoaded", function() {
     const increaseQuantityButton = document.getElementById("increaseQuantity");
     let currentIndex = 0;
     let validThumbnails = [];
-    let selectedColor = localStorage.getItem('selectedColor') || '';
-    let selectedFont = localStorage.getItem('selectedFont') || '';
+    let selectedColor = localStorage.getItem('selectedColor') || colorSelect.value;
+    let selectedFont = localStorage.getItem('selectedFont') || fontSelect.value;
     let quantity = parseInt(localStorage.getItem('selectedQuantity')) || parseInt(quantityInput.value);
 
     // Function to update the main image
@@ -1055,10 +1055,12 @@ document.addEventListener("DOMContentLoaded", function() {
     // Automatically set the main image to the first valid thumbnail
     thumbnails.forEach((thumbnail, index) => {
         const bgImage = thumbnail.style.backgroundImage;
+
         const isValidUrl = bgImage && bgImage !== 'none' && bgImage !== 'url("")' && bgImage !== 'url()';
 
         if (isValidUrl && !bgImage.includes('path-to-image')) {
             validThumbnails.push(thumbnail);
+
             thumbnail.addEventListener("click", function() {
                 currentIndex = validThumbnails.indexOf(thumbnail);
                 updateMainImage(currentIndex);
@@ -1072,48 +1074,44 @@ document.addEventListener("DOMContentLoaded", function() {
         updateMainImage(currentIndex);
     }
 
-    // Pre-select the remembered color, font, and quantity
-    if (selectedColor) colorSelect.value = selectedColor;
-    if (selectedFont) fontSelect.value = selectedFont;
+    // Pre-select the remembered options
+    colorSelect.value = selectedColor;
+    fontSelect.value = selectedFont;
     quantityInput.value = quantity;
 
-    // Function to validate selections
-    function validateSelections() {
-        let isValid = true;
-
-        if (!colorSelect.value) {
-            colorSelect.style.border = "1px solid red";
-            isValid = false;
-        } else {
-            colorSelect.style.border = "1px solid #d8a69a";
-        }
-
-        if (!fontSelect.value) {
-            fontSelect.style.border = "1px solid red";
-            isValid = false;
-        } else {
-            fontSelect.style.border = "1px solid #d8a69a";
-        }
-
-        // Enable buttons only if both selections are valid
-        addToCartButton.disabled = !isValid;
-        buyButton.disabled = !isValid;
+    // Check if the product is already in the wishlist on load
+    const mainImageUrl = mainImage.style.backgroundImage.slice(5, -2); 
+    if (isInWishlist(productTitle)) {
+        wishlistButton.classList.add("is-active");
     }
 
-    // Initial validation on load
-    validateSelections();
+    wishlistButton.addEventListener("click", function() {
+        const isAdded = wishlistButton.classList.toggle("is-active");
 
-    // Event listeners for option changes
+        if (isAdded) {
+            const productData = {
+                title: productTitle,
+                price: productPrice,
+                color: selectedColor,
+                font: selectedFont,
+                quantity: quantity,
+                imageUrl: mainImageUrl
+            };
+            saveToWishlist(productData);
+        } else {
+            removeFromWishlist(productTitle);
+        }
+    });
+
+    // Function to handle color and font selection
     colorSelect.addEventListener("change", function() {
-        selectedColor = colorSelect.value;
+        selectedColor = this.value;
         localStorage.setItem('selectedColor', selectedColor);
-        validateSelections();
     });
 
     fontSelect.addEventListener("change", function() {
-        selectedFont = fontSelect.value;
+        selectedFont = this.value;
         localStorage.setItem('selectedFont', selectedFont);
-        validateSelections();
     });
 
     // Function to handle quantity changes
@@ -1133,111 +1131,39 @@ document.addEventListener("DOMContentLoaded", function() {
 
     // Add to Cart button functionality
     addToCartButton.addEventListener("click", function() {
-        if (!addToCartButton.disabled) {
-            const productData = {
-                title: productTitle,
-                price: productPrice,
-                color: selectedColor,
-                font: selectedFont,
-                quantity: quantity,
-                imageUrl: mainImage.style.backgroundImage.slice(5, -2)
-            };
-            saveToCart(productData);
-            showToast(`Added to your cart!`);
-        } else {
-            validateSelections();
-        }
+        const productData = {
+            title: productTitle,
+            price: productPrice,
+            color: selectedColor,
+            font: selectedFont,
+            quantity: quantity,
+            imageUrl: mainImageUrl
+        };
+        saveToCart(productData);
+
+        showToast(`Added to your cart!`);
     });
 
     // Buy Now button functionality
     buyButton.addEventListener("click", function() {
-        if (!buyButton.disabled) {
-            const productData = {
-                title: productTitle,
-                price: productPrice,
-                color: selectedColor,
-                font: selectedFont,
-                quantity: quantity,
-                imageUrl: mainImage.style.backgroundImage.slice(5, -2)
-            };
-            saveToCart(productData);
-            window.location.href = 'cart.html';
-        } else {
-            validateSelections();
-        }
+        const productData = {
+            title: productTitle,
+            price: productPrice,
+            color: selectedColor,
+            font: selectedFont,
+            quantity: quantity,
+            imageUrl: mainImageUrl
+        };
+        saveToCart(productData);
+        window.location.href = 'cart.html';
     });
 
-    // Function to show a toast notification
     function showToast(message) {
         const toast = document.getElementById("toast");
         toast.textContent = message;
         toast.className = "show";
         setTimeout(() => { toast.className = toast.className.replace("show", ""); }, 3000);
     }
-
-    // Check if the product is already in the wishlist on load
-    const mainImageUrl = mainImage.style.backgroundImage.slice(5, -2);
-    if (isInWishlist(productTitle)) {
-        wishlistButton.classList.add("is-active");
-    }
-
-    // Wishlist button toggle fill and save/remove data
-    wishlistButton.addEventListener("click", function() {
-        const isAdded = wishlistButton.classList.toggle("is-active");
-
-        if (isAdded) {
-            const productData = {
-                title: productTitle,
-                price: productPrice,
-                color: selectedColor,
-                font: selectedFont,
-                quantity: quantity,
-                imageUrl: mainImageUrl
-            };
-            saveToWishlist(productData);
-        } else {
-            removeFromWishlist(productTitle);
-        }
-    });
-
-    // Add like functionality to suggested products
-    const suggestedWishlistButtons = document.querySelectorAll(".suggested-product .wishlist-button");
-
-    suggestedWishlistButtons.forEach(button => {
-        const title = button.closest(".suggested-product").querySelector(".suggested-product-title").textContent;
-        const price = button.closest(".suggested-product").querySelector(".suggested-product-price").textContent;
-        const imageUrl = button.closest(".suggested-product-image").style.backgroundImage.slice(5, -2);
-
-        if (isInWishlist(title)) {
-            button.classList.add("is-active");
-        }
-
-        button.addEventListener("click", function() {
-            const isAdded = button.classList.toggle("is-active");
-
-            if (isAdded) {
-                const productData = {
-                    title: title,
-                    price: price,
-                    imageUrl: imageUrl
-                };
-                saveToWishlist(productData);
-            } else {
-                removeFromWishlist(title);
-            }
-        });
-    });
-
-    // Navigation button functionality
-    prevButton.addEventListener("click", function() {
-        currentIndex = (currentIndex === 0) ? validThumbnails.length - 1 : currentIndex - 1;
-        updateMainImage(currentIndex);
-    });
-
-    nextButton.addEventListener("click", function() {
-        currentIndex = (currentIndex === validThumbnails.length - 1) ? 0 : currentIndex + 1;
-        updateMainImage(currentIndex);
-    });
 
     function isInWishlist(title) {
         const wishlist = JSON.parse(localStorage.getItem('wishlist')) || [];
@@ -1257,10 +1183,20 @@ document.addEventListener("DOMContentLoaded", function() {
     }
 
     function saveToCart(product) {
-        let cart = JSON.parse(localStorage.getItem('cartItems')) || [];
+        let cart = JSON.parse(localStorage.getItem('cart')) || [];
         cart.push(product);
-        localStorage.setItem('cartItems', JSON.stringify(cart));
+        localStorage.setItem('cart', JSON.stringify(cart));
     }
+
+    prevButton.addEventListener("click", function() {
+        currentIndex = (currentIndex === 0) ? validThumbnails.length - 1 : currentIndex - 1;
+        updateMainImage(currentIndex);
+    });
+
+    nextButton.addEventListener("click", function() {
+        currentIndex = (currentIndex === validThumbnails.length - 1) ? 0 : currentIndex + 1;
+        updateMainImage(currentIndex);
+    });
 });
 </script>
 </html>
