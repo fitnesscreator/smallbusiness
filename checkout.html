@@ -399,7 +399,7 @@
 
         // Retrieve cart items and total price from localStorage
         const cartItems = JSON.parse(localStorage.getItem('checkoutCartItems')) || [];
-        const totalPrice = localStorage.getItem('checkoutTotalPrice') || '$0.00';
+        const totalPrice = parseFloat(localStorage.getItem('checkoutTotalPrice')?.replace('$', '') || '0.00').toFixed(2);
 
         if (cartItems.length > 0) {
             let orderSummaryHTML = '';
@@ -417,7 +417,7 @@
                 `;
             });
 
-            orderSummaryHTML += `<div class="total-price">Total: ${totalPrice}</div>`;
+            orderSummaryHTML += `<div class="total-price">Total: $${totalPrice}</div>`;
             orderSummaryContainer.innerHTML = orderSummaryHTML;
 
             // Render PayPal Button
@@ -428,25 +428,62 @@
                         alert("Please fill out all required fields before proceeding.");
                         return;
                     }
+
+                    // Collect form data
+                    const shippingInfo = {
+                        address_line_1: document.getElementById('address').value,
+                        admin_area_2: document.getElementById('city').value,
+                        admin_area_1: document.getElementById('state').value,
+                        postal_code: document.getElementById('zip').value,
+                        country_code: document.getElementById('country').value,
+                        phone: document.getElementById('phone').value,
+                        full_name: `${document.getElementById('firstName').value} ${document.getElementById('lastName').value}`,
+                        email_address: document.getElementById('email').value
+                    };
+
                     return actions.order.create({
                         purchase_units: [{
                             amount: {
-                                value: totalPrice.replace('$', '') // Use the total price from localStorage
-                            }
+                                currency_code: 'USD',
+                                value: totalPrice
+                            },
+                            shipping: {
+                                address: shippingInfo,
+                                name: {
+                                    full_name: shippingInfo.full_name
+                                }
+                            },
+                            items: cartItems.map(item => ({
+                                name: item.title,
+                                unit_amount: {
+                                    currency_code: 'USD',
+                                    value: parseFloat(item.price).toFixed(2)
+                                },
+                                quantity: item.quantity
+                            }))
                         }]
                     });
                 },
                 onApprove: function(data, actions) {
                     return actions.order.capture().then(function(details) {
                         alert('Transaction completed by ' + details.payer.name.given_name);
-                        
+
+                        // Send order details to server or email (this requires a backend implementation)
+                        // For now, just log the details.
+                        console.log('Order captured:', details);
+
                         // Clear cart data after successful payment
                         localStorage.removeItem('checkoutCartItems');
                         localStorage.removeItem('checkoutTotalPrice');
                         
                         // Redirect to the order placed page
                         window.location.href = 'orderplaced.html';
+                    }).catch(function(error) {
+                        console.error("Error capturing order:", error);
                     });
+                },
+                onError: function(err) {
+                    console.error("PayPal error:", err);
                 }
             }).render('#paypal-button-container');
             
