@@ -299,7 +299,7 @@
     <div class="checkout-container">
         <div class="checkout-form-container">
             <h2>Customer Information</h2>
-            <form class="checkout-form" id="checkoutForm" onsubmit="return false;">
+            <form class="checkout-form" id="checkoutForm">
                 <div class="input-group">
                     <input type="text" id="firstName" name="firstName" placeholder="First name" required>
                     <input type="text" id="lastName" name="lastName" placeholder="Last name" required>
@@ -375,7 +375,7 @@
                                 <span>📷</span> <!-- Instagram icon -->
                                 <span>🎵</span> <!-- TikTok icon -->
                                 <span>📘</span> <!-- Facebook icon -->
-                                <span>X</span> <!-- X (Twitter) icon -->
+                                <span>🐦</span> <!-- X (Twitter) icon -->
                             </div>
                         </li>
                     </ul>
@@ -390,119 +390,115 @@
     </div>
 
     <!-- PayPal SDK -->
-<script src="https://www.paypal.com/sdk/js?client-id=AVtWp9vUktooR0s8441A_bCVopw7U8MyKtnpxaaNfevUNZr8LRkdKxUm9M5IBZbjpn8s_M1jQxWvT5tI&currency=USD"></script>
+    <script src="https://www.paypal.com/sdk/js?client-id=AVtWp9vUktooR0s8441A_bCVopw7U8MyKtnpxaaNfevUNZr8LRkdKxUm9M5IBZbjpn8s_M1jQxWvT5tI&currency=USD"></script>
 
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        const orderSummaryContainer = document.querySelector('#order-summary-content');
-        const paypalButtonContainer = document.querySelector('#paypal-button-container');
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const orderSummaryContainer = document.querySelector('#order-summary-content');
+            const paypalButtonContainer = document.querySelector('#paypal-button-container');
 
-        // Retrieve cart items and total price from localStorage
-        const cartItems = JSON.parse(localStorage.getItem('checkoutCartItems')) || [];
-        const totalPrice = localStorage.getItem('checkoutTotalPrice') || '$0.00';
+            // Retrieve cart items and total price from localStorage
+            const cartItems = JSON.parse(localStorage.getItem('checkoutCartItems')) || [];
+            const totalPrice = localStorage.getItem('checkoutTotalPrice') || '$0.00';
 
-        if (cartItems.length > 0) {
-            let orderSummaryHTML = '';
+            if (cartItems.length > 0) {
+                let orderSummaryHTML = '';
 
-            cartItems.forEach(item => {
-                orderSummaryHTML += `
-                    <p>Item: ${item.title}</p>
-                    <p>Price: ${item.price}</p>
-                    ${item.color ? `<p>Color: ${item.color}</p>` : ''}
-                    ${item.font ? `<p>Font: ${item.font}</p>` : ''}
-                    ${item.size ? `<p>Size: ${item.size}</p>` : ''}
-                    <p>Quantity: ${item.quantity}</p>
-                    <img src="${item.imageUrl}" alt="${item.title}" style="width: 80px; height: 80px; border-radius: 10px; object-fit: cover;">
-                    <hr>
-                `;
-            });
+                cartItems.forEach(item => {
+                    orderSummaryHTML += `
+                        <p>Item: ${item.title}</p>
+                        <p>Price: ${item.price}</p>
+                        ${item.color ? `<p>Color: ${item.color}</p>` : ''}
+                        ${item.font ? `<p>Font: ${item.font}</p>` : ''}
+                        ${item.size ? `<p>Size: ${item.size}</p>` : ''}
+                        <p>Quantity: ${item.quantity}</p>
+                        <img src="${item.imageUrl}" alt="${item.title}" style="width: 80px; height: 80px; border-radius: 10px; object-fit: cover;">
+                        <hr>
+                    `;
+                });
 
-            orderSummaryHTML += `<div class="total-price">Total: ${totalPrice}</div>`;
-            orderSummaryContainer.innerHTML = orderSummaryHTML;
+                orderSummaryHTML += `<div class="total-price">Total: ${totalPrice}</div>`;
+                orderSummaryContainer.innerHTML = orderSummaryHTML;
 
-            // Render PayPal Button
-            paypal.Buttons({
-                createOrder: function(data, actions) {
-                    // Validate form before proceeding
-                    if (!validateForm()) {
-                        alert("Please fill out all required fields before proceeding.");
-                        return null;
-                    }
-                    return actions.order.create({
-                        purchase_units: [{
-                            amount: {
-                                value: totalPrice.replace('$', '')
-                            },
-                            items: cartItems.map(item => ({
-                                name: item.title,
-                                unit_amount: {
-                                    currency_code: 'USD',
-                                    value: item.price
+                // Render PayPal Button
+                paypal.Buttons({
+                    createOrder: function(data, actions) {
+                        // Validate form before proceeding
+                        if (!validateForm()) {
+                            alert("Please fill out all required fields before proceeding.");
+                            return;
+                        }
+
+                        const shippingInfo = {
+                            address_line_1: document.getElementById('address').value,
+                            admin_area_2: document.getElementById('city').value,
+                            admin_area_1: document.getElementById('state').value,
+                            postal_code: document.getElementById('zip').value,
+                            country_code: 'US', // Replace with the correct country code if needed
+                            phone: document.getElementById('phone').value
+                        };
+
+                        return actions.order.create({
+                            purchase_units: [{
+                                amount: {
+                                    value: totalPrice.replace('$', '')
                                 },
-                                quantity: item.quantity
-                            })),
-                            shipping: {
-                                name: {
-                                    full_name: `${document.getElementById('firstName').value} ${document.getElementById('lastName').value}`
-                                },
-                                address: {
-                                    address_line_1: document.getElementById('address').value,
-                                    address_line_2: document.getElementById('apt').value || '',
-                                    admin_area_2: document.getElementById('city').value,
-                                    admin_area_1: document.getElementById('state').value,
-                                    postal_code: document.getElementById('zip').value,
-                                    country_code: document.getElementById('country').value
+                                items: cartItems.map(item => ({
+                                    name: item.title,
+                                    unit_amount: {
+                                        currency_code: 'USD',
+                                        value: item.price
+                                    },
+                                    quantity: item.quantity
+                                })),
+                                shipping: {
+                                    address: shippingInfo
                                 }
-                            }
-                        }]
-                    });
-                },
-                onApprove: function(data, actions) {
-                    return actions.order.capture().then(function(details) {
-                        console.log(details); // Log the full details to see what's being captured
-                        alert('Transaction completed by ' + details.payer.name.given_name);
+                            }]
+                        });
+                    },
+                    onApprove: function(data, actions) {
+                        return actions.order.capture().then(function(details) {
+                            console.log(details); // Log the full details to see what's being captured
+                            alert('Transaction completed by ' + details.payer.name.given_name);
+                            
+                            // Clear cart data after successful payment
+                            localStorage.removeItem('checkoutCartItems');
+                            localStorage.removeItem('checkoutTotalPrice');
+                            
+                            // Redirect to the order placed page
+                            window.location.href = 'orderplaced.html';
+                        });
+                    }
+                }).render('#paypal-button-container');
+                
+            } else {
+                orderSummaryContainer.innerHTML = '<p>No items found in the order summary.</p>';
+                paypalButtonContainer.style.display = 'none'; // Hide PayPal button if no items
+            }
 
-                        // Clear cart data after successful payment
-                        localStorage.removeItem('checkoutCartItems');
-                        localStorage.removeItem('checkoutTotalPrice');
+            function validateForm() {
+                const form = document.getElementById('checkoutForm');
+                const inputs = form.querySelectorAll('input[required]');
+                let allFilled = true;
 
-                        // Redirect to the order placed page
-                        window.location.href = 'orderplaced.html';
-                    });
-                },
-                onError: function(err) {
-                    console.error('PayPal Checkout Error:', err);
-                    alert('An error occurred during the transaction. Please try again.');
-                }
-            }).render('#paypal-button-container');
-            
-        } else {
-            orderSummaryContainer.innerHTML = '<p>No items found in the order summary.</p>';
-            paypalButtonContainer.style.display = 'none'; // Hide PayPal button if no items
-        }
+                inputs.forEach(input => {
+                    if (!input.value.trim()) {
+                        allFilled = false;
+                    }
+                });
 
-        function validateForm() {
-            const form = document.getElementById('checkoutForm');
-            const inputs = form.querySelectorAll('input[required]');
-            let allFilled = true;
+                return allFilled;
+            }
 
-            inputs.forEach(input => {
-                if (!input.value.trim()) {
-                    allFilled = false;
+            document.getElementById('checkoutForm').addEventListener('input', function() {
+                const allFilled = validateForm();
+                const paypalButton = document.querySelector('.paypal-buttons button');
+                if (paypalButton) {
+                    paypalButton.disabled = !allFilled;
                 }
             });
-
-            return allFilled;
-        }
-
-        document.getElementById('checkoutForm').addEventListener('input', function() {
-            const allFilled = validateForm();
-            const paypalButton = document.querySelector('.paypal-buttons button');
-            if (paypalButton) {
-                paypalButton.disabled = !allFilled;
-            }
         });
-    });
-</script>
+    </script>
 </body>
 </html>
