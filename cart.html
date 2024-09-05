@@ -500,10 +500,12 @@
     // Checkout functionality
     checkoutButton.addEventListener('click', function() {
         if (cartItems.length > 0) {
-            // Clear the cart after checkout
-            localStorage.removeItem('cart');
-            alert('Checkout successful!');
-            window.location.href = 'checkout.html'; // Redirect to checkout page
+            // Store cart items and total in localStorage
+            localStorage.setItem('checkoutCartItems', JSON.stringify(cartItems));
+            localStorage.setItem('checkoutTotalPrice', cartSummaryTotal.textContent);
+
+            // Redirect to checkout page
+            window.location.href = 'checkout.html';
         } else {
             alert('Your cart is empty!');
         }
