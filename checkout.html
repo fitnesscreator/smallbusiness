@@ -411,7 +411,7 @@
             cartItems.forEach(item => {
                 orderSummaryHTML += `
                     <p>Item: ${item.title}</p>
-                    <p>Price: $${item.price}</p>
+                    <p>Price: ${item.price}</p> <!-- Removed the $ sign -->
                     ${item.color ? `<p>Color: ${item.color}</p>` : ''}
                     ${item.font ? `<p>Font: ${item.font}</p>` : ''}
                     ${item.size ? `<p>Size: ${item.size}</p>` : ''}
@@ -421,7 +421,7 @@
                 `;
             });
 
-            orderSummaryHTML += `<div class="total-price">Total: $${totalPrice}</div>`;
+            orderSummaryHTML += `<div class="total-price">Total: ${totalPrice}</div>`; <!-- Display the price without the $ sign -->
             orderSummaryContainer.innerHTML = orderSummaryHTML;
 
             paypal.Buttons({
