@@ -397,7 +397,7 @@
     <script>
         document.addEventListener('DOMContentLoaded', function() {
     const orderSummaryContainer = document.querySelector('.order-summary');
-    const paypalButtonContainer = document.querySelector('.paypal-button-container');
+    const paypalButtonContainer = document.querySelector('#paypal-button-container');
 
     // Retrieve cart items and total price from localStorage
     const cartItems = JSON.parse(localStorage.getItem('checkoutCartItems')) || [];
@@ -423,7 +423,6 @@
         orderSummaryContainer.innerHTML = orderSummaryHTML;
     } else {
         orderSummaryContainer.innerHTML = '<p>No items found in the order summary.</p>';
-        paypalButtonContainer.style.display = 'none'; // Hide PayPal button if no items
     }
 
     function validateForm() {
@@ -464,12 +463,23 @@
                 
                 // Implement further logic here (e.g., save the transaction details, redirect to a thank-you page, etc.)
             });
+        },
+        onError: function(err) {
+            console.error('PayPal Button Render Error:', err);
         }
-    }).render('#paypal-button-container');
+    }).render('#paypal-button-container').then(function() {
+        // This block runs after the PayPal button is rendered successfully
+        if (cartItems.length === 0) {
+            paypalButtonContainer.style.display = 'none';
+        }
+    });
 
     document.getElementById('checkoutForm').addEventListener('input', function() {
         const allFilled = validateForm();
-        document.querySelector('.paypal-buttons button').disabled = !allFilled;
+        const paypalButton = document.querySelector('.paypal-buttons button');
+        if (paypalButton) {
+            paypalButton.disabled = !allFilled;
+        }
     });
 });
     </script>
