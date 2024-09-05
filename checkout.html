@@ -426,10 +426,11 @@
 
             paypal.Buttons({
                 createOrder: function(data, actions) {
-                    if (!validateForm()) {
-                        alert("Please fill out all required fields before proceeding.");
-                        return;  // Ensure no further processing occurs if validation fails
-                    }
+                    // Skip validation for testing purposes
+                    // if (!validateForm()) {
+                    //     alert("Please fill out all required fields before proceeding.");
+                    //     return;  // Ensure no further processing occurs if validation fails
+                    // }
 
                     const shippingInfo = {
                         address_line_1: document.getElementById('address').value,
@@ -486,27 +487,27 @@
             paypalButtonContainer.style.display = 'none';  // Hide PayPal button if no items
         }
 
-        function validateForm() {
-            const form = document.getElementById('checkoutForm');
-            const inputs = form.querySelectorAll('input[required]');
-            let allFilled = true;
+        // function validateForm() {
+        //     const form = document.getElementById('checkoutForm');
+        //     const inputs = form.querySelectorAll('input[required]');
+        //     let allFilled = true;
 
-            inputs.forEach(input => {
-                if (!input.value.trim()) {
-                    allFilled = false;
-                }
-            });
+        //     inputs.forEach(input => {
+        //         if (!input.value.trim()) {
+        //             allFilled = false;
+        //         }
+        //     });
 
-            return allFilled;
-        }
+        //     return allFilled;
+        // }
 
-        document.getElementById('checkoutForm').addEventListener('input', function() {
-            const allFilled = validateForm();
-            const paypalButton = document.querySelector('.paypal-buttons button');
-            if (paypalButton) {
-                paypalButton.disabled = !allFilled;
-            }
-        });
+        // document.getElementById('checkoutForm').addEventListener('input', function() {
+        //     const allFilled = validateForm();
+        //     const paypalButton = document.querySelector('.paypal-buttons button');
+        //     if (paypalButton) {
+        //         paypalButton.disabled = !allFilled;
+        //     }
+        // });
     });
 </script>
 </body>
