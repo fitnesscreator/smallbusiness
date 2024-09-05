@@ -399,7 +399,7 @@
 
             // Retrieve cart items and total price from localStorage
             const cartItems = JSON.parse(localStorage.getItem('checkoutCartItems')) || [];
-            const totalPrice = localStorage.getItem('checkoutTotalPrice') || '$0.00';
+            const totalPrice = parseFloat(localStorage.getItem('checkoutTotalPrice').replace('$', '') || '0.00').toFixed(2);
 
             if (cartItems.length > 0) {
                 let orderSummaryHTML = '';
@@ -407,7 +407,7 @@
                 cartItems.forEach(item => {
                     orderSummaryHTML += `
                         <p>Item: ${item.title}</p>
-                        <p>Price: ${item.price}</p>
+                        <p>Price: $${item.price}</p>
                         ${item.color ? `<p>Color: ${item.color}</p>` : ''}
                         ${item.font ? `<p>Font: ${item.font}</p>` : ''}
                         ${item.size ? `<p>Size: ${item.size}</p>` : ''}
@@ -417,7 +417,7 @@
                     `;
                 });
 
-                orderSummaryHTML += `<div class="total-price">Total: ${totalPrice}</div>`;
+                orderSummaryHTML += `<div class="total-price">Total: $${totalPrice}</div>`;
                 orderSummaryContainer.innerHTML = orderSummaryHTML;
 
                 // Render PayPal Button
@@ -434,20 +434,21 @@
                             admin_area_2: document.getElementById('city').value,
                             admin_area_1: document.getElementById('state').value,
                             postal_code: document.getElementById('zip').value,
-                            country_code: 'US', // Replace with the correct country code if needed
+                            country_code: document.getElementById('country').value,
                             phone: document.getElementById('phone').value
                         };
 
                         return actions.order.create({
                             purchase_units: [{
                                 amount: {
-                                    value: totalPrice.replace('$', '')
+                                    currency_code: 'USD',
+                                    value: totalPrice
                                 },
                                 items: cartItems.map(item => ({
                                     name: item.title,
                                     unit_amount: {
                                         currency_code: 'USD',
-                                        value: item.price
+                                        value: parseFloat(item.price).toFixed(2)
                                     },
                                     quantity: item.quantity
                                 })),
