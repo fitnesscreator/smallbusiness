@@ -500,7 +500,6 @@
     checkoutForm.addEventListener('input', function() {
         const allFilled = validateForm();
         paypalButton.disabled = !allFilled;
-        paypal.buttons().disable(paypalButton.disabled); // Ensure immediate update
     });
 });
 </script>
