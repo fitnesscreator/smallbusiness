@@ -420,31 +420,23 @@
 
                 paypal.Buttons({
     createOrder: function(data, actions) {
-        if (!validateForm()) {
-            alert("Please fill out all required fields before proceeding.");
-            return;
-        }
-
+        // Collect form data
         const form = document.getElementById('checkoutForm');
         const formData = new FormData(form);
+
         const firstName = formData.get('firstName');
         const lastName = formData.get('lastName');
         const email = formData.get('email');
         const address = formData.get('address');
-        const apt = formData.get('apt');
+        const apt = formData.get('apt') || '';
         const city = formData.get('city');
         const state = formData.get('state');
         const zip = formData.get('zip');
         const country = formData.get('country');
         const phone = formData.get('phone');
 
-        const customData = `
-            Name: ${firstName} ${lastName}
-            Email: ${email}
-            Address: ${address} ${apt ? ', ' + apt : ''}
-            City: ${city}, State: ${state}, Zip: ${zip}, Country: ${country}
-            Phone: ${phone}
-        `;
+        // Combine the data into a custom string (limited to 127 characters by PayPal)
+        const customData = `Name: ${firstName} ${lastName}, ${address} ${apt}, ${city}, ${state}, ${zip}, ${country}, Phone: ${phone}`;
 
         return actions.order.create({
             purchase_units: [{
@@ -452,7 +444,7 @@
                     currency_code: 'USD',
                     value: totalPrice
                 },
-                description: customData,
+                description: customData.slice(0, 127),  // Limit to 127 characters for PayPal
                 items: cartItems.map(item => ({
                     name: item.title,
                     unit_amount: {
@@ -462,6 +454,9 @@
                     quantity: item.quantity
                 }))
             }]
+        }).catch(function(err) {
+            console.error('Create order error:', err);
+            alert('There was an issue with your order. Please check your details and try again.');
         });
     },
     onApprove: function(data, actions) {
@@ -472,10 +467,12 @@
             window.location.href = 'orderplaced.html';
         }).catch(function(error) {
             console.error("Error capturing order:", error);
+            alert('There was an issue processing your payment. Please try again.');
         });
     },
     onError: function(err) {
         console.error("PayPal error:", err);
+        alert('There was an error with PayPal. Please try again later.');
     }
 }).render('#paypal-button-container');
                 
