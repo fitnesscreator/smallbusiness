@@ -397,7 +397,6 @@
         const orderSummaryContainer = document.querySelector('#order-summary-content');
         const paypalButtonContainer = document.querySelector('#paypal-button-container');
 
-        // Retrieve cart items and total price from localStorage
         const cartItems = JSON.parse(localStorage.getItem('checkoutCartItems')) || [];
         const totalPrice = parseFloat(localStorage.getItem('checkoutTotalPrice')?.replace('$', '') || '0.00').toFixed(2);
 
@@ -407,7 +406,7 @@
             cartItems.forEach(item => {
                 orderSummaryHTML += `
                     <p>Item: ${item.title}</p>
-                    <p>Price: ${item.price}</p>
+                    <p>Price: $${item.price}</p>
                     ${item.color ? `<p>Color: ${item.color}</p>` : ''}
                     ${item.font ? `<p>Font: ${item.font}</p>` : ''}
                     ${item.size ? `<p>Size: ${item.size}</p>` : ''}
@@ -423,12 +422,6 @@
             // Render PayPal Button
             paypal.Buttons({
                 createOrder: function(data, actions) {
-                    // Validate form before proceeding
-                    if (!validateForm()) {
-                        alert("Please fill out all required fields before proceeding.");
-                        return;
-                    }
-
                     // Collect form data
                     const shippingInfo = {
                         address_line_1: document.getElementById('address').value,
@@ -448,9 +441,15 @@
                                 value: totalPrice
                             },
                             shipping: {
-                                address: shippingInfo,
                                 name: {
                                     full_name: shippingInfo.full_name
+                                },
+                                address: {
+                                    address_line_1: shippingInfo.address_line_1,
+                                    admin_area_2: shippingInfo.admin_area_2,
+                                    admin_area_1: shippingInfo.admin_area_1,
+                                    postal_code: shippingInfo.postal_code,
+                                    country_code: shippingInfo.country_code
                                 }
                             },
                             items: cartItems.map(item => ({
@@ -468,9 +467,8 @@
                     return actions.order.capture().then(function(details) {
                         alert('Transaction completed by ' + details.payer.name.given_name);
 
-                        // Send order details to server or email (this requires a backend implementation)
-                        // For now, just log the details.
-                        console.log('Order captured:', details);
+                        // Log the details to check them in the console
+                        console.log('Order Details:', details);
 
                         // Clear cart data after successful payment
                         localStorage.removeItem('checkoutCartItems');
@@ -478,8 +476,6 @@
                         
                         // Redirect to the order placed page
                         window.location.href = 'orderplaced.html';
-                    }).catch(function(error) {
-                        console.error("Error capturing order:", error);
                     });
                 },
                 onError: function(err) {
@@ -489,30 +485,8 @@
             
         } else {
             orderSummaryContainer.innerHTML = '<p>No items found in the order summary.</p>';
-            paypalButtonContainer.style.display = 'none'; // Hide PayPal button if no items
+            paypalButtonContainer.style.display = 'none';  // Hide PayPal button if no items
         }
-
-        function validateForm() {
-            const form = document.getElementById('checkoutForm');
-            const inputs = form.querySelectorAll('input[required]');
-            let allFilled = true;
-
-            inputs.forEach(input => {
-                if (!input.value.trim()) {
-                    allFilled = false;
-                }
-            });
-
-            return allFilled;
-        }
-
-        document.getElementById('checkoutForm').addEventListener('input', function() {
-            const allFilled = validateForm();
-            const paypalButton = document.querySelector('.paypal-buttons button');
-            if (paypalButton) {
-                paypalButton.disabled = !allFilled;
-            }
-        });
     });
 </script>
 </body>
