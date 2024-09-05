@@ -420,45 +420,45 @@
 
                 paypal.Buttons({
     createOrder: function(data, actions) {
-        // Collect form data
-        const form = document.getElementById('checkoutForm');
-        const formData = new FormData(form);
+  if (!validateForm()) {
+    alert("Please fill out all required fields before proceeding.");
+    return;
+  }
 
-        const firstName = formData.get('firstName');
-        const lastName = formData.get('lastName');
-        const email = formData.get('email');
-        const address = formData.get('address');
-        const apt = formData.get('apt') || '';
-        const city = formData.get('city');
-        const state = formData.get('state');
-        const zip = formData.get('zip');
-        const country = formData.get('country');
-        const phone = formData.get('phone');
+  const form = document.getElementById('checkoutForm');
+  const formData = new FormData(form);
+  const firstName = formData.get('firstName');
+  const lastName = formData.get('lastName');
+  const email = formData.get('email'); Â  
 
-        // Combine the data into a custom string (limited to 127 characters by PayPal)
-        const customData = `Name: ${firstName} ${lastName}, ${address} ${apt}, ${city}, ${state}, ${zip}, ${country}, Phone: ${phone}`;
+  // ... (get other customer information)
 
-        return actions.order.create({
-            purchase_units: [{
-                amount: {
-                    currency_code: 'USD',
-                    value: totalPrice
-                },
-                description: customData.slice(0, 127),  // Limit to 127 characters for PayPal
-                items: cartItems.map(item => ({
-                    name: item.title,
-                    unit_amount: {
-                        currency_code: 'USD',
-                        value: parseFloat(item.price).toFixed(2)
-                    },
-                    quantity: item.quantity
-                }))
-            }]
-        }).catch(function(err) {
-            console.error('Create order error:', err);
-            alert('There was an issue with your order. Please check your details and try again.');
-        });
-    },
+  const cartItems = JSON.parse(localStorage.getItem('checkoutCartItems')) || [];
+  const totalPrice = parseFloat(localStorage.getItem('checkoutTotalPrice')?.replace('$', '') || '0.00').toFixed(2);
+
+  return actions.order.create({
+    purchase_units: [{
+      amount: {
+        currency_code: 'USD',
+        value: totalPrice
+      },
+      items: cartItems.map(item => ({
+        name: item.title,
+        unit_amount: {
+          currency_code: 'USD',
+          value: parseFloat(item.price).toFixed(2)
+        },
+        quantity: item.quantity,
+        // Add customer information here:
+        description: `
+          Name: ${firstName} ${lastName}
+          Email: ${email}
+          // ... (add other customer details)
+        `
+      }))
+    }]
+  });
+},
     onApprove: function(data, actions) {
         return actions.order.capture().then(function(details) {
             alert('Transaction completed by ' + details.payer.name.given_name);
