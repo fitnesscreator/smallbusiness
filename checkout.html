@@ -393,91 +393,91 @@
     </div>
 
     <!-- PayPal SDK -->
-    <script src="https://www.paypal.com/sdk/js?client-id=Adf2bNELbjpNC4byh0hELDIevFq_k8KVPezDI7sDuE9Q2K6k13qbTt0T-iyCqLvpM2JhVaWnEZgYyP8H&currency=USD"></script>
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-    const orderSummaryContainer = document.querySelector('.order-summary');
-    const paypalButtonContainer = document.querySelector('#paypal-button-container');
+    <script src="https://www.paypal.com/sdk/js?client-id=AVtWp9vUktooR0s8441A_bCVopw7U8MyKtnpxaaNfevUNZr8LRkdKxUm9M5IBZbjpn8s_M1jQxWvT5tI&currency=USD"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const orderSummaryContainer = document.querySelector('.order-summary');
+        const paypalButtonContainer = document.querySelector('#paypal-button-container');
 
-    // Retrieve cart items and total price from localStorage
-    const cartItems = JSON.parse(localStorage.getItem('checkoutCartItems')) || [];
-    const totalPrice = localStorage.getItem('checkoutTotalPrice') || '$0.00';
+        // Retrieve cart items and total price from localStorage
+        const cartItems = JSON.parse(localStorage.getItem('checkoutCartItems')) || [];
+        const totalPrice = localStorage.getItem('checkoutTotalPrice') || '$0.00';
 
-    if (cartItems.length > 0) {
-        let orderSummaryHTML = '<h2>Order Summary</h2>';
+        if (cartItems.length > 0) {
+            let orderSummaryHTML = '<h2>Order Summary</h2>';
 
-        cartItems.forEach(item => {
-            orderSummaryHTML += `
-                <p>Item: ${item.title}</p>
-                <p>Price: ${item.price}</p>
-                ${item.color ? `<p>Color: ${item.color}</p>` : ''}
-                ${item.font ? `<p>Font: ${item.font}</p>` : ''}
-                ${item.size ? `<p>Size: ${item.size}</p>` : ''}
-                <p>Quantity: ${item.quantity}</p>
-                <img src="${item.imageUrl}" alt="${item.title}" style="width: 80px; height: 80px; border-radius: 10px; object-fit: cover;">
-                <hr>
-            `;
-        });
+            cartItems.forEach(item => {
+                orderSummaryHTML += `
+                    <p>Item: ${item.title}</p>
+                    <p>Price: ${item.price}</p>
+                    ${item.color ? `<p>Color: ${item.color}</p>` : ''}
+                    ${item.font ? `<p>Font: ${item.font}</p>` : ''}
+                    ${item.size ? `<p>Size: ${item.size}</p>` : ''}
+                    <p>Quantity: ${item.quantity}</p>
+                    <img src="${item.imageUrl}" alt="${item.title}" style="width: 80px; height: 80px; border-radius: 10px; object-fit: cover;">
+                    <hr>
+                `;
+            });
 
-        orderSummaryHTML += `<div class="total-price">Total: ${totalPrice}</div>`;
-        orderSummaryContainer.innerHTML = orderSummaryHTML;
+            orderSummaryHTML += `<div class="total-price">Total: ${totalPrice}</div>`;
+            orderSummaryContainer.innerHTML = orderSummaryHTML;
 
-        // Render PayPal Button
-        paypal.Buttons({
-            createOrder: function(data, actions) {
-                // Validate form before proceeding
-                if (!validateForm()) {
-                    alert("Please fill out all required fields before proceeding.");
-                    return;
+            // Render PayPal Button
+            paypal.Buttons({
+                createOrder: function(data, actions) {
+                    // Validate form before proceeding
+                    if (!validateForm()) {
+                        alert("Please fill out all required fields before proceeding.");
+                        return;
+                    }
+                    return actions.order.create({
+                        purchase_units: [{
+                            amount: {
+                                value: totalPrice.replace('$', '') // Use the total price from localStorage
+                            }
+                        }]
+                    });
+                },
+                onApprove: function(data, actions) {
+                    return actions.order.capture().then(function(details) {
+                        alert('Transaction completed by ' + details.payer.name.given_name);
+                        
+                        // Clear cart data after successful payment
+                        localStorage.removeItem('checkoutCartItems');
+                        localStorage.removeItem('checkoutTotalPrice');
+                        
+                        // Implement further logic here (e.g., save the transaction details, redirect to a thank-you page, etc.)
+                    });
                 }
-                return actions.order.create({
-                    purchase_units: [{
-                        amount: {
-                            value: totalPrice.replace('$', '') // Use the total price from localStorage
-                        }
-                    }]
-                });
-            },
-            onApprove: function(data, actions) {
-                return actions.order.capture().then(function(details) {
-                    alert('Transaction completed by ' + details.payer.name.given_name);
-                    
-                    // Clear cart data after successful payment
-                    localStorage.removeItem('checkoutCartItems');
-                    localStorage.removeItem('checkoutTotalPrice');
-                    
-                    // Implement further logic here (e.g., save the transaction details, redirect to a thank-you page, etc.)
-                });
-            }
-        }).render('#paypal-button-container');
-        
-    } else {
-        orderSummaryContainer.innerHTML = '<p>No items found in the order summary.</p>';
-        paypalButtonContainer.style.display = 'none'; // Hide PayPal button if no items
-    }
+            }).render('#paypal-button-container');
+            
+        } else {
+            orderSummaryContainer.innerHTML = '<p>No items found in the order summary.</p>';
+            paypalButtonContainer.style.display = 'none'; // Hide PayPal button if no items
+        }
 
-    function validateForm() {
-        const form = document.getElementById('checkoutForm');
-        const inputs = form.querySelectorAll('input[required]');
-        let allFilled = true;
+        function validateForm() {
+            const form = document.getElementById('checkoutForm');
+            const inputs = form.querySelectorAll('input[required]');
+            let allFilled = true;
 
-        inputs.forEach(input => {
-            if (!input.value.trim()) {
-                allFilled = false;
+            inputs.forEach(input => {
+                if (!input.value.trim()) {
+                    allFilled = false;
+                }
+            });
+
+            return allFilled;
+        }
+
+        document.getElementById('checkoutForm').addEventListener('input', function() {
+            const allFilled = validateForm();
+            const paypalButton = document.querySelector('.paypal-buttons button');
+            if (paypalButton) {
+                paypalButton.disabled = !allFilled;
             }
         });
-
-        return allFilled;
-    }
-
-    document.getElementById('checkoutForm').addEventListener('input', function() {
-        const allFilled = validateForm();
-        const paypalButton = document.querySelector('.paypal-buttons button');
-        if (paypalButton) {
-            paypalButton.disabled = !allFilled;
-        }
     });
-});
-    </script>
+</script>
 </body>
 </html>
