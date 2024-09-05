@@ -394,8 +394,6 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-    console.log("Page loaded and DOM ready");
-
     const orderSummaryContainer = document.querySelector('#order-summary-content');
     const paypalButtonContainer = document.querySelector('#paypal-button-container');
     const checkoutForm = document.getElementById('checkoutForm');
@@ -403,9 +401,6 @@
 
     const cartItems = JSON.parse(localStorage.getItem('checkoutCartItems')) || [];
     const totalPrice = parseFloat(localStorage.getItem('checkoutTotalPrice')?.replace('$', '') || '0.00').toFixed(2);
-
-    console.log("Cart Items:", cartItems);
-    console.log("Total Price:", totalPrice);
 
     if (cartItems.length > 0) {
         let orderSummaryHTML = '';
@@ -422,7 +417,8 @@
             `;
         });
 
-        orderSummaryHTML += `<div class="total-price">Total: ${totalPrice}</div>`; orderSummaryContainer.innerHTML = orderSummaryHTML;
+        orderSummaryHTML += `<div class="total-price">Total: ${totalPrice}</div>`;
+        orderSummaryContainer.innerHTML = orderSummaryHTML;
 
         paypal.Buttons({
             createOrder: function(data, actions) {
@@ -504,6 +500,7 @@
     checkoutForm.addEventListener('input', function() {
         const allFilled = validateForm();
         paypalButton.disabled = !allFilled;
+        paypal.buttons().disable(paypalButton.disabled); // Ensure immediate update
     });
 });
 </script>
