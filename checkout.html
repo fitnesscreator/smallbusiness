@@ -431,19 +431,41 @@
                     return actions.order.create({
                         purchase_units: [{
                             amount: {
-                                value: totalPrice.replace('$', '') // Use the total price from localStorage
+                                value: totalPrice.replace('$', '')
+                            },
+                            items: cartItems.map(item => ({
+                                name: item.title,
+                                unit_amount: {
+                                    currency_code: 'USD',
+                                    value: item.price
+                                },
+                                quantity: item.quantity
+                            })),
+                            shipping: {
+                                name: {
+                                    full_name: `${document.getElementById('firstName').value} ${document.getElementById('lastName').value}`
+                                },
+                                address: {
+                                    address_line_1: document.getElementById('address').value,
+                                    address_line_2: document.getElementById('apt').value || '',
+                                    admin_area_2: document.getElementById('city').value,
+                                    admin_area_1: document.getElementById('state').value,
+                                    postal_code: document.getElementById('zip').value,
+                                    country_code: 'US' // Replace with the correct country code if needed
+                                }
                             }
                         }]
                     });
                 },
                 onApprove: function(data, actions) {
                     return actions.order.capture().then(function(details) {
+                        console.log(details); // Log the full details to see what's being captured
                         alert('Transaction completed by ' + details.payer.name.given_name);
-                        
+
                         // Clear cart data after successful payment
                         localStorage.removeItem('checkoutCartItems');
                         localStorage.removeItem('checkoutTotalPrice');
-                        
+
                         // Redirect to the order placed page
                         window.location.href = 'orderplaced.html';
                     });
