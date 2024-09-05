@@ -299,7 +299,7 @@
     <div class="checkout-container">
         <div class="checkout-form-container">
             <h2>Customer Information</h2>
-            <form class="checkout-form" id="checkoutForm">
+            <form class="checkout-form" id="checkoutForm" onsubmit="return false;">
                 <div class="input-group">
                     <input type="text" id="firstName" name="firstName" placeholder="First name" required>
                     <input type="text" id="lastName" name="lastName" placeholder="Last name" required>
@@ -426,7 +426,7 @@
                     // Validate form before proceeding
                     if (!validateForm()) {
                         alert("Please fill out all required fields before proceeding.");
-                        return;
+                        return null;
                     }
                     return actions.order.create({
                         purchase_units: [{
@@ -451,7 +451,7 @@
                                     admin_area_2: document.getElementById('city').value,
                                     admin_area_1: document.getElementById('state').value,
                                     postal_code: document.getElementById('zip').value,
-                                    country_code: 'US' // Replace with the correct country code if needed
+                                    country_code: document.getElementById('country').value
                                 }
                             }
                         }]
@@ -469,6 +469,10 @@
                         // Redirect to the order placed page
                         window.location.href = 'orderplaced.html';
                     });
+                },
+                onError: function(err) {
+                    console.error('PayPal Checkout Error:', err);
+                    alert('An error occurred during the transaction. Please try again.');
                 }
             }).render('#paypal-button-container');
             
