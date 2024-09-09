@@ -472,7 +472,7 @@
             formObject.cartItems = cartItems;
 
             // Send data to Google Apps Script (Google Sheets and Email)
-            fetch('YOUR_GOOGLE_APPS_SCRIPT_URL', {
+            fetch('https://script.google.com/macros/s/AKfycbwUVUXrMIN0i1wTbzeoFquJS6ufS_KyibK5sde83lt4hlBNS9gk2NaFa_kF07prqRUE1w/exec', {
                 method: 'POST',
                 body: JSON.stringify(formObject),
                 headers: {
