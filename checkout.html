@@ -446,46 +446,9 @@
                     return actions.order.capture().then(function(details) {
                         console.log('Transaction completed by ' + details.payer.name.given_name);
 
-                        const form = document.getElementById('checkoutForm');
-                        const formData = new FormData(form);
-
-                        const customerInfo = {
-                            firstName: formData.get('firstName'),
-                            lastName: formData.get('lastName'),
-                            email: formData.get('email'),
-                            address: formData.get('address'),
-                            apt: formData.get('apt'),
-                            city: formData.get('city'),
-                            state: formData.get('state'),
-                            zip: formData.get('zip'),
-                            country: formData.get('country'),
-                            phone: formData.get('phone')
-                        };
-
-                        // Send data to Google Apps Script after successful payment
-                        fetch('https://script.google.com/macros/s/AKfycbwUVUXrMIN0i1wTbzeoFquJS6ufS_KyibK5sde83lt4hlBNS9gk2NaFa_kF07prqRUE1w/exec', {
-                            method: 'POST',
-                            body: JSON.stringify({
-                                customerInfo: customerInfo,
-                                cartItems: cartItems,
-                                totalPrice: totalPrice
-                            }),
-                            headers: {
-                                'Content-Type': 'application/json'
-                            }
-                        })
-                        .then(response => response.text())
-                        .then(result => {
-                            console.log('Data successfully sent to Google Sheets and Email:', result);
-                            window.location.href = 'orderplaced.html';
-                        })
-                        .catch(error => {
-                            console.error('Error:', error);
-                            alert('There was an issue processing your order. Please try again.');
-                        });
-
-                        localStorage.removeItem('checkoutCartItems');
-                        localStorage.removeItem('checkoutTotalPrice');
+                        // Redirect to a separate page to handle data submission
+                        localStorage.setItem('successfulPayment', true);
+                        window.location.href = 'orderplaced.html';
                     }).catch(function(error) {
                         console.error("Error capturing order:", error);
                         alert('There was an issue processing your payment. Please try again.');
