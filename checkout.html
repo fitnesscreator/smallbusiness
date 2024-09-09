@@ -460,43 +460,35 @@
         });
     },
     onApprove: function(data, actions) {
-        return actions.order.capture().then(function(details) {
-            alert('Transaction completed by ' + details.payer.name.given_name);
+    return actions.order.capture().then(function(details) {
+        console.log('Transaction completed by ' + details.payer.name.given_name);
 
-            // Prepare data to send to Google Sheets
-            const form = document.getElementById('checkoutForm');
-            const formData = new FormData(form);
-            const formObject = Object.fromEntries(formData.entries());
-
-            // Add cart items to form data
-            formObject.cartItems = cartItems;
-
-            // Send data to Google Apps Script (Google Sheets and Email)
-            fetch('https://script.google.com/macros/s/AKfycbwUVUXrMIN0i1wTbzeoFquJS6ufS_KyibK5sde83lt4hlBNS9gk2NaFa_kF07prqRUE1w/exec', {
-                method: 'POST',
-                body: JSON.stringify(formObject),
-                headers: {
-                    'Content-Type': 'application/json'
-                }
-            })
-            .then(response => response.text())
-            .then(result => {
-                console.log('Data successfully sent to Google Sheets and Email:', result);
-                // Redirect to order placed page
-                window.location.href = 'orderplaced.html';
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                alert('There was an issue processing your order. Please try again.');
-            });
-
-            localStorage.removeItem('checkoutCartItems');
-            localStorage.removeItem('checkoutTotalPrice');
-        }).catch(function(error) {
-            console.error("Error capturing order:", error);
-            alert('There was an issue processing your payment. Please try again.');
+        // Test fetch request with static data
+        fetch('YOUR_GOOGLE_APPS_SCRIPT_URL', {
+            method: 'POST',
+            body: JSON.stringify({test: 'This is a test'}),
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+        .then(response => response.text())
+        .then(result => {
+            console.log('Data successfully sent to Google Sheets and Email:', result);
+            // Redirect to order placed page
+            window.location.href = 'orderplaced.html';
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('There was an issue processing your order. Please try again.');
         });
-    },
+
+        localStorage.removeItem('checkoutCartItems');
+        localStorage.removeItem('checkoutTotalPrice');
+    }).catch(function(error) {
+        console.error("Error capturing order:", error);
+        alert('There was an issue processing your payment. Please try again.');
+    });
+}
     onError: function(err) {
         console.error("PayPal error:", err);
         alert('There was an error with PayPal. Please try again later.');
