@@ -387,7 +387,6 @@
         &copy; 2024 Your Company. All Rights Reserved.
     </div>
 
-    // PayPal SDK
 <script src="https://www.paypal.com/sdk/js?client-id=AVtWp9vUktooR0s8441A_bCVopw7U8MyKtnpxaaNfevUNZr8LRkdKxUm9M5IBZbjpn8s_M1jQxWvT5tI&currency=USD"></script>
 
 <!-- PayPal Button Logic -->
@@ -425,22 +424,6 @@
                         return;
                     }
 
-                    const form = document.getElementById('checkoutForm');
-                    const formData = new FormData(form);
-                    const firstName = formData.get('firstName');
-                    const lastName = formData.get('lastName');
-                    const email = formData.get('email');
-                    const address = formData.get('address');
-                    const apt = formData.get('apt');
-                    const city = formData.get('city');
-                    const state = formData.get('state');
-                    const zip = formData.get('zip');
-                    const country = formData.get('country');
-                    const phone = formData.get('phone');
-
-                    const cartItems = JSON.parse(localStorage.getItem('checkoutCartItems')) || [];
-                    const totalPrice = parseFloat(localStorage.getItem('checkoutTotalPrice')?.replace('$', '') || '0.00').toFixed(2);
-
                     return actions.order.create({
                         purchase_units: [{
                             amount: {
@@ -463,10 +446,29 @@
                     return actions.order.capture().then(function(details) {
                         console.log('Transaction completed by ' + details.payer.name.given_name);
 
-                        // Test fetch request with static data
-                        fetch('https://script.google.com/macros/s/AKfycbwUVUXrMIN0i1wTbzeoFquJS6ufS_KyibK5sde83lt4hlBNS9gk2NaFa_kF07prqRUE1w/exec', {
+                        const form = document.getElementById('checkoutForm');
+                        const formData = new FormData(form);
+
+                        const customerInfo = {
+                            firstName: formData.get('firstName'),
+                            lastName: formData.get('lastName'),
+                            email: formData.get('email'),
+                            address: formData.get('address'),
+                            apt: formData.get('apt'),
+                            city: formData.get('city'),
+                            state: formData.get('state'),
+                            zip: formData.get('zip'),
+                            country: formData.get('country'),
+                            phone: formData.get('phone')
+                        };
+
+                        fetch('https://script.google.com/macros/s/YOUR_SCRIPT_ID/exec', {
                             method: 'POST',
-                            body: JSON.stringify({test: 'This is a test'}),
+                            body: JSON.stringify({
+                                customerInfo: customerInfo,
+                                cartItems: cartItems,
+                                totalPrice: totalPrice
+                            }),
                             headers: {
                                 'Content-Type': 'application/json'
                             }
@@ -474,7 +476,6 @@
                         .then(response => response.text())
                         .then(result => {
                             console.log('Data successfully sent to Google Sheets and Email:', result);
-                            // Redirect to order placed page
                             window.location.href = 'orderplaced.html';
                         })
                         .catch(error => {
