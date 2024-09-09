@@ -417,6 +417,7 @@
             orderSummaryHTML += `<div class="total-price">Total: $${totalPrice}</div>`;
             orderSummaryContainer.innerHTML = orderSummaryHTML;
 
+            // Initialize PayPal Buttons
             paypal.Buttons({
                 createOrder: function(data, actions) {
                     return actions.order.create({
@@ -431,7 +432,8 @@
                                     currency_code: 'USD',
                                     value: parseFloat(item.price).toFixed(2)
                                 },
-                                quantity: item.quantity
+                                quantity: item.quantity,
+                                description: `Color: ${item.color || 'N/A'}, Font: ${item.font || 'N/A'}, Size: ${item.size || 'N/A'}`
                             }))
                         }]
                     });
@@ -440,8 +442,47 @@
                     return actions.order.capture().then(function(details) {
                         console.log('Transaction completed by ' + details.payer.name.given_name);
 
-                        // Redirect to order placed page
-                        window.location.href = 'orderplaced.html';
+                        const form = document.getElementById('checkoutForm');
+                        const formData = new FormData(form);
+
+                        const customerInfo = {
+                            firstName: formData.get('firstName'),
+                            lastName: formData.get('lastName'),
+                            email: formData.get('email'),
+                            address: formData.get('address'),
+                            apt: formData.get('apt'),
+                            city: formData.get('city'),
+                            state: formData.get('state'),
+                            zip: formData.get('zip'),
+                            country: formData.get('country'),
+                            phone: formData.get('phone')
+                        };
+
+                        // Send data to Google Apps Script
+                        fetch('https://script.google.com/macros/s/AKfycbwUVUXrMIN0i1wTbzeoFquJS6ufS_KyibK5sde83lt4hlBNS9gk2NaFa_kF07prqRUE1w/exec', {
+                            method: 'POST',
+                            body: JSON.stringify({
+                                customerInfo: customerInfo,
+                                cartItems: cartItems,
+                                totalPrice: totalPrice
+                            }),
+                            headers: {
+                                'Content-Type': 'application/json'
+                            }
+                        })
+                        .then(response => response.text())
+                        .then(result => {
+                            console.log('Data successfully sent to Google Sheets and Email:', result);
+                            window.location.href = 'orderplaced.html';
+                        })
+                        .catch(error => {
+                            console.error('Error:', error);
+                            alert('There was an issue processing your order. Please try again.');
+                        });
+
+                        // Clear localStorage
+                        localStorage.removeItem('checkoutCartItems');
+                        localStorage.removeItem('checkoutTotalPrice');
                     }).catch(function(error) {
                         console.error("Error capturing order:", error);
                         alert('There was an issue processing your payment. Please try again.');
@@ -457,6 +498,30 @@
             orderSummaryContainer.innerHTML = '<p>No items found in the order summary.</p>';
             paypalButtonContainer.style.display = 'none';
         }
+
+        // Function to validate the form
+        function validateForm() {
+            const form = document.getElementById('checkoutForm');
+            const inputs = form.querySelectorAll('input[required]');
+            let allFilled = true;
+
+            inputs.forEach(input => {
+                if (!input.value.trim()) {
+                    allFilled = false;
+                }
+            });
+
+            return allFilled;
+        }
+
+        // Disable PayPal button if form is not valid
+        document.getElementById('checkoutForm').addEventListener('input', function() {
+            const allFilled = validateForm();
+            const paypalButton = document.querySelector('.paypal-buttons button');
+            if (paypalButton) {
+                paypalButton.disabled = !allFilled;
+            }
+        });
     });
 </script>
 </body>
